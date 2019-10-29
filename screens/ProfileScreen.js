@@ -1,27 +1,17 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { createStackNavigator } from "react-navigation";
 
-const ProfileScreen = porps => {
-  return (
-    <View style={styles.container}>
-      <Text>Profile screen</Text>
-    </View>
-  );
-};
+import Profile from "./Profile/Profile";
+import SignupScreen from "../screens/Auth/SignupScreen";
 
-ProfileScreen.navigationOptions = {
-  title: "Profile"
-};
+//switch between the Login page and the SignUp page
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    paddingTop: 15,
-    backgroundColor: "#fff"
-  }
-});
+const AuthStackNavigator = createStackNavigator(
+  {
+    Profile: Profile,
+    Friend: Friend
+  },
+  { initialRouteName: "Profile" }
+);
 
-export default ProfileScreen;
+export default AuthStackNavigator;
