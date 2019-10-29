@@ -7,9 +7,10 @@ import { Ionicons } from "@expo/vector-icons";
 
 import AppNavigator from "./navigation/AppNavigator";
 
-import firebase from "firebase";
-import { firebaseConfig } from "./firebaseConfig";
-firebase.initializeApp(firebaseConfig);
+// import firebase from "firebase";
+// import { firebaseConfig } from "./firebaseConfig";
+// firebase.initializeApp(firebaseConfig);
+import firebase from './local/FirebaseClient';
 
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false);

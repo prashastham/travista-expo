@@ -5,6 +5,8 @@ import {LinearGradient} from 'expo-linear-gradient';
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
+import Storage from '../../local/Storage';
+import firebaseClient from '../../local/FirebaseClient';
 
 export default class Profile extends Component {
  
@@ -19,11 +21,12 @@ export default class Profile extends Component {
       YellowBox.ignoreWarnings([
         'Warning: componentWillMount is deprecated',
         'Warning: componentWillReceiveProps is deprecated',
+        'Warning: Setting a timer for a long period of time',
       ]);
    
     }
     state = {
-      id:'',
+      id:'1234567',
       editable:'true', //this for identify own account. not still use!
       email:'lahirupathum1223@gmail.com',
       name:'Lahiru Pathum',
@@ -52,89 +55,67 @@ export default class Profile extends Component {
     //   })
     this.getPermissionAsync();
     }
+    // ------------------------------------------------------------------------
+    uploadImageAsync= async (uri) => {
+      // Why are we using XMLHttpRequest? See:
+      // https://github.com/expo/expo/issues/2402#issuecomment-443726662
+      const blob = await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = function() {
+          resolve(xhr.response);
+        };
+        xhr.onerror = function(e) {
+          console.log(e);
+          reject(new TypeError('Network request failed'));
+        };
+        xhr.responseType = 'blob';
+        xhr.open('GET', uri, true);
+        xhr.send(null);
+      });
+      const uid = this.state.id
+      const ref = firebaseClient.storage().ref('users/'+uid).child('dp.jpg')
+      const snapshot = await ref.put(blob);
+    
+      // We're done with the blob, close and release it
+      blob.close();
+    
+      return await snapshot.ref.getDownloadURL();
+    }
+    
 
-  //   uploadImage(uri, mime = 'image/jpeg') {
-  //     return new Promise((resolve, reject) => {
-  //       this.setState({visible:true});
-  //       const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
-  //       let uploadBlob = null
-  //       const uid = this.state.id
-  //       const imageRef = firebaseClient.storage().ref(uid).child('dp.jpg')
+    //-------------------------------------------------------------------------
   
-  //       fs.readFile(uploadUri, 'base64')
-  //         .then((data) => {
-  //           return Blob.build(data, { type: `${mime};BASE64` })
-  //         })
-  //         .then((blob) => {
-  //           uploadBlob = blob
-  //           return imageRef.put(blob, { contentType: mime })
-            
-  //         })
-  //         .then(() => {
-  //           uploadBlob.close()
-  //           return imageRef.getDownloadURL()
-  //         })
-  //         .then((url) => {
-  //           resolve(url)
-  //         })
-  //         .catch((error) => {
-  //           reject(error)
-  //       })
-  //     })
-  // }
-//   updateimageurl = () =>{
-//     const url = 'https://ireshd-7df6e.firebaseapp.com/api/update/'
-//     const updateData = {
-//       update:'dpurl',
-//       value:this.state.dpurl,
-//       id:this.state.id
-//     }
+  // updateimageurl = () =>{
+  //   const url = 'https://ireshd-7df6e.firebaseapp.com/api/update/'
+  //   const updateData = {
+  //     update:'dpurl',
+  //     value:this.state.dpurl,
+  //     id:this.state.id
+  //   }
 
-//     fetch(url,{
-//       method:'POST',
-//       headers: { 
-//         'Accept': 'application/json',
-//          'Content-Type': 'application/json' 
-//       },
-//       body:JSON.stringify(updateData)
-//     })
-//     .then((res => res.json()))
-//     .then((res) =>{
-//       if(res.error === 'false')
-//       {
-//         Storage.removeItem('dpurl');
-//         Storage.setItem('dpurl',{value:res.dpurl, id:1});
-//         this.setState({visible:false,dpurl:res.dpurl});
-//         Actions.reset('main');
-//       }
-//       else{
-//         this.setState({visible:false});
-//         alert(res.msg)
-//       }
+  //   fetch(url,{
+  //     method:'POST',
+  //     headers: { 
+  //       'Accept': 'application/json',
+  //        'Content-Type': 'application/json' 
+  //     },
+  //     body:JSON.stringify(updateData)
+  //   })
+  //   .then((res => res.json()))
+  //   .then((res) =>{
+  //     if(res.error === 'false')
+  //     {
+  //       Storage.removeItem('dpurl');
+  //       Storage.setItem('dpurl',{value:res.dpurl, id:1});
+  //       this.setState({visible:false,dpurl:res.dpurl});
+  //     }
+  //     else{
+  //       this.setState({visible:false});
+  //       alert(res.msg)
+  //     }
       
-//     })
-//   }
-
-    // imagepicker = () =>{
-
-    //   ImagePicker.openPicker({
-    //     width: 300,
-    //     height: 300,
-    //     cropping: true,
-    //     freeStyleCropEnabled: true,
-    //     mediaType: 'photo'
-    //   }).then(image => {
-    //     // alert(image.path);
-    //     this.uploadImage(image.path)
-    //     .then(url => { console.log('uploaded'); this.setState({dpurl: url},()=>{
-    //       this.updateimageurl();
-    //     }) })
-    //     .catch(error => {alert(error + 'uploaderror'), this.setState({visible:false})})
-    //   })
-    //   .catch((error) =>{
-    //     alert(error + 'pickererror')
-    //   })
-    // }
+  //   })
+  // }
 
     getPermissionAsync = async () => {
         if (Constants.platform.ios) {
@@ -149,7 +130,7 @@ export default class Profile extends Component {
         let result = await ImagePicker.launchImageLibraryAsync({
           mediaTypes: ImagePicker.MediaTypeOptions.All,
           allowsEditing: true,
-          aspect: [4, 3],
+          aspect: [5, 5],
         });
     
         console.log(result);
@@ -157,7 +138,10 @@ export default class Profile extends Component {
     
         if (!result.cancelled) {
         //   this.setState({ image: result.uri });
-        alert(result.uri)
+        const dp = await this.uploadImageAsync(result.uri)
+        // this.updateimageurl()
+        this.setState({dpurl:dp})
+        alert(dp)
         }
       };
    
@@ -176,7 +160,7 @@ export default class Profile extends Component {
                     title = {((this.state.name).toUpperCase())[0]}
                     containerStyle={{marginTop:50,marginBottom:50,borderWidth:4,borderColor:'#fff'}}
                     source={{
-                    uri:'https://vignette4.wikia.nocookie.net/animal-jam-clans-1/images/7/75/Facepalm-cat-300x300.jpg/revision/latest?cb=20151223193525',//this.state.dpurl,
+                    uri:this.state.dpurl,//this.state.dpurl,
                     }}
                     editButton = {
                     {name: 'camera', type: 'material-community',underlayColor:'#4ac959',iconStyle:{fontSize:30},color:'#000'}
