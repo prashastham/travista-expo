@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { Button, Input } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
-import Constants from "expo-constants";
+import Colors from "../../constants/Colors";
 import { LinearGradient } from "expo-linear-gradient";
 
 const LoginScreen = props => {
@@ -49,7 +49,7 @@ const LoginScreen = props => {
               required
               autoCapitalize="none"
               errorMessage="Enter valid E-Mail address"
-              errorStyle={{ color: "#fb4c19" }}
+              errorStyle={Colors.errorText}
             />
           </View>
           <View style={styles.inputContainer}>
@@ -69,7 +69,7 @@ const LoginScreen = props => {
               required
               minLength={6}
               errorMessage="Enter valid password"
-              errorStyle={{ color: "#fb4c19" }}
+              errorStyle={Colors.errorText}
             />
           </View>
           <View style={styles.buttonContainer}>
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     minHeight: Dimensions.get("window").height * 0.4
   },
   buttonContainer: {
-    padding: 25,
+    padding: 10,
     widht: 300,
     minWidth: "90%"
   },
