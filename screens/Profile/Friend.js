@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 
-export default class Profile extends Component {
-static navigationOptions = { title:'Profile' }
+export default class Friend extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -12,7 +11,7 @@ static navigationOptions = { title:'Profile' }
   render() {
     return (
       <View>
-        <Text> Profile </Text>
+        <Text> Friend </Text>
       </View>
     );
   }

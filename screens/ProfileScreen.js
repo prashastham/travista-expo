@@ -1,17 +1,17 @@
-import React from "react";
 import { createStackNavigator } from "react-navigation";
-
 import Profile from "./Profile/Profile";
-import SignupScreen from "../screens/Auth/SignupScreen";
+import Friend from "./Profile/Friend";
 
-//switch between the Login page and the SignUp page
 
-const AuthStackNavigator = createStackNavigator(
+const ProfileStackNavigator = createStackNavigator(
   {
-    Profile: Profile,
+    Profile: {
+      screen:Profile,
+      
+    },
     Friend: Friend
   },
   { initialRouteName: "Profile" }
 );
 
-export default AuthStackNavigator;
+export default ProfileStackNavigator;

@@ -7,10 +7,11 @@ import {
 
 import TabBarIcon from "../components/TabBarIcon";
 import HomeScreen from "../screens/HomeScreen";
-import ProfileScreen from "../screens/ProfileScreen";
+import Profile from "../screens/Profile/Profile";
 import SettingsScreen from "../screens/SettingsScreen";
 import ChatListScreen from "../screens/Chat/ChatListScreen";
 import MapScreen from "../screens/MapScreen";
+import ProfileScreen from "../screens/ProfileScreen";
 
 const config = Platform.select({
   web: { headerMode: "screen" },
@@ -40,7 +41,7 @@ const ProfileStack = createStackNavigator(
   {
     Profiles: ProfileScreen
   },
-  config
+  {headerMode:'none'}
 );
 
 ProfileStack.navigationOptions = {
