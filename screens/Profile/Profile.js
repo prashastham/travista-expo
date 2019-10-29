@@ -2,6 +2,9 @@ import React,{Component  } from "react";
 import { View,Text,YellowBox,StyleSheet,Platform,Dimensions,ScrollView,Image,SafeAreaView,Alert,TouchableOpacity,ImageBackground } from "react-native";
 import {Avatar,Icon} from 'react-native-elements';
 import {LinearGradient} from 'expo-linear-gradient';
+import * as ImagePicker from 'expo-image-picker';
+import Constants from 'expo-constants';
+import * as Permissions from 'expo-permissions';
 
 export default class Profile extends Component {
  
@@ -47,6 +50,7 @@ export default class Profile extends Component {
     //       telenumber:telenumber.value,
     //       dpurl:dpurl.value,
     //   })
+    this.getPermissionAsync();
     }
 
   //   uploadImage(uri, mime = 'image/jpeg') {
@@ -131,6 +135,31 @@ export default class Profile extends Component {
     //     alert(error + 'pickererror')
     //   })
     // }
+
+    getPermissionAsync = async () => {
+        if (Constants.platform.ios) {
+          const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+          if (status !== 'granted') {
+            alert('Sorry, we need camera roll permissions to make this work!');
+          }
+        }
+      }
+    
+      _pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.All,
+          allowsEditing: true,
+          aspect: [4, 3],
+        });
+    
+        console.log(result);
+        
+    
+        if (!result.cancelled) {
+        //   this.setState({ image: result.uri });
+        alert(result.uri)
+        }
+      };
    
     render() {
       return (
@@ -152,7 +181,7 @@ export default class Profile extends Component {
                     editButton = {
                     {name: 'camera', type: 'material-community',underlayColor:'#4ac959',iconStyle:{fontSize:30},color:'#000'}
                     }
-                    // onEditPress = {()=>{this.imagepicker()}}
+                    onEditPress = {()=>{this._pickImage()}}
                     showEditButton
                 />
             </LinearGradient>
