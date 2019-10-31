@@ -1,27 +1,17 @@
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { createStackNavigator } from "react-navigation";
+import Profile from "./Profile/Profile";
+import Friend from "./Profile/Friend";
 
-const ProfileScreen = porps => {
-  return (
-    <View style={styles.container}>
-      <Text>Profile screen</Text>
-    </View>
-  );
-};
 
-ProfileScreen.navigationOptions = {
-  title: "Profile"
-};
+const ProfileStackNavigator = createStackNavigator(
+  {
+    Profile: {
+      screen:Profile,
+      
+    },
+    Friend: Friend
+  },
+  { initialRouteName: "Profile" }
+);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    paddingTop: 15,
-    backgroundColor: "#fff"
-  }
-});
-
-export default ProfileScreen;
+export default ProfileStackNavigator;

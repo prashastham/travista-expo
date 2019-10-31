@@ -17,7 +17,8 @@ import { LinearGradient } from "expo-linear-gradient";
 const LoginScreen = props => {
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.container}>
+      <ScrollView > 
+        {/* style={styles.container} */}
         <View style={styles.intro}>
           <ImageBackground
             source={require("../../assets/images/intro1.png")}
@@ -86,7 +87,7 @@ const LoginScreen = props => {
               <Icon name="arrow-right" size={15} color="white" padding={5} />
             }
             iconRight
-            title="Join Us  "
+            title="Join Us"
             onPress={() => props.navigation.navigate({ routeName: "SignUp" })}
           />
         </View>
@@ -143,12 +144,12 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     padding: 25,
-    widht: 300,
+    width: 300,
     minWidth: "90%"
   },
   inputContainer: {
     padding: 25,
-    widht: 300,
+    width: 300,
     minWidth: "90%"
   }
 });

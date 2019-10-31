@@ -10,7 +10,7 @@ export default createAppContainer(
     {
       Loading: AuthLoadingScreen,
       Auth: AuthStackNavigator,
-      App: AppTabNavigator
+      App: AppTabNavigator,
     },
     {
       initialRouteName: "Auth"
