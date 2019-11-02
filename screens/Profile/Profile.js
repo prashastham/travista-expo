@@ -1,6 +1,6 @@
 import React,{Component  } from "react";
 import { View,Text,YellowBox,StyleSheet,Platform,Dimensions,ScrollView,Image,SafeAreaView,Alert,TouchableOpacity,ImageBackground } from "react-native";
-import {Avatar,Icon} from 'react-native-elements';
+import {Avatar,Icon,Overlay} from 'react-native-elements';
 import {LinearGradient} from 'expo-linear-gradient';
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
@@ -40,7 +40,8 @@ export default class Profile extends Component {
       telenumber:'0776480429',
       dpurl:'https://vignette4.wikia.nocookie.net/animal-jam-clans-1/images/7/75/Facepalm-cat-300x300.jpg/revision/latest?cb=20151223193525',
       bio:'Hey there, this is about you. Say something shortly',
-      visible:false
+      visible:false,
+      isOverlayVisible:false
     }
     async componentDidMount(){
     //   let email = await Storage.getItem("email");
@@ -165,6 +166,7 @@ export default class Profile extends Component {
                     source={{
                     uri:this.state.dpurl,//this.state.dpurl,
                     }}
+                    onPress={()=>{this.setState({isOverlayVisible:true})}}
                     editButton = {
                     {name: 'camera', type: 'material-community',underlayColor:'#4ac959',iconStyle:{fontSize:30},color:'#000'}
                     }
@@ -172,6 +174,17 @@ export default class Profile extends Component {
                     showEditButton
                 />
             </LinearGradient>
+            {/* add overlay to avatay */}
+          <Overlay
+              isVisible={this.state.isOverlayVisible}
+              onBackdropPress={() => this.setState({ isOverlayVisible: false })}
+              width={304}
+              height={304}
+              overlayBackgroundColor ='#000'
+              overlayStyle={{padding:0, justifyContent:'center', alignItems:'center'}}
+          >
+              <Image source={{uri:this.state.dpurl}} style={{width:300,height:300, margin:0}}/>
+          </Overlay>
           <View style = {styles.namefield}>
             <Text style = {styles.nametext}>{this.state.name}</Text>
             {

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import Colors from '../../constants/Colors';
+import { Button , Overlay} from 'react-native-elements';
 
 export default class EditProfile extends Component {
 
@@ -17,7 +18,7 @@ export default class EditProfile extends Component {
   render() {
     return (
       <View>
-        <Text> EditProfile </Text>
+        <Text> EditProfile </Text>        
       </View>
     );
   }
