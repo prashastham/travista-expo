@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text } from 'react-native';
 import Colors from '../../constants/Colors';
 
-export default class Friend extends Component {
+export default class EditProfile extends Component {
 
   static navigationOptions = {
-    title:'Friends',
-    headerTintColor: Colors.stackHeaderTintColor,
+      title:'Edit Profile',
+      headerTintColor:Colors.stackHeaderTintColor,
   }
   constructor(props) {
     super(props);
@@ -17,10 +17,8 @@ export default class Friend extends Component {
   render() {
     return (
       <View>
-        <Text> Friend </Text>
+        <Text> EditProfile </Text>
       </View>
     );
   }
 }
-
-

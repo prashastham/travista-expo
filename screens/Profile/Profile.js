@@ -7,11 +7,13 @@ import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 import Storage from '../../local/Storage';
 import firebaseClient from '../../local/FirebaseClient';
+import Colors from '../../constants/Colors';
 
 export default class Profile extends Component {
  
     static navigationOptions = {
-        title: "Profile"
+        title: "Profile",
+        headerTintColor:Colors.stackHeaderTintColor,
       };
       
     constructor(props) {
@@ -128,7 +130,8 @@ export default class Profile extends Component {
     
       _pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.All,
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          quality:0.5,
           allowsEditing: true,
           aspect: [5, 5],
         });
@@ -187,7 +190,7 @@ export default class Profile extends Component {
               type = 'material'
               color = '#4ac959'
               containerStyle = {styles.menuicon}
-              onPress={() => Actions.changeemail()}
+              onPress={() => this.props.navigation.navigate('Friend')}
             />
             <Icon
               raised
@@ -196,7 +199,7 @@ export default class Profile extends Component {
               type = 'material'
               color = '#4ac959'
               containerStyle = {styles.menuicon}
-              onPress={() => Actions.changeemail()}
+              onPress={() => this.props.navigation.navigate('EditProfile')}
             />
             <Icon
               raised
