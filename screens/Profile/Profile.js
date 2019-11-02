@@ -182,6 +182,7 @@ export default class Profile extends Component {
               height={304}
               overlayBackgroundColor ='#000'
               overlayStyle={{padding:0, justifyContent:'center', alignItems:'center'}}
+              animationType='fade'
           >
               <Image source={{uri:this.state.dpurl}} style={{width:300,height:300, margin:0}}/>
           </Overlay>
