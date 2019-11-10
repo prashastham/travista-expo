@@ -1,15 +1,14 @@
 import { createStackNavigator } from "react-navigation";
 import Profile from "./Profile/Profile";
 import Friend from "./Profile/Friend";
+import EditProfile from './Profile/EditProfile';
 
 
 const ProfileStackNavigator = createStackNavigator(
   {
-    Profile: {
-      screen:Profile,
-      
-    },
-    Friend: Friend
+    Profile:Profile,
+    Friend: Friend,
+    EditProfile: EditProfile
   },
   { initialRouteName: "Profile" }
 );
