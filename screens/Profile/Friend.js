@@ -1,4 +1,3 @@
-import React ,{Component}from 'react';
 import { createMaterialTopTabNavigator } from 'react-navigation-tabs';
 import {
     createStackNavigator,
@@ -19,7 +18,6 @@ const MyFriendsStack = createStackNavigator(
 
 MyFriendsStack.navigationOptions = {
     tabBarLabel: "MyFriends",
-    labelStyle:{fontSize: 20,fontWeight: '500',}
 };
 
 const SuggestionsStack = createStackNavigator(
