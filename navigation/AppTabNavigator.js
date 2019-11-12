@@ -7,7 +7,6 @@ import {
 
 import TabBarIcon from "../components/TabBarIcon";
 import HomeScreen from "../screens/HomeScreen";
-import Profile from "../screens/Profile/Profile";
 import SettingsScreen from "../screens/SettingsScreen";
 import ChatListScreen from "../screens/Chat/ChatListScreen";
 import MapScreen from "../screens/MapScreen";

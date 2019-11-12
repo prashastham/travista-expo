@@ -41,7 +41,7 @@ export default class Profile extends Component {
       dpurl:'https://vignette4.wikia.nocookie.net/animal-jam-clans-1/images/7/75/Facepalm-cat-300x300.jpg/revision/latest?cb=20151223193525',
       bio:'Hey there, this is about you. Say something shortly',
       visible:false,
-      isOverlayVisible:false
+      isOverlayVisible:false,
     }
     async componentDidMount(){
     //   let email = await Storage.getItem("email");
@@ -175,17 +175,17 @@ export default class Profile extends Component {
                 />
             </LinearGradient>
             {/* add overlay to avatay */}
-          <Overlay
-              isVisible={this.state.isOverlayVisible}
-              onBackdropPress={() => this.setState({ isOverlayVisible: false })}
-              width={304}
-              height={304}
-              overlayBackgroundColor ='#000'
-              overlayStyle={{padding:0, justifyContent:'center', alignItems:'center'}}
-              animationType='slide'
-          >
-              <Image source={{uri:this.state.dpurl}} style={{width:300,height:300, margin:0}}/>
-          </Overlay>
+            <Overlay
+                isVisible={this.state.isOverlayVisible}
+                onBackdropPress={() => this.setState({ isOverlayVisible: false })}
+                width={304}
+                height={304}
+                overlayBackgroundColor ='#000'
+                overlayStyle={{padding:0, justifyContent:'center', alignItems:'center'}}
+                animationType='none'
+            >
+                <Image source={{uri:this.state.dpurl}} style={{width:300,height:300, margin:0}}/>
+            </Overlay>
           <View style = {styles.namefield}>
             <Text style = {styles.nametext}>{this.state.name}</Text>
             {
@@ -311,7 +311,7 @@ export default class Profile extends Component {
               <Image
                 style = {styles.galleryimage}
                 source = {{uri:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Pomeranian_in_garden.jpg/1200px-Pomeranian_in_garden.jpg'}}
-              />
+             />
             </View>
             <View style = {styles.subgallerycontainer}>
               <Image

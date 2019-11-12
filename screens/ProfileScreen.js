@@ -7,7 +7,12 @@ import EditProfile from './Profile/EditProfile';
 const ProfileStackNavigator = createStackNavigator(
   {
     Profile:Profile,
-    Friend: Friend,
+    Friend:{
+      screen:Friend,
+      navigationOptions: ({ navigation }) => ({
+        title: 'Friends',
+      }),
+    } ,
     EditProfile: EditProfile
   },
   { initialRouteName: "Profile" }
