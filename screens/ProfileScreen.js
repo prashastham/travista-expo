@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
+import Video from "react-native-video";
 
 const ProfileScreen = porps => {
   return (
@@ -21,6 +22,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingTop: 15,
     backgroundColor: "#fff"
+  },
+  backgroundVideo: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0
   }
 });
 

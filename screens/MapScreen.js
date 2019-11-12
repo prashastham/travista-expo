@@ -9,8 +9,8 @@ const MapScreen = props => {
       <MapView
         style={styles.map}
         initialRegion={{
-          latitude: 137.78825,
-          longitude: 22.4324,
+          latitude: 6.927079,
+          longitude: 79.861244,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421
         }}

@@ -28,9 +28,9 @@ const posts = [
   },
   {
     id: 2,
-    name: "Amaya Kinivita",
+    name: "Steve Jobs",
     avatar:
-      "https://yt3.ggpht.com/a/AGF-l7_7eNVdBXwQTgFSNw450UeJSZDcJy1eMcaa8A=s900-c-k-c0xffffffff-no-rj-mo",
+      "https://upload.wikimedia.org/wikipedia/commons/f/f5/Steve_Jobs_Headshot_2010-CROP2.jpg",
     image: "https://picsum.photos/300/600",
     description: "Great click, it was an awesome trip",
     likes: 0,
@@ -57,9 +57,9 @@ const posts = [
   },
   {
     id: 5,
-    name: "Amaya Kinivita",
+    name: "Steve Jobs",
     avatar:
-      "https://yt3.ggpht.com/a/AGF-l7_7eNVdBXwQTgFSNw450UeJSZDcJy1eMcaa8A=s900-c-k-c0xffffffff-no-rj-mo",
+      "https://upload.wikimedia.org/wikipedia/commons/f/f5/Steve_Jobs_Headshot_2010-CROP2.jpg",
     image: "https://picsum.photos/300/600",
     description: "Yay that was awesome",
     likes: 0,
@@ -86,9 +86,9 @@ const posts = [
   },
   {
     id: 8,
-    name: "Amaya Kinivita",
+    name: "Steve Jobs",
     avatar:
-      "https://yt3.ggpht.com/a/AGF-l7_7eNVdBXwQTgFSNw450UeJSZDcJy1eMcaa8A=s900-c-k-c0xffffffff-no-rj-mo",
+      "https://upload.wikimedia.org/wikipedia/commons/f/f5/Steve_Jobs_Headshot_2010-CROP2.jpg",
     image: "https://picsum.photos/300/600",
     description: "Great click ;)",
     likes: 0,
