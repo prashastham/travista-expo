@@ -13,8 +13,10 @@ export default class Suggestions extends Component {
           seed: 1,
           error: null,
           refreshing: false,
-          firstload:true
+          firstload:true,
+          text:''
         };
+        this.arrayholder = [];
       }
     
       componentDidMount() {
@@ -36,6 +38,7 @@ export default class Suggestions extends Component {
               refreshing: false,
               firstload:false
             });
+            this.arrayholder = res.results;
           })
           .catch(error => {
             this.setState({ error, loading: false });
@@ -79,28 +82,32 @@ export default class Suggestions extends Component {
           />
         );
       };
-    
-    
+
+     
       renderFooter = () => {
-        // if (!this.state.loading) return null;
-    
-        return (
-          <View
-            style={{
-              paddingVertical: 20,
-              borderTopWidth: 1,
-              borderColor: "#CED0CE"
-            }}
-          >
-            <ActivityIndicator animating size="large" />
-          </View>
-        );
+        if (!this.state.loading) 
+        {
+          return (
+            <View
+              style={{
+                paddingVertical: 20,
+                borderTopWidth: 1,
+                borderColor: "#CED0CE"
+              }}
+            >
+              <ActivityIndicator animating size="large" />
+            </View>
+          );
+        }
+        else{
+          return null
+        }
         
       };
     
       render() {
         return (
-            (this.state.loading && this.state.firstload)
+            (this.state.loading && this.state.firstload) 
             ? 
                 <View
                     style={{
@@ -131,13 +138,12 @@ export default class Suggestions extends Component {
                 )}
                 keyExtractor={item => item.email}
                 ItemSeparatorComponent={this.renderSeparator}
-                // ListHeaderComponent={this.renderHeader}
+                ListHeaderComponent={this.renderHeader}
                 ListFooterComponent={this.renderFooter}
                 onRefresh={this.handleRefresh}
                 refreshing={this.state.refreshing}
                 onEndReached={this.handleLoadMore}
-                onEndReachedThreshold={50}
-                removeClippedSubviews = {true}
+                onEndReachedThreshold={50} 
                 />
         );
       }

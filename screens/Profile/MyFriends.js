@@ -13,8 +13,10 @@ export default class MyFriends extends Component {
           seed: 1,
           error: null,
           refreshing: false,
-          firstload:true
+          firstload:true,
+          text:''
         };
+        this.arrayholder = [];
       }
     
       componentDidMount() {
@@ -36,6 +38,7 @@ export default class MyFriends extends Component {
               refreshing: false,
               firstload:false
             });
+            this.arrayholder = res.results;
           })
           .catch(error => {
             this.setState({ error, loading: false });
@@ -82,9 +85,8 @@ export default class MyFriends extends Component {
     
     
       renderFooter = () => {
-        // if (!this.state.loading) return null;
-    
-        return (
+        if (!this.state.loading) 
+        {return (
           <View
             style={{
               paddingVertical: 20,
@@ -94,9 +96,31 @@ export default class MyFriends extends Component {
           >
             <ActivityIndicator animating size="large" />
           </View>
-        );
+        );}
+        else{
+          return null;
+        }
         
       };
+
+      searchFilterFunction = text => {    
+        this.setState({text:text})
+        const newData = this.arrayholder.filter(item => {      
+          const itemData = `${item.name.title.toUpperCase()}   
+          ${item.name.first.toUpperCase()} ${item.name.last.toUpperCase()}`;
+          
+           const textData = text.toUpperCase();
+            
+           return itemData.indexOf(textData) > -1;    
+        });
+        
+        this.setState({ data: newData });  
+      };
+    
+      renderHeader = () => {
+        return <SearchBar placeholder="Type Here..." lightTheme onChangeText={text => this.searchFilterFunction(text)} autoCorrect={false} value={this.state.text}/>;
+      };
+
     
       render() {
         return (
@@ -131,13 +155,12 @@ export default class MyFriends extends Component {
                 )}
                 keyExtractor={item => item.email}
                 ItemSeparatorComponent={this.renderSeparator}
-                // ListHeaderComponent={this.renderHeader}
+                ListHeaderComponent={this.renderHeader}
                 ListFooterComponent={this.renderFooter}
                 onRefresh={this.handleRefresh}
                 refreshing={this.state.refreshing}
                 onEndReached={this.handleLoadMore}
                 onEndReachedThreshold={50}
-                removeClippedSubviews = {true}
                 />
         );
       }
