@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import {
   StyleSheet,
   View,
@@ -7,7 +8,8 @@ import {
   Image,
   Text,
   ScrollView,
-  SafeAreaView
+  SafeAreaView,
+  KeyboardAvoidingView
 } from "react-native";
 import { Button, Input } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";

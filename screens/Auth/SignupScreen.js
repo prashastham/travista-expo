@@ -5,6 +5,7 @@ import {
   View,
   ScrollView,
   SafeAreaView,
+  KeyboardAvoidingView,
   Dimensions
 } from "react-native";
 import { Button, Input } from "react-native-elements";

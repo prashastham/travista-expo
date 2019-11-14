@@ -6,18 +6,21 @@ import { Ionicons } from "@expo/vector-icons";
 
 import { createStore, combineReducers } from "redux";
 import { Provider } from "react-redux";
-import login from "./redux/reducer/login";
+import loginReducer from "./redux/reducer/login";
 
 import AppNavigator from "./navigation/AppNavigator";
 
 import firebase from "firebase";
 import { firebaseConfig } from "./firebaseConfig";
+import login from "./redux/reducer/login";
+import postsReducer from "./redux/reducer/posts";
 firebase.initializeApp(firebaseConfig);
 
 const rootReducer = combineReducers({
-  login: login
+  login: login,
+  posts: postsReducer
 });
-const store = createStore(rootReducer);
+let store = createStore(rootReducer);
 
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
