@@ -5,11 +5,13 @@ import {
   View,
   ScrollView,
   SafeAreaView,
+  KeyboardAvoidingView,
   Dimensions
 } from "react-native";
 import { Button, Input } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { LinearGradient } from "expo-linear-gradient";
+import Colors from "../../constants/Colors";
 
 const SignupScreen = props => {
   return (
@@ -32,7 +34,7 @@ const SignupScreen = props => {
               required
               autoCapitalize="none"
               errorMessage="Enter valid E-Mail address"
-              errorStyle={{ color: "#fb4c19" }}
+              errorStyle={Colors.errorText}
             />
           </View>
           <View style={styles.inputContainer}>
@@ -52,7 +54,7 @@ const SignupScreen = props => {
               required
               minLength={6}
               errorMessage="Enter valid password"
-              errorStyle={{ color: "#fb4c19" }}
+              errorStyle={Colors.errorText}
             />
           </View>
           <View style={styles.inputContainer}>
@@ -72,7 +74,7 @@ const SignupScreen = props => {
               required
               minLength={6}
               errorMessage="Enter valid password"
-              errorStyle={{ color: "#fb4c19" }}
+              errorStyle={Colors.errorText}
             />
           </View>
           <View style={styles.buttonContainer}>
@@ -136,7 +138,7 @@ const styles = StyleSheet.create({
     maxHeight: Dimensions.get("screen").height
   },
   buttonContainer: {
-    padding: 25,
+    padding: 10,
     width: 300,
     minWidth: "90%"
   },

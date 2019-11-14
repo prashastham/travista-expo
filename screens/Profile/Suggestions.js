@@ -14,9 +14,7 @@ export default class Suggestions extends Component {
           error: null,
           refreshing: false,
           firstload:true,
-          text:''
         };
-        this.arrayholder = [];
       }
     
       componentDidMount() {
@@ -38,7 +36,6 @@ export default class Suggestions extends Component {
               refreshing: false,
               firstload:false
             });
-            this.arrayholder = res.results;
           })
           .catch(error => {
             this.setState({ error, loading: false });

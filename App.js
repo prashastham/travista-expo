@@ -1,16 +1,27 @@
 import { AppLoading } from "expo";
-import { Asset } from "expo-asset";
 import * as Font from "expo-font";
 import React, { useState } from "react";
 import { Platform, StatusBar, StyleSheet, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
+import { createStore, combineReducers } from "redux";
+import { Provider } from "react-redux";
+import loginReducer from "./redux/reducer/login";
+
 import AppNavigator from "./navigation/AppNavigator";
 
-// import firebase from "firebase";
-// import { firebaseConfig } from "./firebaseConfig";
-// firebase.initializeApp(firebaseConfig);
-import firebase from './local/FirebaseClient';
+import login from "./redux/reducer/login";
+import postsReducer from "./redux/reducer/posts";
+//import firebase from "firebase";
+//import { firebaseConfig } from "./firebaseConfig";
+//firebase.initializeApp(firebaseConfig);
+import firebase from "./local/FirebaseClient";
+
+const rootReducer = combineReducers({
+  login: login,
+  posts: postsReducer
+});
+let store = createStore(rootReducer);
 
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
@@ -27,7 +38,9 @@ export default function App(props) {
     return (
       <View style={styles.container}>
         {Platform.OS === "ios" && <StatusBar barStyle="default" />}
-        <AppNavigator />
+        <Provider store={store}>
+          <AppNavigator />
+        </Provider>
       </View>
     );
   }
