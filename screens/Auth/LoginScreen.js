@@ -19,7 +19,7 @@ import { LinearGradient } from "expo-linear-gradient";
 const LoginScreen = props => {
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView > 
+      <ScrollView>
         {/* style={styles.container} */}
         <View style={styles.intro}>
           <ImageBackground
@@ -145,13 +145,8 @@ const styles = StyleSheet.create({
     minHeight: Dimensions.get("window").height * 0.4
   },
   buttonContainer: {
-<<<<<<< HEAD
     padding: 10,
     widht: 300,
-=======
-    padding: 25,
-    width: 300,
->>>>>>> master
     minWidth: "90%"
   },
   inputContainer: {

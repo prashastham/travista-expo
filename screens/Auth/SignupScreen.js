@@ -138,13 +138,8 @@ const styles = StyleSheet.create({
     maxHeight: Dimensions.get("screen").height
   },
   buttonContainer: {
-<<<<<<< HEAD
     padding: 10,
     widht: 300,
-=======
-    padding: 25,
-    width: 300,
->>>>>>> master
     minWidth: "90%"
   },
   inputContainer: {
