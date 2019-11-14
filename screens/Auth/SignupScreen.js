@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     padding: 10,
-    widht: 300,
+    width: 300,
     minWidth: "90%"
   },
   inputContainer: {

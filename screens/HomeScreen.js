@@ -27,7 +27,10 @@ const HomeScreen = props => {
   });
 
   return (
-    <ScrollView style={styles.container} contentOffset={{ x: 10, y: 10 }}>
+    
+    <ScrollView contentOffset={{ x: 10, y: 10 }}> 
+    <View style={styles.container}>
+    {/* style={styles.container} */}
       {posts.map((u, i) => {
         return (
           <Card
@@ -39,6 +42,7 @@ const HomeScreen = props => {
                   <Avatar
                     size="medium"
                     source={{ uri: u.avatar }}
+                    rounded
                     PlaceholderContent={<ActivityIndicator />}
                   />
                 </View>
@@ -59,9 +63,9 @@ const HomeScreen = props => {
               <Image
                 source={{ uri: u.image }}
                 style={{
-                  flex: 1,
+                  flexGrow: 1,
                   minHeight: Dimensions.get("window").height * 0.4,
-                  Width: Dimensions.get("window").width
+                  // width: Dimensions.get("window").width
                 }}
                 resizeMode="stretch"
                 PlaceholderContent={<ActivityIndicator />}
@@ -98,6 +102,7 @@ const HomeScreen = props => {
           </Card>
         );
       })}
+      </View>
     </ScrollView>
   );
 };
@@ -115,8 +120,8 @@ const styles = StyleSheet.create({
   },
   postContainer: {
     flexDirection: "row",
-    Width: 400,
-    Width: 300,
+    width: 400,
+    width: 300,
     maxHeight: Dimensions.get("screen").height,
     maxWidth: Dimensions.get("screen").width * 0.5,
     justifyContent: "center",

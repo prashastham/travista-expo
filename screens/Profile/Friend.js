@@ -1,26 +1,49 @@
-import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import Colors from '../../constants/Colors';
+import { createMaterialTopTabNavigator } from 'react-navigation-tabs';
+import {
+    createStackNavigator,
+    createAppContainer
+} from "react-navigation";
 
-export default class Friend extends Component {
+import MyFriendsScreen from './MyFriends';
+import SuggestionScreen from './Suggestions';
 
-  static navigationOptions = {
-    title:'Friends',
-    headerTintColor: Colors.stackHeaderTintColor,
-  }
-  constructor(props) {
-    super(props);
-    this.state = {
-    };
-  }
+const MyFriendsStack = createStackNavigator(
+    {
+      MyFriends: MyFriendsScreen
+    },
+    {
+      headerMode:'none'
+    }
+);
 
-  render() {
-    return (
-      <View>
-        <Text> Friend </Text>
-      </View>
-    );
-  }
+MyFriendsStack.navigationOptions = {
+    tabBarLabel: "MyFriends",
+};
+
+const SuggestionsStack = createStackNavigator(
+    {
+      Suggestion: SuggestionScreen
+    },
+    {
+      headerMode:'none'
+    }
+);
+
+SuggestionsStack.navigationOptions = {
+    tabBarLabel: "Suggestion",
+};
+
+const tabNavigator = createMaterialTopTabNavigator({
+    MyFriendsStack,
+    SuggestionsStack
+},
+{
+  tabBarOptions:
+  {
+    labelStyle:{fontSize: 15,fontWeight: '300',color:'#fff'},
+    style:{backgroundColor:'#4ac959'},
+    indicatorStyle:{backgroundColor:'green'}
 }
+});
 
-
+export default createAppContainer(tabNavigator);
