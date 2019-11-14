@@ -16,7 +16,7 @@ import Colors from "../../constants/Colors";
 const SignupScreen = props => {
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.container}>
+      <ScrollView>
         <View>
           <View style={styles.inputContainer}>
             <Input
@@ -138,13 +138,18 @@ const styles = StyleSheet.create({
     maxHeight: Dimensions.get("screen").height
   },
   buttonContainer: {
+<<<<<<< HEAD
     padding: 10,
     widht: 300,
+=======
+    padding: 25,
+    width: 300,
+>>>>>>> master
     minWidth: "90%"
   },
   inputContainer: {
     padding: 25,
-    widht: 300,
+    width: 300,
     minWidth: "90%"
   }
 });

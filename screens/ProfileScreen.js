@@ -1,19 +1,25 @@
+<<<<<<< HEAD
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import Video from "react-native-video";
+=======
+import { createStackNavigator } from "react-navigation";
+import Profile from "./Profile/Profile";
+import Friend from "./Profile/Friend";
+import EditProfile from './Profile/EditProfile';
+>>>>>>> master
 
-const ProfileScreen = porps => {
-  return (
-    <View style={styles.container}>
-      <Text>Profile screen</Text>
-    </View>
-  );
-};
 
-ProfileScreen.navigationOptions = {
-  title: "Profile"
-};
+const ProfileStackNavigator = createStackNavigator(
+  {
+    Profile:Profile,
+    Friend: Friend,
+    EditProfile: EditProfile
+  },
+  { initialRouteName: "Profile" }
+);
 
+<<<<<<< HEAD
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -33,3 +39,6 @@ const styles = StyleSheet.create({
 });
 
 export default ProfileScreen;
+=======
+export default ProfileStackNavigator;
+>>>>>>> master
