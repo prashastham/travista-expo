@@ -8,6 +8,7 @@ import * as Permissions from 'expo-permissions';
 import Storage from '../../local/Storage';
 import firebaseClient from '../../local/FirebaseClient';
 import Colors from '../../constants/Colors';
+import Post from '../../elements/Post';
 
 export default class Profile extends Component {
  
@@ -325,24 +326,9 @@ export default class Profile extends Component {
               <Text style={styles.galleryeditbtntext}>Edit Public Gallery</Text>
             </TouchableOpacity>
           </View>
-          <View style = {styles.datafield}>
-            {/* <Text style = {styles.datatext}>{this.state.telenumber}</Text>
-            <Icon
-              name = 'edit'
-              type = 'material'
-              color = '#4ac959'
-              onPress={() => Actions.changetelenumber()}
-            /> */}
-          </View>
-          <View style = {styles.datafield}>
-            {/* <Text style = {styles.datatext}>{this.state.telenumber}</Text>
-            <Icon
-              name = 'edit'
-              type = 'material'
-              color = '#4ac959'
-              onPress={() => Actions.changetelenumber()}
-            /> */}
-          </View>
+          
+            <Post/>
+          
         </ScrollView>
         </View>    
       );
