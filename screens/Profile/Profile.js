@@ -10,6 +10,7 @@ import firebaseClient from '../../local/FirebaseClient';
 import Colors from '../../constants/Colors';
 import Post from '../../elements/Post';
 import HeaderIcon from "../../components/HeaderIcon";
+import * as Progress from 'react-native-progress';
 
 export default class Profile extends Component {
  
@@ -45,6 +46,8 @@ export default class Profile extends Component {
       bio:'Hey there, this is about you. Say something shortly',
       visible:false,
       isOverlayVisible:false,
+      progress:0,
+      dpupload:false
     }
     async componentDidMount(){
     //   let email = await Storage.getItem("email");
@@ -63,6 +66,7 @@ export default class Profile extends Component {
     }
     // ------------------------------------------------------------------------
     uploadImageAsync= async (uri) => {
+      this.setState({dpupload:true})
       // Why are we using XMLHttpRequest? See:
       // https://github.com/expo/expo/issues/2402#issuecomment-443726662
       const blob = await new Promise((resolve, reject) => {
@@ -80,12 +84,35 @@ export default class Profile extends Component {
       });
       const uid = this.state.id
       const ref = firebaseClient.storage().ref('users/'+uid).child('dp.jpg')
-      const snapshot = await ref.put(blob);
+      const uploadTask = ref.put(blob);
+      
+      uploadTask.on('state_changed', (snapshot)=>{
+        // Observe state change events such as progress, pause, and resume
+        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+        var progress = (snapshot.bytesTransferred / snapshot.totalBytes);
+        this.setState({progress:progress})
+        console.log('Upload is ' + progress + '% done');
+        // switch (snapshot.state) {
+        //   case firebaseClient.storage.TaskState.PAUSED: // or 'paused'
+        //     console.log('Upload is paused');
+        //     break;
+        //   case firebaseClient.storage.TaskState.RUNNING: // or 'running'
+        //     console.log('Upload is running');
+        //     break;
+        // }
+      }, function(error) {
+        // Handle unsuccessful uploads
+      }, ()=> {
+        // Handle successful uploads on complete
+        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+        uploadTask.snapshot.ref.getDownloadURL().then((downloadURL)=> {
+          console.log('File available at', downloadURL);
+          blob.close();
+          this.setState({dpurl:downloadURL,dpupload:false})
+        });
+      })
     
       // We're done with the blob, close and release it
-      blob.close();
-    
-      return await snapshot.ref.getDownloadURL();
     }
     
 
@@ -145,10 +172,8 @@ export default class Profile extends Component {
     
         if (!result.cancelled) {
         //   this.setState({ image: result.uri });
-        const dp = await this.uploadImageAsync(result.uri)
-        // this.updateimageurl()
-        this.setState({dpurl:dp})
-        alert(dp)
+        this.uploadImageAsync(result.uri)
+        
         }
       };
    
@@ -189,6 +214,15 @@ export default class Profile extends Component {
             >
                 <Image source={{uri:this.state.dpurl}} style={{width:300,height:300, margin:0}}/>
             </Overlay>
+            {
+              this.state.dpupload ?
+            <View style={styles.progressBar}>
+              <Progress.Bar progress={this.state.progress} width={200} />
+              <Text>{(this.state.progress*100).toFixed(2)}%</Text>
+            </View>
+            :
+            null
+            }
           <View style = {styles.namefield}>
             <Text style = {styles.nametext}>{this.state.name}</Text>
             {
@@ -325,7 +359,7 @@ export default class Profile extends Component {
           </View>
           <View style = {styles.galleryedit}>
             <TouchableOpacity style = {styles.galleryeditbtn}>
-              <Text style={styles.galleryeditbtntext}>Edit Public Gallery</Text>
+              <Text style={styles.galleryeditbtntext}>Edit Public Gallery {this.state.progress}</Text>
             </TouchableOpacity>
           </View>
           <View style = {{justifyContent:'center',paddingVertical:15,paddingLeft:10, borderBottomWidth:0.5,borderBottomColor:'#af4'}}>
@@ -354,6 +388,12 @@ export default class Profile extends Component {
         width:'100%',
         height:100,
         marginVertical: 10,
+    },
+    progressBar:{
+      flexGrow:1,
+      flexDirection:'column',
+      alignItems:'center',
+      paddingVertical:10,
     },
     nametext:{
         fontSize:30,
