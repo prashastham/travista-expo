@@ -9,12 +9,14 @@ import Storage from '../../local/Storage';
 import firebaseClient from '../../local/FirebaseClient';
 import Colors from '../../constants/Colors';
 import Post from '../../elements/Post';
+import HeaderIcon from "../../components/HeaderIcon";
 
 export default class Profile extends Component {
  
     static navigationOptions = {
         title: "Profile",
         headerTintColor:Colors.stackHeaderTintColor,
+        headerLeft:<HeaderIcon/>
       };
       
     constructor(props) {
@@ -326,9 +328,10 @@ export default class Profile extends Component {
               <Text style={styles.galleryeditbtntext}>Edit Public Gallery</Text>
             </TouchableOpacity>
           </View>
-          
-            <Post/>
-          
+          <View style = {{justifyContent:'center',paddingVertical:15,paddingLeft:10, borderBottomWidth:0.5,borderBottomColor:'#af4'}}>
+            <Text style={{fontSize:20,fontWeight:'500',}}>My Memories</Text>
+          </View>
+          <Post/>
         </ScrollView>
         </View>    
       );
