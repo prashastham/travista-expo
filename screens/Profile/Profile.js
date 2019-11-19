@@ -250,7 +250,7 @@ export default class Profile extends Component {
               type = 'material'
               color = '#4ac959'
               containerStyle = {styles.menuicon}
-              onPress={() => this.props.navigation.navigate('EditProfile')}
+              onPress={() => this.props.navigation.navigate('EditProfile',this.state)}
             />
             <Icon
               raised
