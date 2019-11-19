@@ -149,7 +149,6 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     padding: 25,
-    width: 300,
     minWidth: "100%"
   }
 });
