@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
 import Colors from '../../constants/Colors';
 import { Button , Overlay, Input} from 'react-native-elements';
 
@@ -9,20 +9,74 @@ export default class EditProfile extends Component {
       title:'Edit Profile',
       headerTintColor:Colors.stackHeaderTintColor,
   }
+
+  current_data = this.props.navigation.state.params
   constructor(props) {
     super(props);
     this.state = {
-      name:'Lahiru'
+      accessToken:this.current_data.id,
+      name:this.current_data.name,
+      email:this.current_data.email,
+      hometown:this.current_data.hometown,
+      from:this.current_data.from,
+      country:this.current_data.country,
+      interest:this.current_data.interest,
+      telenumber:this.current_data.telenumber,
+      bio:this.current_data.bio,
+      loading:false
     };
     
   }
-  current_data = this.props.navigation.state.params
+
+  goback=(props)=>{
+    this.props.navigation.goBack()
+  }
 
   save(){
-    alert('hello')
+    this.setState({loading:true});
+    const url = 'https://us-central1-travista-de863.cloudfunctions.net/app/api_app/profileupdate'
+    const data = {
+      accessToken:this.state.accessToken,
+      name:this.state.name,
+      email:this.state.email,
+      hometown:this.state.hometown,
+      from:this.state.from,
+      country:this.state.country,
+      interest:this.state.interest,
+      telenumber:this.state.telenumber,
+      bio:this.state.bio,
+    }
+    
+    fetch(url,{
+      method:'POST',
+      headers: { 
+        'Accept': 'application/json',
+         'Content-Type': 'application/json' 
+      },
+      body:JSON.stringify(data)
+    })
+    .then((res => res.json()))
+    .then(res =>{
+      console.log(res)
+      this.setState({loading:false});
+      this.goback();
+    })
+    .catch(error=>{
+      console.log('There is some problem in your fetch operation'+error.message)
+      throw error
+    })
   }
 
   render() {
+    if(this.state.loading) {
+    return(
+      <ActivityIndicator
+        size={"large"}
+        style={styles.activityIndicator}
+      />
+    )
+    }
+    else{
     return (
       <ScrollView>
         <View style={styles.saveContainer}>
@@ -38,68 +92,78 @@ export default class EditProfile extends Component {
         <View style={styles.editField}>
           <Input
             label='Name :'
-            value={this.current_data.name}
+            value={this.state.name}
             leftIcon={{ type: 'material', name: 'account-circle', containerStyle:{marginRight:10} }}
+            onChangeText={text => this.setState({name:text}).bind()}
           />
         </View>
         <View style={styles.editField}>
           <Input
             label='E-Mail :'
-            value={this.current_data.email}
+            value={this.state.email}
             leftIcon={{ type: 'material', name: 'email', containerStyle:{marginRight:10} }}
+            onChangeText={text => this.setState({email:text}).bind()}
           />
         </View>
         <View style={styles.editField}>
           <Input
             label='Hometown :'
-            value={this.current_data.hometown}
+            value={this.state.hometown}
             leftIcon={{ type: 'material', name: 'room', containerStyle:{marginRight:10} }}
+            onChangeText={text => this.setState({hometown:text}).bind()}
           />
         </View>
         <View style={styles.editField}>
           <Input
             label='From :'
-            value={this.current_data.from}
+            value={this.state.from}
             leftIcon={{ type: 'material', name: 'room', containerStyle:{marginRight:10} }}
+            onChangeText={text => this.setState({from:text}).bind()}
           />
         </View>
         <View style={styles.editField}>
           <Input
             label='Country :'
-            value={this.current_data.country}
+            value={this.state.country}
             leftIcon={{ type: 'material', name: 'room', containerStyle:{marginRight:10} }}
+            onChangeText={text => this.setState({country:text}).bind()}
           />
         </View>
         <View style={styles.editField}>
           <Input
             label='Interest :'
-            value={this.current_data.interest}
+            value={this.state.interest}
             leftIcon={{ type: 'material', name: 'pool', containerStyle:{marginRight:10} }}
+            onChangeText={text => this.setState({interest:text}).bind()}
           />
         </View>
         <View style={styles.editField}>
           <Input
             label='Worksin :'
-            value={this.current_data.worksin}
+            value={this.state.worksin}
             leftIcon={{ type: 'material', name: 'work', containerStyle:{marginRight:10} }}
+            onChangeText={text => this.setState({worksin:text}).bind()}
           />
         </View>   
         <View style={styles.editField}>
           <Input
             label='Telenumber :'
-            value={this.current_data.telenumber}
+            value={this.state.telenumber}
             leftIcon={{ type: 'material', name: 'phone', containerStyle:{marginRight:10} }}
+            onChangeText={text => this.setState({telenumber:text}).bind()}
           />
         </View> 
         <View style={styles.editField}>
           <Input
             label='Bio :'
-            value={this.current_data.bio}
+            value={this.state.bio}
             leftIcon={{ type: 'material', name: 'assignment', containerStyle:{marginRight:10} }}
+            onChangeText={text => this.setState({bio:text}).bind()}
           />
         </View> 
       </ScrollView>
     );
+    }
   }
 }
 
@@ -131,4 +195,9 @@ const styles = StyleSheet.create({
   editInput:{
 
   },
+  activityIndicator:{
+    flex:1,
+    justifyContent:'center',
+    alignItems:'center'
+  }
 })
