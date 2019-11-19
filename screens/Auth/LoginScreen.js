@@ -8,7 +8,6 @@ import {
   Image,
   Text,
   ScrollView,
-  SafeAreaView,
   KeyboardAvoidingView
 } from "react-native";
 import { Button, Input } from "react-native-elements";
@@ -18,7 +17,7 @@ import { LinearGradient } from "expo-linear-gradient";
 
 const LoginScreen = props => {
   return (
-    <SafeAreaView style={styles.container}>
+    <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
       <ScrollView>
         {/* style={styles.container} */}
         <View style={styles.intro}>
@@ -119,7 +118,7 @@ const LoginScreen = props => {
           </LinearGradient>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -146,13 +145,12 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     padding: 10,
-    widht: 300,
     minWidth: "90%"
   },
   inputContainer: {
     padding: 25,
     width: 300,
-    minWidth: "90%"
+    minWidth: "100%"
   }
 });
 

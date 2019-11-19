@@ -4,18 +4,26 @@ import {
   Text,
   View,
   ScrollView,
-  SafeAreaView,
   KeyboardAvoidingView,
   Dimensions
 } from "react-native";
 import { Button, Input } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { LinearGradient } from "expo-linear-gradient";
+import { useDispatch } from "react-redux";
+
 import Colors from "../../constants/Colors";
+import * as authActions from "../../redux/action/auth";
 
 const SignupScreen = props => {
+  // const dispatch = useDispatch();
+
+  // const signupHandler = () =>{
+  //   dispatch(authActions.signup);
+  // };
+
   return (
-    <SafeAreaView style={styles.container}>
+    <KeyboardAvoidingView style={styles.container} behavior="height" enabled>
       <ScrollView>
         <View>
           <View style={styles.inputContainer}>
@@ -121,7 +129,7 @@ const SignupScreen = props => {
           </LinearGradient>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -135,17 +143,17 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
+    width: Dimensions.get("window").width,
     maxHeight: Dimensions.get("screen").height
   },
   buttonContainer: {
     padding: 10,
-    widht: 300,
     minWidth: "90%"
   },
   inputContainer: {
     padding: 25,
     width: 300,
-    minWidth: "90%"
+    minWidth: "100%"
   }
 });
 

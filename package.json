@@ -9,6 +9,7 @@
     "test": "jest --watchAll"
   },
   "jest": {
+    "verbose": true,
     "preset": "jest-expo"
   },
   "dependencies": {

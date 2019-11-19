@@ -115,8 +115,8 @@ const styles = StyleSheet.create({
   },
   postContainer: {
     flexDirection: "row",
-    Width: 400,
-    Width: 300,
+    width: 400,
+    width: 300,
     maxHeight: Dimensions.get("screen").height,
     maxWidth: Dimensions.get("screen").width * 0.5,
     justifyContent: "center",
