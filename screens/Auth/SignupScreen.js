@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useReducer, useCallback, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -15,17 +15,96 @@ import { useDispatch } from "react-redux";
 import Colors from "../../constants/Colors";
 import * as authActions from "../../redux/action/auth";
 
+import firebase from "../../local/FirebaseClient";
+
+// const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
+
+// const formReducer = (state, action) => {
+//   if (action.type === FORM_INPUT_UPDATE) {
+//     const updateValues = {
+//       ...state.inputValues,
+//       [action.input]: action.value
+//     };
+
+//     const updatedValidities = {
+//       ...state.inputValidities,
+//       [action.input]: action.isValid
+//     };
+
+//     let updatedFormIsValid = true;
+//     for (const key in updatedValidities) {
+//       updatedFormIsValid = updatedFormIsValid && updatedValidities[key];
+//     }
+//     return {
+//       formIsValid: updatedFormIsValid,
+//       inputValidities: updatedValidities,
+//       inputValues: updateValues
+//     };
+//   }
+//   return state;
+// };
+
 const SignupScreen = props => {
+  const [email, updateEmail] = React.useState("");
+  const [password, updatePassword] = useState("");
+  const [conf_password, updateConfPassword] = useState("");
+  const [errormsg, setError] = useState(null);
+
+  const handleSignUp = () => {
+    if (password == conf_password) {
+      firebase
+        .auth()
+        .createUserWithEmailAndPassword(email, password)
+        .catch(errormsg => setError(errormsg.message));
+    } else {
+      setError("Password do not match");
+    }
+  };
   // const dispatch = useDispatch();
 
-  // const signupHandler = () =>{
-  //   dispatch(authActions.signup);
+  // const [formState, dispatchFormState] = useReducer(formReducer, {
+  //   inputValues: {
+  //     email: "",
+  //     password: "",
+  //     conf_password: ""
+  //   },
+  //   inputValidities: {
+  //     email: false,
+  //     password: false,
+  //     conf_password: false
+  //   },
+  //   formIsValid: false
+  // });
+
+  // const signupHandler = () => {
+  //   dispatch(
+  //     authActions.signup(
+  //       formState.inputValues.email,
+  //       formState.inputValues.password
+  //     )
+  //   );
   // };
+
+  //used to store values of onInputChange of the Inputs
+  // const inputChangeHandler = useCallback(
+  //   (inputIdentifier, inputValue, inputValidity) => {
+  //     dispatchFormState({
+  //       type: FORM_INPUT_UPDATE,
+  //       value: inputValue,
+  //       isValid: inputValidity,
+  //       input: inputIdentifier
+  //     });
+  //   },
+  //   [dispatchFormState]
+  // );
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior="height" enabled>
       <ScrollView>
         <View>
+          <View style={styles.errorMsg}>
+            {errormsg && <Text style={styles.error}>{errormsg}</Text>}
+          </View>
           <View style={styles.inputContainer}>
             <Input
               id="email"
@@ -41,8 +120,8 @@ const SignupScreen = props => {
               email
               required
               autoCapitalize="none"
-              errorMessage="Enter valid E-Mail address"
-              errorStyle={Colors.errorText}
+              onChangeText={text => updateEmail(text)}
+              value={email}
             />
           </View>
           <View style={styles.inputContainer}>
@@ -61,13 +140,13 @@ const SignupScreen = props => {
               autoCapitalize="none"
               required
               minLength={6}
-              errorMessage="Enter valid password"
-              errorStyle={Colors.errorText}
+              onChangeText={text => updatePassword(text)}
+              value={password}
             />
           </View>
           <View style={styles.inputContainer}>
             <Input
-              id="password"
+              id="conf_password"
               label="Re-Type Password"
               keyboardType="default"
               secureTextEntry
@@ -81,16 +160,12 @@ const SignupScreen = props => {
               autoCapitalize="none"
               required
               minLength={6}
-              errorMessage="Enter valid password"
-              errorStyle={Colors.errorText}
+              onChangeText={text => updateConfPassword(text)}
+              value={conf_password}
             />
           </View>
           <View style={styles.buttonContainer}>
-            <Button
-              title="Sign Up"
-              type="outline"
-              onPress={() => props.navigation.navigate({ routeName: "App" })}
-            />
+            <Button title="Sign Up" type="outline" onPress={handleSignUp} />
           </View>
         </View>
         <View style={styles.buttonContainer}>
@@ -146,9 +221,21 @@ const styles = StyleSheet.create({
     width: Dimensions.get("window").width,
     maxHeight: Dimensions.get("screen").height
   },
+  errorMsg: {
+    height: 72,
+    alignItems: "center",
+    justifyContent: "center",
+    marginHorizontal: 30
+  },
+  error: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: "red",
+    textAlign: "center"
+  },
   buttonContainer: {
     padding: 10,
-    minWidth: "90%"
+    minWidth: "100%"
   },
   inputContainer: {
     padding: 25,

@@ -10,15 +10,12 @@ import loginReducer from "./redux/reducer/login";
 
 import AppNavigator from "./navigation/AppNavigator";
 
-import login from "./redux/reducer/login";
 import postsReducer from "./redux/reducer/posts";
 //import firebase from "firebase";
 //import { firebaseConfig } from "./firebaseConfig";
 //firebase.initializeApp(firebaseConfig);
-import firebase from "./local/FirebaseClient";
 
 const rootReducer = combineReducers({
-  login: login,
   posts: postsReducer
 });
 let store = createStore(rootReducer);

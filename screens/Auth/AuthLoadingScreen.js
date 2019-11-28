@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { Component } from "react";
 import {
   StyleSheet,
   Text,
@@ -6,19 +6,27 @@ import {
   ActivityIndicator,
   StatusBar
 } from "react-native";
-
+import firebase from "../../local/FirebaseClient";
 // import firebase from "firebase";
 
-const AuthLoadingScreen = () => {
-  return (
-    <View style={styles.container}>
-      <View style={{ padding: 15 }}>
-        <ActivityIndicator size="large" color="#ccc" />
+class AuthLoadingScreen extends React.Component {
+  componentDidMount() {
+    firebase.auth().onAuthStateChanged(user => {
+      this.props.navigation.navigate(user ? "App" : "Auth");
+    });
+  }
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <View style={{ padding: 15 }}>
+          <ActivityIndicator size="large" color="#ccc" />
+        </View>
+        <StatusBar barStyle="light-content" />
       </View>
-      <StatusBar barStyle="light-content" />
-    </View>
-  );
-};
+    );
+  }
+}
 
 AuthLoadingScreen.navigationOptions = {
   header: null
