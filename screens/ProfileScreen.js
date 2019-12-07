@@ -6,7 +6,7 @@ import EditProfile from './Profile/EditProfile';
 const ProfileStackNavigator = createStackNavigator(
   {
     Profile:Profile,
-    Friend:CreatePost,
+    CreatePost:CreatePost,
     EditProfile: EditProfile
   },
   { initialRouteName: "Profile" }

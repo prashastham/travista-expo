@@ -279,11 +279,11 @@ export default class Profile extends Component {
             <Icon
               raised
               size = {24}
-              name = 'people'
+              name = 'tab'
               type = 'material'
               color = '#4ac959'
               containerStyle = {styles.menuicon}
-              onPress={() => alert('create post')}
+              onPress={() => this.props.navigation.navigate('CreatePost')}
             />
             <Icon
               raised
