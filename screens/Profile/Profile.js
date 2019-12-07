@@ -1,7 +1,8 @@
 import React,{Component  } from "react";
-import { View,Text,YellowBox,StyleSheet,Platform,Dimensions,ScrollView,Image,SafeAreaView,Alert,TouchableOpacity,ImageBackground } from "react-native";
-import {Avatar,Icon,Overlay} from 'react-native-elements';
+import { View,Text,YellowBox,StyleSheet,Platform,Dimensions,ScrollView,Image,SafeAreaView,Alert,TouchableOpacity,PlatformOSType } from "react-native";
+import {Avatar,Icon,Overlay,Button} from 'react-native-elements';
 import {LinearGradient} from 'expo-linear-gradient';
+import Modal from 'react-native-modal';
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
@@ -46,6 +47,7 @@ export default class Profile extends Component {
       bio:'Hey there, this is about you. Say something shortly',
       visible:false,
       isOverlayVisible:false,
+      isModalVisible:false,
       progress:0,
       dpupload:false
     }
@@ -233,6 +235,46 @@ export default class Profile extends Component {
             }
             
           </View>
+          {/* ------------------------------------------------------------------------------------------------------ */}
+          <Modal
+          isVisible={this.state.isModalVisible}
+          onSwipeComplete={() => this.setState({isModalVisible: false})}
+          swipeDirection={['down']}
+          onBackButtonPress={() => this.setState({isModalVisible: false})}
+          onBackdropPress={() => this.setState({isModalVisible: false})}
+          style={styles.moreOptionModal}
+          >
+            <View style={styles.modalContent}>
+              <View style = {styles.modalContentRow}>
+                <Icon
+                  name = {PlatformOSType === 'ios'? 'mail':'email' }
+                  type = {PlatformOSType === 'ios'? 'ionicon':'material' }
+                  size = {30}
+                  color = '#ccc'
+                />
+                <Text style={styles.modalContentRowText}>Change e-mail</Text>
+              </View>
+              <View style = {styles.modalContentRow}>
+                <Icon
+                  name = {PlatformOSType === 'ios'? 'log-out':'trending-flat' }
+                  type = {PlatformOSType === 'ios'? 'ionicon':'material' }
+                  size = {30}
+                  color = '#000'
+                />
+                <Text style={styles.modalContentRowText}>Log Out</Text>
+              </View>
+              <View style = {styles.modalContentRow}>
+                <Icon
+                  name = {'delete' }
+                  type = {PlatformOSType === 'ios'? 'ionicon':'material' }
+                  size = {30}
+                  color = '#f00'
+                />
+                <Text style={styles.modalContentRowText}>Delete Account</Text>
+              </View>
+            </View>
+          </Modal>
+          {/* ------------------------------------------------------------------------------------------------------ */}
           <View style = {styles.menufield}>
             <Icon
               raised
@@ -241,7 +283,7 @@ export default class Profile extends Component {
               type = 'material'
               color = '#4ac959'
               containerStyle = {styles.menuicon}
-              onPress={() => this.props.navigation.navigate('Friend')}
+              onPress={() => alert('create post')}
             />
             <Icon
               raised
@@ -259,7 +301,7 @@ export default class Profile extends Component {
               type = 'material'
               color = '#4ac959'
               containerStyle = {styles.menuicon}
-              onPress={() => Actions.changeemail()}
+              onPress={() => {this.setState({isModalVisible:true})}}
             />
           </View>
           <View style = {styles.datacontainer}>
@@ -533,5 +575,33 @@ export default class Profile extends Component {
       color:'#00f',
       fontSize:14,
       fontWeight:'bold',
-    }
+    },
+    moreOptionModal:{
+      justifyContent:'flex-end',
+      margin:0,
+    },
+    modalContent:{
+      backgroundColor: 'white',
+      padding: 22,
+      flexDirection:'column',
+      justifyContent: 'flex-start',
+      alignItems: 'center',
+      borderRadius: 4,
+      borderColor: 'rgba(0, 0, 0, 0.1)',
+    },
+    modalContentRow:{
+      flexDirection:'row',
+      justifyContent:'flex-start',
+      alignItems: 'center',
+      width:'100%',
+      height:65,
+      // borderBottomWidth:1,
+      // borderBottomColor:'#ccc'
+    },
+    modalContentRowText:{
+      flexGrow:1,
+      fontSize:17,
+      fontWeight:'300',
+      marginLeft:10,
+    },
 });
