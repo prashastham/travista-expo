@@ -33,7 +33,7 @@ export default class Profile extends Component {
    
     }
     state = {
-      id:'1234567',
+      id:'1234',
       editable:'true', //this for identify own account. not still use!
       email:'lahirupathum1223@gmail.com',
       name:'Lahiru Pathum',

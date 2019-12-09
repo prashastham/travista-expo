@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, ActivityIndicator, Alert } from 'react-native';
 import Colors from '../../constants/Colors';
 import { Button , Overlay, Input} from 'react-native-elements';
 
@@ -21,6 +21,7 @@ export default class EditProfile extends Component {
       from:this.current_data.from,
       country:this.current_data.country,
       interest:this.current_data.interest,
+      worksin:this.current_data.worksin,
       telenumber:this.current_data.telenumber,
       bio:this.current_data.bio,
       loading:false
@@ -34,7 +35,7 @@ export default class EditProfile extends Component {
 
   save(){
     this.setState({loading:true});
-    const url = 'https://us-central1-travista-de863.cloudfunctions.net/app/api_app/profileupdate'
+    const url = 'https://us-central1-travista-chat.cloudfunctions.net/app/api_app/profileupdate'
     const data = {
       accessToken:this.state.accessToken,
       name:this.state.name,
@@ -43,10 +44,11 @@ export default class EditProfile extends Component {
       from:this.state.from,
       country:this.state.country,
       interest:this.state.interest,
+      worksin:this.state.worksin,
       telenumber:this.state.telenumber,
       bio:this.state.bio,
     }
-    
+    console.log(data)
     fetch(url,{
       method:'POST',
       headers: { 
@@ -63,7 +65,17 @@ export default class EditProfile extends Component {
     })
     .catch(error=>{
       console.log('There is some problem in your fetch operation'+error.message)
-      throw error
+      if(error.message === 'Network request failed')
+      {
+        Alert.alert(
+          '',
+          'Connection faild. Try again later.',
+          [
+            {text: 'OK', onPress: () => {this.goback()}},
+          ],
+          {cancelable: false},
+        );
+      }
     })
   }
 
@@ -86,7 +98,7 @@ export default class EditProfile extends Component {
             type='outline'
             raised={true}
             buttonStyle={styles.saveButton}
-            onPress={()=>this.save()}
+            onPress={this.save.bind(this)}
           />
         </View>
         <View style={styles.editField}>
@@ -94,7 +106,7 @@ export default class EditProfile extends Component {
             label='Name :'
             value={this.state.name}
             leftIcon={{ type: 'material', name: 'account-circle', containerStyle:{marginRight:10} }}
-            onChangeText={text => this.setState({name:text}).bind()}
+            onChangeText={text => this.setState({name:text})}
           />
         </View>
         <View style={styles.editField}>
@@ -102,7 +114,7 @@ export default class EditProfile extends Component {
             label='E-Mail :'
             value={this.state.email}
             leftIcon={{ type: 'material', name: 'email', containerStyle:{marginRight:10} }}
-            onChangeText={text => this.setState({email:text}).bind()}
+            onChangeText={text => this.setState({email:text})}
           />
         </View>
         <View style={styles.editField}>
@@ -110,7 +122,7 @@ export default class EditProfile extends Component {
             label='Hometown :'
             value={this.state.hometown}
             leftIcon={{ type: 'material', name: 'room', containerStyle:{marginRight:10} }}
-            onChangeText={text => this.setState({hometown:text}).bind()}
+            onChangeText={text => this.setState({hometown:text})}
           />
         </View>
         <View style={styles.editField}>
@@ -118,7 +130,7 @@ export default class EditProfile extends Component {
             label='From :'
             value={this.state.from}
             leftIcon={{ type: 'material', name: 'room', containerStyle:{marginRight:10} }}
-            onChangeText={text => this.setState({from:text}).bind()}
+            onChangeText={text => this.setState({from:text})}
           />
         </View>
         <View style={styles.editField}>
@@ -126,7 +138,7 @@ export default class EditProfile extends Component {
             label='Country :'
             value={this.state.country}
             leftIcon={{ type: 'material', name: 'room', containerStyle:{marginRight:10} }}
-            onChangeText={text => this.setState({country:text}).bind()}
+            onChangeText={text => this.setState({country:text})}
           />
         </View>
         <View style={styles.editField}>
@@ -134,7 +146,7 @@ export default class EditProfile extends Component {
             label='Interest :'
             value={this.state.interest}
             leftIcon={{ type: 'material', name: 'pool', containerStyle:{marginRight:10} }}
-            onChangeText={text => this.setState({interest:text}).bind()}
+            onChangeText={text => this.setState({interest:text})}
           />
         </View>
         <View style={styles.editField}>
@@ -142,7 +154,7 @@ export default class EditProfile extends Component {
             label='Worksin :'
             value={this.state.worksin}
             leftIcon={{ type: 'material', name: 'work', containerStyle:{marginRight:10} }}
-            onChangeText={text => this.setState({worksin:text}).bind()}
+            onChangeText={text => this.setState({worksin:text})}
           />
         </View>   
         <View style={styles.editField}>
@@ -150,7 +162,7 @@ export default class EditProfile extends Component {
             label='Telenumber :'
             value={this.state.telenumber}
             leftIcon={{ type: 'material', name: 'phone', containerStyle:{marginRight:10} }}
-            onChangeText={text => this.setState({telenumber:text}).bind()}
+            onChangeText={text => this.setState({telenumber:text})}
           />
         </View> 
         <View style={styles.editField}>
@@ -158,7 +170,7 @@ export default class EditProfile extends Component {
             label='Bio :'
             value={this.state.bio}
             leftIcon={{ type: 'material', name: 'assignment', containerStyle:{marginRight:10} }}
-            onChangeText={text => this.setState({bio:text}).bind()}
+            onChangeText={text => this.setState({bio:text})}
           />
         </View> 
       </ScrollView>
