@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
     alignItems:'center',
     paddingVertical: 10,
     paddingHorizontal: 20,
-    marginBottom:50
+    marginBottom:20,
   },
   saveButton:{
     width:70,

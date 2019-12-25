@@ -110,7 +110,8 @@ export default class Profile extends Component {
         uploadTask.snapshot.ref.getDownloadURL().then((downloadURL)=> {
           console.log('File available at', downloadURL);
           blob.close();
-          this.setState({dpurl:downloadURL,dpupload:false})
+          this.setState({dpurl:downloadURL,dpupload:false,progress:0});
+          this.updateimageurl();
         });
       })
     
@@ -120,37 +121,34 @@ export default class Profile extends Component {
 
     //-------------------------------------------------------------------------
   
-  // updateimageurl = () =>{
-  //   const url = 'https://ireshd-7df6e.firebaseapp.com/api/update/'
-  //   const updateData = {
-  //     update:'dpurl',
-  //     value:this.state.dpurl,
-  //     id:this.state.id
-  //   }
-
-  //   fetch(url,{
-  //     method:'POST',
-  //     headers: { 
-  //       'Accept': 'application/json',
-  //        'Content-Type': 'application/json' 
-  //     },
-  //     body:JSON.stringify(updateData)
-  //   })
-  //   .then((res => res.json()))
-  //   .then((res) =>{
-  //     if(res.error === 'false')
-  //     {
-  //       Storage.removeItem('dpurl');
-  //       Storage.setItem('dpurl',{value:res.dpurl, id:1});
-  //       this.setState({visible:false,dpurl:res.dpurl});
-  //     }
-  //     else{
-  //       this.setState({visible:false});
-  //       alert(res.msg)
-  //     }
-      
-  //   })
-  // }
+  updateimageurl = () =>{
+   const url = 'https://us-central1-travista-chat.cloudfunctions.net/app/api_app/profileupdate'
+    const data = {
+      accessToken:this.state.id,
+      dpurl:this.state.dpurl
+    }
+    console.log(data)
+    fetch(url,{
+      method:'POST',
+      headers: { 
+        'Accept': 'application/json',
+         'Content-Type': 'application/json' 
+      },
+      body:JSON.stringify(data)
+    })
+    .then((res => res.json()))
+    .then(res =>{
+      console.log(res)
+      this.setState({loading:false});
+    })
+    .catch(error=>{
+      console.log('There is some problem in your fetch operation'+error.message)
+      if(error.message === 'Network request failed')
+      {
+        alert('Connection faild. Try again later.')
+      }
+    })
+  }
 
     getPermissionAsync = async () => {
         if (Constants.platform.ios) {
