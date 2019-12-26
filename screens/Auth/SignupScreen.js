@@ -104,9 +104,11 @@ const SignupScreen = props => {
     <KeyboardAvoidingView style={styles.container} behavior="height" enabled>
       <ScrollView>
         <View>
-          <View style={styles.errorMsg}>
-            {errormsg && <Text style={styles.error}>{errormsg}</Text>}
-          </View>
+          {errormsg && 
+            <View style={styles.errorMsg}>
+              <Text style={styles.error}>{errormsg}</Text>
+            </View>
+          }
           <View style={styles.inputContainer}>
             <Input
               id="email"
@@ -233,7 +235,8 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: "600",
     color: "red",
-    textAlign: "center"
+    textAlign: "center",
+    justifyContent:'center'
   },
   buttonContainer: {
     padding: 10,
