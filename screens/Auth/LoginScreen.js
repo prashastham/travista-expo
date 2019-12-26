@@ -16,6 +16,7 @@ import Colors from "../../constants/Colors";
 import { LinearGradient } from "expo-linear-gradient";
 
 import firebase from "../../local/FirebaseClient";
+import Storage from '../../local/Storage';
 
 const LoginScreen = props => {
   const [email, updateEmail] = React.useState("");
@@ -26,6 +27,7 @@ const LoginScreen = props => {
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
+      .then(user=>{console.log(user.user); Storage.setItem('accessToken',user.user.uid)})
       .catch(error => setError(error.message));
   };
 

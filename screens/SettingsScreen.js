@@ -9,7 +9,7 @@ import {
 import firebase from '../local/FirebaseClient';
 import Storage from '../local/Storage';
 
-const Logout = props=>{
+const Logout = props =>{
   firebase.auth().signOut()
   .then(async ()=>{
     tkm = await Storage.getItem('accessToken')
@@ -17,7 +17,7 @@ const Logout = props=>{
     Storage.clear()
     tk = await Storage.getItem('accessToken')
     console.log(tk)
-    props.navigation.navigate({ routeName: "Auth" })
+    props.navigation.navigate({ routeName: "Loading" })
   })
   .catch(error=>{console.log(error)})
 }
@@ -26,7 +26,7 @@ const SettingsScreen = props => {
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        onPress={() => Logout()}
+        onPress={() => Logout(props)}
       >
         <View style={styles.textList}>
           <Text style={{ fontSize: 16 }}>Logout</Text>
