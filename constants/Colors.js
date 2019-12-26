@@ -10,7 +10,7 @@ export default {
   errorText: "#fff",
   warningBackground: "#EAEB5E",
   warningText: "#666804",
-  stackHeaderTintColor: "#005f44",
+  stackHeaderTintColor: "#2f95dc",
 
   noticeBackground: tintColor,
   noticeText: "#fff"

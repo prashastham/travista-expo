@@ -1,19 +1,18 @@
-import * as Firebase from 'firebase'
+import * as Firebase from "firebase";
 
 // Initialize Firebase
 const config = {
-  apiKey: "AIzaSyDQoOelslmiX_e1DhYV7UckfaIev5YXwrE",
-  authDomain: "travista-de863.firebaseapp.com",
-  databaseURL: "https://travista-de863.firebaseio.com",
-  projectId: "travista-de863",
-  storageBucket: "travista-de863.appspot.com",
-  messagingSenderId: "736893274288",
-  appId: "1:736893274288:web:f66314b0139ed4b5a01375",
-  measurementId: "G-E0X12ZGR03"
+  apiKey: "AIzaSyBv574Dpf-JhXuu6For9Z_jBaF_qtitSio",
+  authDomain: "travista-chat.firebaseapp.com",
+  databaseURL: "https://travista-chat.firebaseio.com",
+  projectId: "travista-chat",
+  storageBucket: "travista-chat.appspot.com",
+  messagingSenderId: "773160238273",
+  appId: "1:773160238273:web:cc371a3c1247dad93"
 };
 
 // export default !firebase.apps.length ? firebase.initializeApp(config) : firebase.app();
 
-const firebaseApp = Firebase.initializeApp(config)
+const firebaseApp = Firebase.initializeApp(config);
 
-export default firebaseApp
+export default firebaseApp;

@@ -9,6 +9,7 @@
     "test": "jest --watchAll"
   },
   "jest": {
+    "verbose": true,
     "preset": "jest-expo"
   },
   "dependencies": {
@@ -38,6 +39,7 @@
     "react-navigation": "^3.12.0",
     "react-navigation-tabs": "^2.5.6",
     "react-redux": "^7.1.3",
+    "react-thunk": "^1.0.0",
     "redux": "^4.0.4"
   },
   "devDependencies": {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import {
   StyleSheet,
@@ -8,7 +8,6 @@ import {
   Image,
   Text,
   ScrollView,
-  SafeAreaView,
   KeyboardAvoidingView
 } from "react-native";
 import { Button, Input } from "react-native-elements";
@@ -16,9 +15,22 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import Colors from "../../constants/Colors";
 import { LinearGradient } from "expo-linear-gradient";
 
+import firebase from "../../local/FirebaseClient";
+
 const LoginScreen = props => {
+  const [email, updateEmail] = React.useState("");
+  const [password, updatePassword] = useState("");
+  const [errormsg, setError] = useState(null);
+
+  const handleLogin = () => {
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .catch(error => setError(error.message));
+  };
+
   return (
-    <SafeAreaView style={styles.container}>
+    <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
       <ScrollView>
         {/* style={styles.container} */}
         <View style={styles.intro}>
@@ -36,6 +48,9 @@ const LoginScreen = props => {
           </ImageBackground>
         </View>
         <View>
+          <View style={styles.errorMsg}>
+            {errormsg && <Text style={styles.error}>{errormsg}</Text>}
+          </View>
           <View style={styles.inputContainer}>
             <Input
               id="email"
@@ -51,8 +66,8 @@ const LoginScreen = props => {
               email
               required
               autoCapitalize="none"
-              errorMessage="Enter valid E-Mail address"
-              errorStyle={Colors.errorText}
+              onChangeText={text => updateEmail(text)}
+              value={email}
             />
           </View>
           <View style={styles.inputContainer}>
@@ -71,16 +86,12 @@ const LoginScreen = props => {
               autoCapitalize="none"
               required
               minLength={6}
-              errorMessage="Enter valid password"
-              errorStyle={Colors.errorText}
+              onChangeText={text => updatePassword(text)}
+              value={password}
             />
           </View>
           <View style={styles.buttonContainer}>
-            <Button
-              title="Login"
-              type="outline"
-              onPress={() => props.navigation.navigate({ routeName: "App" })}
-            />
+            <Button title="Login" type="outline" onPress={handleLogin} />
           </View>
         </View>
         <View style={styles.buttonContainer}>
@@ -119,7 +130,7 @@ const LoginScreen = props => {
           </LinearGradient>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -144,15 +155,25 @@ const styles = StyleSheet.create({
     minWidth: "95%",
     minHeight: Dimensions.get("window").height * 0.4
   },
+  errorMsg: {
+    height: 72,
+    alignItems: "center",
+    justifyContent: "center",
+    marginHorizontal: 30
+  },
+  error: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: "red",
+    textAlign: "center"
+  },
   buttonContainer: {
     padding: 10,
-    width: 300,
-    minWidth: "90%"
+    minWidth: "100%"
   },
   inputContainer: {
     padding: 25,
-    width: 300,
-    minWidth: "90%"
+    minWidth: "100%"
   }
 });
 
