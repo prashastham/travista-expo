@@ -55,6 +55,7 @@ const SignupScreen = props => {
       firebase
         .auth()
         .createUserWithEmailAndPassword(email, password)
+        .then(()=>{alert('hello')})
         .catch(errormsg => setError(errormsg.message));
     } else {
       setError("Password do not match");
@@ -209,7 +210,7 @@ const SignupScreen = props => {
 };
 
 SignupScreen.navigationOptions = {
-  title: "Sign"
+  title: "Sign Up"
 };
 
 const styles = StyleSheet.create({

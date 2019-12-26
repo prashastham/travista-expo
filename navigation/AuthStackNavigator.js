@@ -11,7 +11,7 @@ const AuthStackNavigator = createStackNavigator(
     Login: LoginScreen,
     SignUp: SignupScreen
   },
-  { initialRouteName: "Login" }
+  { initialRouteName: "SignUp" }
 );
 
 export default AuthStackNavigator;
