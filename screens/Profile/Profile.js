@@ -278,12 +278,21 @@ export default class Profile extends Component {
             />
             <Icon
               raised
+<<<<<<< HEAD
               size={24}
               name="account-circle"
               type="material"
               color="#2f95dc"
               containerStyle={styles.menuicon}
               onPress={() => this.props.navigation.navigate("EditProfile")}
+=======
+              size = {24}
+              name = 'account-circle'
+              type = 'material'
+              color = '#4ac959'
+              containerStyle = {styles.menuicon}
+              onPress={() => this.props.navigation.navigate('EditProfile',this.state)}
+>>>>>>> 2cd294cbee556b4e49e4b29a184d8ec96d3b2172
             />
             <Icon
               raised
