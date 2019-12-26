@@ -16,6 +16,7 @@ import Colors from "../../constants/Colors";
 import * as authActions from "../../redux/action/auth";
 
 import firebase from "../../local/FirebaseClient";
+import Storage from '../../local/Storage';
 
 // const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
 
@@ -55,7 +56,7 @@ const SignupScreen = props => {
       firebase
         .auth()
         .createUserWithEmailAndPassword(email, password)
-        .then(()=>{alert('hello')})
+        .then(user=>{Storage.setItem("accessToken", user.uid)})
         .catch(errormsg => setError(errormsg.message));
     } else {
       setError("Password do not match");
