@@ -8,6 +8,8 @@ import {
 } from "react-native";
 import firebase from '../local/FirebaseClient';
 import Storage from '../local/Storage';
+import Colors from "../constants/Colors";
+import HeaderIcon  from '../components/HeaderIcon';
 
 const Logout = props =>{
   firebase.auth().signOut()
@@ -37,7 +39,9 @@ const SettingsScreen = props => {
 };
 
 SettingsScreen.navigationOptions = {
-  title: "Settings"
+  title: "Settings",
+  headerTintColor:Colors.stackHeaderTintColor,
+  headerLeft:<HeaderIcon/>
 };
 
 const styles = StyleSheet.create({

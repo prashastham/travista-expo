@@ -11,6 +11,7 @@ import {
 import { Card, Button, Avatar, Image } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Colors from "../constants/Colors";
+import HeaderIcon from "../components/HeaderIcon";
 
 import dummy_posts from "../dummy_data/dummy_posts";
 const posts = dummy_posts;
@@ -108,7 +109,9 @@ const HomeScreen = props => {
 };
 
 HomeScreen.navigationOptions = {
-  header: null
+  title: "Travista",
+  headerTintColor:Colors.stackHeaderTintColor,
+  headerLeft:<HeaderIcon/>
 };
 
 const styles = StyleSheet.create({
