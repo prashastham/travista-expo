@@ -3,6 +3,7 @@ import { View, Text, Image, StyleSheet} from 'react-native';
 import {Button} from 'react-native-elements';
 import firebase from '../../local/FirebaseClient';
 
+let interval;
 export default class VerifyScreen extends Component {
     static navigationOption = {
         header:'none'
@@ -10,9 +11,27 @@ export default class VerifyScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      verified:'false'
     };
   }
+  componentDidMount() {
+    interval = setInterval(() => {
 
+      firebase.auth().currentUser.reload();
+      let user = firebase.auth().currentUser;
+      console.log(user)
+      this.setState({verified:user.emailVerified})
+      if(user.emailVerified)
+      {
+        clearInterval(interval);
+        this.props.navigation.navigate('Loading');
+      }
+
+    }, 5000);
+  }
+  componentWillUnmount() {
+    clearInterval(interval);
+  }
   sendVerification()
   {
     const user = firebase.auth().currentUser;
@@ -20,7 +39,7 @@ export default class VerifyScreen extends Component {
   }
   goback=(props)=>{
     this.props.navigation.navigate('Auth')
-    
+
   }
 
   render() {
