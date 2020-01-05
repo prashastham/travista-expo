@@ -27,9 +27,36 @@ const LoginScreen = props => {
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
-      .then(user=>{console.log(user.user); Storage.setItem('accessToken',user.user.uid)})
+      .then(({user})=>{console.log(user); Storage.setItem('accessToken',user.uid); getuserdata(user.uid);}) 
       .catch(error => setError(error.message));
   };
+
+  const getuserdata = (accessToken) =>{
+    console.log(accessToken)
+   
+    const url = `https://us-central1-travista-chat.cloudfunctions.net/app/api/login?access=${accessToken}`
+    fetch(url,{
+      method:'GET',
+      headers: { 
+        'Accept': 'application/json',
+         'Content-Type': 'application/json' 
+      }
+    })
+    .then((res => res.json()))
+    .then(res =>{
+      Object.entries(res).forEach(([key, value]) => {
+        console.log(`${key} ${value}`);
+        Storage.setItem(key, value)
+    });
+    })
+    .catch(error=>{
+      console.log('There is some problem in your fetch operation'+error.message)
+      if(error.message === 'Network request failed')
+      {
+        alert('Check Your Connection.')
+      }
+    })
+  }
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>

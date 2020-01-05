@@ -38,8 +38,8 @@ export default class VerifyScreen extends Component {
     user.sendEmailVerification();
   }
   goback=(props)=>{
-    this.props.navigation.navigate('Auth')
-
+    const user = firebase.auth().currentUser;
+    user.delete();
   }
 
   render() {
