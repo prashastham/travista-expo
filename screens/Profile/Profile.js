@@ -33,18 +33,18 @@ export default class Profile extends Component {
    
     }
     state = {
-      id:'1234',
+      id:'',//1234
       editable:'true', //this for identify own account. not still use!
-      email:'lahirupathum1223@gmail.com',
-      name:'Lahiru Pathum',
-      hometown:'Yakkalamulla',
-      from:'Galle',
-      country:'Sri Lanaka',
-      interest:'Beach',
-      worksin:'Travista Group',
-      telenumber:'0776480429',
-      dpurl:'https://vignette4.wikia.nocookie.net/animal-jam-clans-1/images/7/75/Facepalm-cat-300x300.jpg/revision/latest?cb=20151223193525',
-      bio:'Hey there, this is about you. Say something shortly',
+      email:'',//lahirupathum1223@gmail.com
+      name:'',//Lahiru Pathum
+      hometown:'',//Yakkalamulla
+      from:'',//Galle
+      country:'',//Sri Lanaka
+      interest:'',//Beach
+      worksin:'',//Travista Group
+      telenumber:'',//0776480429
+      dpurl:'',//https://vignette4.wikia.nocookie.net/animal-jam-clans-1/images/7/75/Facepalm-cat-300x300.jpg/revision/latest?cb=20151223193525
+      bio:'',//Hey there, this is about you. Say something shortly
       visible:false,
       isOverlayVisible:false,
       isModalVisible:false,
@@ -52,20 +52,39 @@ export default class Profile extends Component {
       dpupload:false
     }
     async componentDidMount(){
-    //   let email = await Storage.getItem("email");
-    //   let name = await Storage.getItem("name");
-    //   let id = await Storage.getItem("id");
-    //   let telenumber = await Storage.getItem("telenumber");
-    //   let dpurl = await Storage.getItem('dpurl')
-    //   this.setState({
-    //       email:email.value,
-    //       name:name.value,
-    //       id:id.value,
-    //       telenumber:telenumber.value,
-    //       dpurl:dpurl.value,
-    //   })
+      this.willFocus = this.props.navigation.addListener('willFocus', async () => {
+        let email = await Storage.getItem("email");
+        let name = await Storage.getItem("name");
+        let id = await Storage.getItem("accessToken");
+        let telenumber = await Storage.getItem("telenumber");
+        let dpurl = await Storage.getItem('dpurl')
+        let bio = await Storage.getItem('bio')
+        let country = await Storage.getItem('country')
+        let from = await Storage.getItem('from')
+        let hometown = await Storage.getItem('hometown')
+        let interest = await Storage.getItem('interest')
+        let worksin = await Storage.getItem('worksin')
+        this.setState({
+            email:email,
+            name:name,
+            id:id,
+            telenumber:telenumber,
+            dpurl:dpurl,
+            bio:bio,
+            country:country,
+            from:from,
+            hometown:hometown,
+            interest:interest,
+            worksin:worksin,
+        })
+      });
     this.getPermissionAsync();
   }
+
+  componentWillUnmount() {
+    this.willFocus;
+  }
+
   // ------------------------------------------------------------------------
   uploadImageAsync = async uri => {
     this.setState({ dpupload: true });
@@ -146,6 +165,7 @@ export default class Profile extends Component {
     .then((res => res.json()))
     .then(res =>{
       console.log(res)
+      Storage.setItem('dpurl',this.state.dpurl)
       this.setState({loading:false});
     })
     .catch(error=>{
@@ -202,10 +222,10 @@ export default class Profile extends Component {
                 borderColor: "#fff"
               }}
               source={{
-                uri: this.state.dpurl //this.state.dpurl,
+                uri: this.state.dpurl===''?' ':this.state.dpurl //this.state.dpurl,
               }}
               onPress={() => {
-                this.setState({ isOverlayVisible: true });
+                this.setState({ isOverlayVisible: this.state.dpurl===''?false:true });
               }}
               editButton={{
                 name: "camera",
@@ -314,7 +334,7 @@ export default class Profile extends Component {
               type="material"
               color="#2f95dc"
               containerStyle={styles.menuicon}
-              onPress={() => this.props.navigation.navigate("EditProfile")}
+              onPress={() => this.props.navigation.navigate("EditProfile",this.state)}
             />
             <Icon
               raised

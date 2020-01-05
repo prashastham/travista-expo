@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, ScrollView, StyleSheet, ActivityIndicator, Alert } from 'react-native';
 import Colors from '../../constants/Colors';
 import { Button , Overlay, Input} from 'react-native-elements';
+import Storage from '../../local/Storage';
 
 export default class EditProfile extends Component {
 
@@ -61,6 +62,10 @@ export default class EditProfile extends Component {
     .then(res =>{
       console.log(res)
       this.setState({loading:false});
+      Object.entries(res).forEach(([key, value]) => {
+        console.log(`${key} ${value}`);
+        Storage.setItem(key, value)
+      });
       this.goback();
     })
     .catch(error=>{
