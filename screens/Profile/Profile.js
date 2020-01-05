@@ -409,6 +409,18 @@ export default class Profile extends Component {
                 <Text style={styles.datatext}>{this.state.email}</Text>
               </View>
             ) : null}
+            {this.state.telenumber !== "" ? (
+              <View style={styles.datafield}>
+                <Icon
+                  name="phone"
+                  type="material"
+                  color="#aaaaaa"
+                  containerStyle={styles.dataicon}
+                />
+                <Text style={styles.datalable}>Telephone </Text>
+                <Text style={styles.datatext}>{this.state.telenumber}</Text>
+              </View>
+            ) : null}
           </View>
           <View style={styles.profilegallerycontainer}>
             <View style={styles.subgallerycontainer}>
