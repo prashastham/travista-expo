@@ -11,6 +11,7 @@ import SettingsScreen from "../screens/SettingsScreen";
 import ChatListScreen from "../screens/Chat/ChatListScreen";
 import MapScreen from "../screens/MapScreen";
 import ProfileScreen from "../screens/ProfileScreen";
+import OtherProfileScreen from "../screens/Profile/OtherProfile";
 
 const config = Platform.select({
   web: { headerMode: "screen" },
@@ -19,7 +20,8 @@ const config = Platform.select({
 
 const HomeStack = createStackNavigator(
   {
-    Home: HomeScreen
+    Home: HomeScreen,
+    OtherProfile:OtherProfileScreen,
   },
   config
 );
@@ -38,9 +40,17 @@ HomeStack.path = "";
 
 const ProfileStack = createStackNavigator(
   {
-    Profiles: ProfileScreen
+    Profiles: {
+      screen:ProfileScreen,
+      navigationOptions: () => ({
+        header:null,
+      }),
+    },
+    OtherProfile:{
+      screen:OtherProfileScreen,
+    }
   },
-  {headerMode:'none'}
+  
 );
 
 ProfileStack.navigationOptions = {

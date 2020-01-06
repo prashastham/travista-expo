@@ -27,6 +27,10 @@ const HomeScreen = props => {
     setDate((hours % 12) + ":" + (min < 10 ? "0" + min : min) + " " + ampm);
   });
 
+  viewProfile=()=>{
+    props.navigation.navigate('OtherProfile',{accessToken:'4LSlL7BsdseSkIKi8BKGrVdTIE22'})
+  }
+
   return (
     
     <ScrollView contentOffset={{ x: 10, y: 10 }}> 
@@ -45,6 +49,7 @@ const HomeScreen = props => {
                     source={{ uri: u.avatar }}
                     rounded
                     PlaceholderContent={<ActivityIndicator />}
+                    onPress={()=>this.viewProfile()}
                   />
                 </View>
                 <View style={styles.user}>

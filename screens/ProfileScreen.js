@@ -7,7 +7,7 @@ const ProfileStackNavigator = createStackNavigator(
   {
     Profile:Profile,
     CreatePost:CreatePost,
-    EditProfile: EditProfile
+    EditProfile: EditProfile,
   },
   { initialRouteName: "Profile" }
 );

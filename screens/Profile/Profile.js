@@ -467,7 +467,7 @@ export default class Profile extends Component {
           >
             <Text style={{ fontSize: 20, fontWeight: "500" }}>My Memories</Text>
           </View>
-          <Post />
+          <Post navigation = {this.props.navigation}/>
         </ScrollView>
       </View>
     );
