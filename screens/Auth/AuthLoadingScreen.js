@@ -7,12 +7,11 @@ import {
   StatusBar
 } from "react-native";
 import firebase from "../../local/FirebaseClient";
-// import firebase from "firebase";
 
 class AuthLoadingScreen extends React.Component {
   componentDidMount() {
     firebase.auth().onAuthStateChanged(user => {
-      this.props.navigation.navigate(user ? "App" : "Auth");
+      this.props.navigation.navigate(user ? (user.emailVerified? "App":"Verify") : "Auth");
     });
   }
 
