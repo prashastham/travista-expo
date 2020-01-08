@@ -11,10 +11,11 @@ import {
   SafeAreaView,
   Alert,
   TouchableOpacity,
-  ImageBackground
+  PlatformOSType
 } from "react-native";
-import { Avatar, Icon, Overlay } from "react-native-elements";
+import { Avatar, Icon, Overlay, Button } from "react-native-elements";
 import { LinearGradient } from "expo-linear-gradient";
+import Modal from "react-native-modal";
 import * as ImagePicker from "expo-image-picker";
 import Constants from "expo-constants";
 import * as Permissions from "expo-permissions";
@@ -42,39 +43,61 @@ export default class Profile extends Component {
     ]);
   }
   state = {
-    id: "1234567",
+    id: "", //1234
     editable: "true", //this for identify own account. not still use!
-    email: "lahirupathum1223@gmail.com",
-    name: "Lahiru Pathum",
-    hometown: "Yakkalamulla",
-    from: "Galle",
-    country: "Sri Lanaka",
-    interest: "Beach",
-    worksin: "Travista Group",
-    telenumber: "0776480429",
-    dpurl:
-      "https://vignette4.wikia.nocookie.net/animal-jam-clans-1/images/7/75/Facepalm-cat-300x300.jpg/revision/latest?cb=20151223193525",
-    bio: "Hey there, this is about you. Say something shortly",
+    email: "", //lahirupathum1223@gmail.com
+    name: "", //Lahiru Pathum
+    hometown: "", //Yakkalamulla
+    from: "", //Galle
+    country: "", //Sri Lanaka
+    interest: "", //Beach
+    worksin: "", //Travista Group
+    telenumber: "", //0776480429
+    dpurl: "", //https://vignette4.wikia.nocookie.net/animal-jam-clans-1/images/7/75/Facepalm-cat-300x300.jpg/revision/latest?cb=20151223193525
+    bio: "", //Hey there, this is about you. Say something shortly
     visible: false,
     isOverlayVisible: false,
+    isModalVisible: false,
     progress: 0,
     dpupload: false
   };
   async componentDidMount() {
-    //   let email = await Storage.getItem("email");
-    //   let name = await Storage.getItem("name");
-    //   let id = await Storage.getItem("id");
-    //   let telenumber = await Storage.getItem("telenumber");
-    //   let dpurl = await Storage.getItem('dpurl')
-    //   this.setState({
-    //       email:email.value,
-    //       name:name.value,
-    //       id:id.value,
-    //       telenumber:telenumber.value,
-    //       dpurl:dpurl.value,
-    //   })
+    this.willFocus = this.props.navigation.addListener(
+      "willFocus",
+      async () => {
+        let email = await Storage.getItem("email");
+        let name = await Storage.getItem("name");
+        let id = await Storage.getItem("accessToken");
+        let telenumber = await Storage.getItem("telenumber");
+        let dpurl = await Storage.getItem("dpurl");
+        let bio = await Storage.getItem("bio");
+        let country = await Storage.getItem("country");
+        let from = await Storage.getItem("from");
+        let hometown = await Storage.getItem("hometown");
+        let interest = await Storage.getItem("interest");
+        let worksin = await Storage.getItem("worksin");
+        this.setState({
+          email: email,
+          name: name,
+          id: id,
+          telenumber: telenumber,
+          dpurl: dpurl,
+          bio: bio,
+          country: country,
+          from: from,
+          hometown: hometown,
+          interest: interest,
+          worksin: worksin
+        });
+      }
+    );
     this.getPermissionAsync();
   }
+
+  componentWillUnmount() {
+    this.willFocus;
+  }
+
   // ------------------------------------------------------------------------
   uploadImageAsync = async uri => {
     this.setState({ dpupload: true });
@@ -126,7 +149,8 @@ export default class Profile extends Component {
         uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
           console.log("File available at", downloadURL);
           blob.close();
-          this.setState({ dpurl: downloadURL, dpupload: false });
+          this.setState({ dpurl: downloadURL, dpupload: false, progress: 0 });
+          this.updateimageurl();
         });
       }
     );
@@ -134,37 +158,39 @@ export default class Profile extends Component {
     // We're done with the blob, close and release it
   };
 
-  // updateimageurl = () =>{
-  //   const url = 'https://ireshd-7df6e.firebaseapp.com/api/update/'
-  //   const updateData = {
-  //     update:'dpurl',
-  //     value:this.state.dpurl,
-  //     id:this.state.id
-  //   }
+  //-------------------------------------------------------------------------
 
-  //   fetch(url,{
-  //     method:'POST',
-  //     headers: {
-  //       'Accept': 'application/json',
-  //        'Content-Type': 'application/json'
-  //     },
-  //     body:JSON.stringify(updateData)
-  //   })
-  //   .then((res => res.json()))
-  //   .then((res) =>{
-  //     if(res.error === 'false')
-  //     {
-  //       Storage.removeItem('dpurl');
-  //       Storage.setItem('dpurl',{value:res.dpurl, id:1});
-  //       this.setState({visible:false,dpurl:res.dpurl});
-  //     }
-  //     else{
-  //       this.setState({visible:false});
-  //       alert(res.msg)
-  //     }
-
-  //   })
-  // }
+  updateimageurl = () => {
+    const url =
+      "https://us-central1-travista-chat.cloudfunctions.net/app/api_app/profileupdate";
+    const data = {
+      accessToken: this.state.id,
+      dpurl: this.state.dpurl
+    };
+    console.log(data);
+    fetch(url, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    })
+      .then(res => res.json())
+      .then(res => {
+        console.log(res);
+        Storage.setItem("dpurl", this.state.dpurl);
+        this.setState({ loading: false });
+      })
+      .catch(error => {
+        console.log(
+          "There is some problem in your fetch operation" + error.message
+        );
+        if (error.message === "Network request failed") {
+          alert("Connection faild. Try again later.");
+        }
+      });
+  };
 
   getPermissionAsync = async () => {
     if (Constants.platform.ios) {
@@ -211,10 +237,12 @@ export default class Profile extends Component {
                 borderColor: "#fff"
               }}
               source={{
-                uri: this.state.dpurl //this.state.dpurl,
+                uri: this.state.dpurl === "" ? " " : this.state.dpurl //this.state.dpurl,
               }}
               onPress={() => {
-                this.setState({ isOverlayVisible: true });
+                this.setState({
+                  isOverlayVisible: this.state.dpurl === "" ? false : true
+                });
               }}
               editButton={{
                 name: "camera",
@@ -266,15 +294,55 @@ export default class Profile extends Component {
               </Text>
             )}
           </View>
+          {/* ------------------------------------------------------------------------------------------------------ */}
+          <Modal
+            isVisible={this.state.isModalVisible}
+            onSwipeComplete={() => this.setState({ isModalVisible: false })}
+            swipeDirection={["down"]}
+            onBackButtonPress={() => this.setState({ isModalVisible: false })}
+            onBackdropPress={() => this.setState({ isModalVisible: false })}
+            style={styles.moreOptionModal}
+          >
+            <View style={styles.modalContent}>
+              <View style={styles.modalContentRow}>
+                <Icon
+                  name={PlatformOSType === "ios" ? "mail" : "email"}
+                  type={PlatformOSType === "ios" ? "ionicon" : "material"}
+                  size={30}
+                  color="#ccc"
+                />
+                <Text style={styles.modalContentRowText}>Change e-mail</Text>
+              </View>
+              <View style={styles.modalContentRow}>
+                <Icon
+                  name={PlatformOSType === "ios" ? "log-out" : "trending-flat"}
+                  type={PlatformOSType === "ios" ? "ionicon" : "material"}
+                  size={30}
+                  color="#000"
+                />
+                <Text style={styles.modalContentRowText}>Log Out</Text>
+              </View>
+              <View style={styles.modalContentRow}>
+                <Icon
+                  name={"delete"}
+                  type={PlatformOSType === "ios" ? "ionicon" : "material"}
+                  size={30}
+                  color="#f00"
+                />
+                <Text style={styles.modalContentRowText}>Delete Account</Text>
+              </View>
+            </View>
+          </Modal>
+          {/* ------------------------------------------------------------------------------------------------------ */}
           <View style={styles.menufield}>
             <Icon
               raised
               size={24}
-              name="people"
+              name="tab"
               type="material"
-              color="#2f95dc"
+              color="#4ac959"
               containerStyle={styles.menuicon}
-              onPress={() => this.props.navigation.navigate("Friend")}
+              onPress={() => this.props.navigation.navigate("CreatePost")}
             />
             <Icon
               raised
@@ -283,16 +351,20 @@ export default class Profile extends Component {
               type="material"
               color="#2f95dc"
               containerStyle={styles.menuicon}
-              onPress={() => this.props.navigation.navigate("EditProfile")}
+              onPress={() =>
+                this.props.navigation.navigate("EditProfile", this.state)
+              }
             />
             <Icon
               raised
               size={24}
               name="more-horiz"
               type="material"
-              color="#2f95dc"
+              color="#4ac959"
               containerStyle={styles.menuicon}
-              onPress={() => Actions.changeemail()}
+              onPress={() => {
+                this.setState({ isModalVisible: true });
+              }}
             />
           </View>
           <View style={styles.datacontainer}>
@@ -358,6 +430,18 @@ export default class Profile extends Component {
                 <Text style={styles.datatext}>{this.state.email}</Text>
               </View>
             ) : null}
+            {this.state.telenumber !== "" ? (
+              <View style={styles.datafield}>
+                <Icon
+                  name="phone"
+                  type="material"
+                  color="#aaaaaa"
+                  containerStyle={styles.dataicon}
+                />
+                <Text style={styles.datalable}>Telephone </Text>
+                <Text style={styles.datatext}>{this.state.telenumber}</Text>
+              </View>
+            ) : null}
           </View>
           <View style={styles.profilegallerycontainer}>
             <View style={styles.subgallerycontainer}>
@@ -404,7 +488,7 @@ export default class Profile extends Component {
           >
             <Text style={{ fontSize: 20, fontWeight: "500" }}>My Memories</Text>
           </View>
-          <Post />
+          <Post navigation={this.props.navigation} />
         </ScrollView>
       </View>
     );
@@ -570,5 +654,33 @@ const styles = StyleSheet.create({
     color: "#00f",
     fontSize: 14,
     fontWeight: "bold"
+  },
+  moreOptionModal: {
+    justifyContent: "flex-end",
+    margin: 0
+  },
+  modalContent: {
+    backgroundColor: "white",
+    padding: 22,
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    borderRadius: 4,
+    borderColor: "rgba(0, 0, 0, 0.1)"
+  },
+  modalContentRow: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    width: "100%",
+    height: 65
+    // borderBottomWidth:1,
+    // borderBottomColor:'#ccc'
+  },
+  modalContentRowText: {
+    flexGrow: 1,
+    fontSize: 17,
+    fontWeight: "300",
+    marginLeft: 10
   }
 });

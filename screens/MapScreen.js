@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Dimensions } from "react-native";
 import MapView from "react-native-maps";
 import Marker from "react-native-maps";
+import Colors from "../constants/Colors";
+import HeaderIcon from '../components/HeaderIcon';
 
 const MapScreen = props => {
   return (
@@ -20,7 +22,9 @@ const MapScreen = props => {
 };
 
 MapScreen.navigationOptions = {
-  title: "Map"
+  title: "Map",
+  headerTintColor:Colors.stackHeaderTintColor,
+  headerLeft:<HeaderIcon/>
 };
 
 const styles = StyleSheet.create({

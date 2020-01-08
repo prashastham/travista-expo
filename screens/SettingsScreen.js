@@ -6,12 +6,29 @@ import {
   StyleSheet,
   FlatList
 } from "react-native";
+import firebase from '../local/FirebaseClient';
+import Storage from '../local/Storage';
+import Colors from "../constants/Colors";
+import HeaderIcon  from '../components/HeaderIcon';
+
+const Logout = props =>{
+  firebase.auth().signOut()
+  .then(async ()=>{
+    tkm = await Storage.getItem('accessToken')
+    console.log(tkm)
+    Storage.clear()
+    tk = await Storage.getItem('accessToken')
+    console.log(tk)
+    props.navigation.navigate({ routeName: "Loading" })
+  })
+  .catch(error=>{console.log(error)})
+}
 
 const SettingsScreen = props => {
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        onPress={() => props.navigation.navigate({ routeName: "Auth" })}
+        onPress={() => Logout(props)}
       >
         <View style={styles.textList}>
           <Text style={{ fontSize: 16 }}>Logout</Text>
@@ -22,7 +39,9 @@ const SettingsScreen = props => {
 };
 
 SettingsScreen.navigationOptions = {
-  title: "Settings"
+  title: "Settings",
+  headerTintColor:Colors.stackHeaderTintColor,
+  headerLeft:<HeaderIcon/>
 };
 
 const styles = StyleSheet.create({

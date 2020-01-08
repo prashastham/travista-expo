@@ -11,6 +11,7 @@ import {
 import { Card, Button, Avatar, Image } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Colors from "../constants/Colors";
+import HeaderIcon from "../components/HeaderIcon";
 
 import dummy_posts from "../dummy_data/dummy_posts";
 const posts = dummy_posts;
@@ -25,6 +26,10 @@ const HomeScreen = props => {
 
     setDate((hours % 12) + ":" + (min < 10 ? "0" + min : min) + " " + ampm);
   });
+
+  viewProfile=()=>{
+    props.navigation.navigate('OtherProfile',{accessToken:'4LSlL7BsdseSkIKi8BKGrVdTIE22'})
+  }
 
   return (
     
@@ -44,6 +49,7 @@ const HomeScreen = props => {
                     source={{ uri: u.avatar }}
                     rounded
                     PlaceholderContent={<ActivityIndicator />}
+                    onPress={()=>this.viewProfile()}
                   />
                 </View>
                 <View style={styles.user}>
@@ -108,7 +114,9 @@ const HomeScreen = props => {
 };
 
 HomeScreen.navigationOptions = {
-  header: null
+  title: "Travista",
+  headerTintColor:Colors.stackHeaderTintColor,
+  headerLeft:<HeaderIcon/>
 };
 
 const styles = StyleSheet.create({

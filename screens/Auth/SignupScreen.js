@@ -16,6 +16,7 @@ import Colors from "../../constants/Colors";
 import * as authActions from "../../redux/action/auth";
 
 import firebase from "../../local/FirebaseClient";
+import Storage from "../../local/Storage";
 
 // const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
 
@@ -46,19 +47,65 @@ import firebase from "../../local/FirebaseClient";
 
 const SignupScreen = props => {
   const [email, updateEmail] = React.useState("");
+  const [name, updateName] = useState("");
+  const [telephone, updateTelephone] = useState("");
   const [password, updatePassword] = useState("");
   const [conf_password, updateConfPassword] = useState("");
   const [errormsg, setError] = useState(null);
 
   const handleSignUp = () => {
+    console.log(email + name + telephone);
     if (password == conf_password) {
       firebase
         .auth()
         .createUserWithEmailAndPassword(email, password)
+        .then(user => {
+          user.user.updateProfile({ displayName: name }).then(() => {
+            user.user.sendEmailVerification();
+            Storage.setItem("accessToken", user.user.uid);
+            createUser(user.user.uid);
+          });
+        })
         .catch(errormsg => setError(errormsg.message));
     } else {
       setError("Password do not match");
     }
+  };
+
+  const createUser = accessToken => {
+    console.log(accessToken);
+    const data = {
+      email: email,
+      name: name,
+      telenumber: telephone,
+      accessToken: accessToken,
+      dpurl: ""
+    };
+    const url =
+      "https://us-central1-travista-chat.cloudfunctions.net/app/api_app/createuser";
+    fetch(url, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    })
+      .then(res => res.json())
+      .then(res => {
+        Object.entries(res).forEach(([key, value]) => {
+          console.log(`${key} ${value}`);
+          Storage.setItem(key, value);
+        });
+      })
+      .catch(error => {
+        console.log(
+          "There is some problem in your fetch operation" + error.message
+        );
+        if (error.message === "Network request failed") {
+          alert("Check Your Connection.");
+        }
+      });
   };
   // const dispatch = useDispatch();
 
@@ -102,8 +149,44 @@ const SignupScreen = props => {
     <KeyboardAvoidingView style={styles.container} behavior="height" enabled>
       <ScrollView>
         <View>
-          <View style={styles.errorMsg}>
-            {errormsg && <Text style={styles.error}>{errormsg}</Text>}
+          {errormsg && (
+            <View style={styles.errorMsg}>
+              <Text style={styles.error}>{errormsg}</Text>
+            </View>
+          )}
+          <View style={styles.inputContainer}>
+            <Input
+              id="name"
+              label="Your Name"
+              placeholder="Frist name Last name"
+              leftIcon={{
+                type: "material",
+                name: "person",
+                color: "#ccc",
+                padding: 5
+              }}
+              required
+              autoCapitalize="none"
+              onChangeText={text => updateName(text)}
+              value={name}
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <Input
+              id="telephone"
+              label="Your Telephone"
+              placeholder="+9471 000 000 1"
+              leftIcon={{
+                type: "material",
+                name: "phone",
+                color: "#ccc",
+                padding: 5
+              }}
+              required
+              autoCapitalize="none"
+              onChangeText={text => updateTelephone(text)}
+              value={telephone}
+            />
           </View>
           <View style={styles.inputContainer}>
             <Input
@@ -209,7 +292,7 @@ const SignupScreen = props => {
 };
 
 SignupScreen.navigationOptions = {
-  title: "Sign"
+  title: "Sign Up"
 };
 
 const styles = StyleSheet.create({
@@ -231,7 +314,8 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: "600",
     color: "red",
-    textAlign: "center"
+    textAlign: "center",
+    justifyContent: "center"
   },
   buttonContainer: {
     padding: 10,
