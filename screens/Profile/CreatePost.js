@@ -21,7 +21,7 @@ export default class CreatePost extends Component {
             type='outline'
             raised={true}
             buttonStyle={{width:100,}}
-            onPress={()=>this.props.navigation.navigate('OtherProfile',{accessToken:'4LSlL7BsdseSkIKi8BKGrVdTIE22'})}
+            onPress={()=>this.props.navigation.navigate('ServiceProfile',{accessToken:'4LSlL7BsdseSkIKi8BKGrVdTIE22'})}
           />
       </View>
     );

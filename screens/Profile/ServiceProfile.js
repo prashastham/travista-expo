@@ -1,12 +1,11 @@
 import React,{Component  } from "react";
-import { View,Text,YellowBox,StyleSheet,Platform,Dimensions,ScrollView,Image,SafeAreaView,Alert,TouchableOpacity,PlatformOSType, ActivityIndicator } from "react-native";
+import { View,Text,YellowBox,StyleSheet,Platform,Dimensions,ScrollView,Image, ActivityIndicator, ImageBackground, Linking} from "react-native";
 import {Avatar,Icon,Overlay,Button} from 'react-native-elements';
-import {LinearGradient} from 'expo-linear-gradient';
 import Colors from '../../constants/Colors';
 import Post from '../../elements/Post';
 import HeaderIcon from "../../components/HeaderIcon";
 
-export default class OtherProfile extends Component {
+export default class ServiceProfile extends Component {
  
     static navigationOptions = {
         title: "Profile",
@@ -29,51 +28,35 @@ export default class OtherProfile extends Component {
     }
     state = {
       id:this.current_data.accessToken,
-      email:'',
-      name:'',
-      hometown:'',
-      from:'',
-      country:'',
-      interest:'',
-      worksin:'',
-      telenumber:'',
-      dpurl:'',
-      bio:'',
+      email:'anjanasamindraperera@gmail.com',
+      name:'Hotel kamaro',
+      location:'bandaragama',
+      lat:'6.9270786',
+      lng:'79.861243',
+      telenumber:'075-2713825',
+      dpurl:'https://firebasestorage.googleapis.com/v0/b/travista-chat.appspot.com/o/219809563563.jpg?alt=media',
+      coverurl:'https://firebasestorage.googleapis.com/v0/b/travista-chat.appspot.com/o/857703376913.jpg?alt=media',
+      bio:'This is my hotel',
+      category:'Hotel',
+      website:'http://kamaro.lk',
+      booking:'http://Booking.lk',
+      reviews:[
+                {
+                    "reviewId": "ZnWaMKlpmG0ZpfCKKuNv",
+                    "body": "a hotel",
+                    "travelerId": "shamen",
+                    "serviceId": "Thilara hotel ",
+                    "createdAt": "2019-10-12T17:03:20.813Z"
+                }
+            ],
       visible:false,
       isOverlayVisible:false,
-      loading:true
+      loading:false
     }
     
     componentDidMount(){
-      this.getdata()
-      // this.setState({id:this.current_data.accessToken});
-      // this.willFocus = this.props.navigation.addListener('willFocus', async () => {
-      //   let email = await Storage.getItem("email");
-      //   let name = await Storage.getItem("name");
-      //   let id = await Storage.getItem("accessToken");
-      //   let telenumber = await Storage.getItem("telenumber");
-      //   let dpurl = await Storage.getItem('dpurl')
-      //   let bio = await Storage.getItem('bio')
-      //   let country = await Storage.getItem('country')
-      //   let from = await Storage.getItem('from')
-      //   let hometown = await Storage.getItem('hometown')
-      //   let interest = await Storage.getItem('interest')
-      //   let worksin = await Storage.getItem('worksin')
-      //   this.setState({
-      //       email:email,
-      //       name:name,
-      //       id:id,
-      //       telenumber:telenumber,
-      //       dpurl:dpurl,
-      //       bio:bio,
-      //       country:country,
-      //       from:from,
-      //       hometown:hometown,
-      //       interest:interest,
-      //       worksin:worksin,
-      //   })
-      // });
-  }
+    //   this.getdata()
+    }
   
   getdata = () =>{
     this.setState({loading:true})
@@ -108,9 +91,34 @@ export default class OtherProfile extends Component {
       if(error.message === 'Network request failed')
       {
         alert('Connection faild. Try again later.')
-        this.props.navigation.goBack();
       }
     })
+  }
+
+  dialCall (){
+    let phoneNumber = '';
+    if (Platform.OS === 'android') {
+      phoneNumber = 'tel:${'+`${this.state.telenumber}`+'}';
+    }
+    else {
+      phoneNumber = 'telprompt:${'+`${this.state.telenumber}`+'}';
+    }
+ 
+    Linking.openURL(phoneNumber);
+  }
+
+  openLocation (){
+      console.log('hello')
+    const scheme = Platform.select({ ios: 'maps:0,0?q=', android: 'geo:0,0?q=' });
+    const latLng = `${this.state.lat},${this.state.lng}`;
+    const label = 'Custom Label';
+    const url = Platform.select({
+      ios: `${scheme}${label}@${latLng}`,
+      android: `${scheme}${latLng}(${label})`
+    });
+    
+    
+    Linking.openURL(url);
   }
 
   render() {
@@ -127,9 +135,8 @@ export default class OtherProfile extends Component {
         
         <View style={styles.MainContainer}>
           <ScrollView>
-            <LinearGradient
-              start={{ x: 0.2, y: 0.1 }}
-              colors={["#ccff66", "#00ff00"]}
+            <ImageBackground
+              source={{ uri: this.state.coverurl }}
               style={styles.linearGradient}
             >
               <Avatar
@@ -137,8 +144,8 @@ export default class OtherProfile extends Component {
                 size={170}
                 title={this.state.name.toUpperCase()[0]}
                 containerStyle={{
-                  marginTop: 50,
-                  marginBottom: 50,
+                  marginTop: 100,
+                  marginBottom: 0,
                   borderWidth: 4,
                   borderColor: "#fff"
                 }}
@@ -149,7 +156,7 @@ export default class OtherProfile extends Component {
                   this.setState({ isOverlayVisible: this.state.dpurl===''?false:true });
                 }}
               />
-            </LinearGradient>
+            </ImageBackground>
             {/* add overlay to avatar */}
             <Overlay
               isVisible={this.state.isOverlayVisible}
@@ -182,13 +189,13 @@ export default class OtherProfile extends Component {
               {this.state.worksin !== "" ? (
                 <View style={styles.datafield}>
                   <Icon
-                    name="work"
+                    name="info"
                     type="material"
                     color="#aaaaaa"
                     containerStyle={styles.dataicon}
                   />
-                  <Text style={styles.datalable}>Works in </Text>
-                  <Text style={styles.datatext}>{this.state.worksin}</Text>
+                  <Text style={styles.datalable}>Type </Text>
+                  <Text style={styles.datatext}>{this.state.category}</Text>
                 </View>
               ) : null}
               {this.state.hometown !== "" ? (
@@ -199,37 +206,11 @@ export default class OtherProfile extends Component {
                     color="#aaaaaa"
                     containerStyle={styles.dataicon}
                   />
-                  <Text style={styles.datalable}>Lives in </Text>
-                  <Text style={styles.datatext}>
-                    {this.state.hometown}, {this.state.country}
-                  </Text>
+                  <Text style={styles.datalable}>Location </Text>
+                  <Text style={styles.datatext} onPress={()=>this.openLocation()}>{this.state.location}</Text>
                 </View>
               ) : null}
               {this.state.from !== "" ? (
-                <View style={styles.datafield}>
-                  <Icon
-                    name="location-on"
-                    type="material"
-                    color="#aaaaaa"
-                    containerStyle={styles.dataicon}
-                  />
-                  <Text style={styles.datalable}>From </Text>
-                  <Text style={styles.datatext}>{this.state.from}</Text>
-                </View>
-              ) : null}
-              {this.state.interest !== "" ? (
-                <View style={styles.datafield}>
-                  <Icon
-                    name="favorite-border"
-                    type="material"
-                    color="#aaaaaa"
-                    containerStyle={styles.dataicon}
-                  />
-                  <Text style={styles.datalable}>Interest </Text>
-                  <Text style={styles.datatext}>{this.state.interest}</Text>
-                </View>
-              ) : null}
-              {this.state.email !== "" ? (
                 <View style={styles.datafield}>
                   <Icon
                     name="email"
@@ -241,7 +222,7 @@ export default class OtherProfile extends Component {
                   <Text style={styles.datatext}>{this.state.email}</Text>
                 </View>
               ) : null}
-              {this.state.telenumber !== "" ? (
+              {this.state.interest !== "" ? (
                 <View style={styles.datafield}>
                   <Icon
                     name="phone"
@@ -250,36 +231,33 @@ export default class OtherProfile extends Component {
                     containerStyle={styles.dataicon}
                   />
                   <Text style={styles.datalable}>Telephone </Text>
-                  <Text style={styles.datatext}>{this.state.telenumber}</Text>
+                  <Text style={styles.datatext} onPress={()=>this.dialCall()}>{this.state.telenumber}</Text>
                 </View>
               ) : null}
-            </View>
-            <View style={styles.profilegallerycontainer}>
-              <View style={styles.subgallerycontainer}>
-                <Image
-                  style={styles.galleryimage}
-                  source={{
-                    uri:
-                      "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Pomeranian_in_garden.jpg/1200px-Pomeranian_in_garden.jpg"
-                  }}
-                />
-                <Image
-                  style={styles.galleryimage}
-                  source={{
-                    uri:
-                      "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Pomeranian_in_garden.jpg/1200px-Pomeranian_in_garden.jpg"
-                  }}
-                />
-              </View>
-              <View style={styles.subgallerycontainer}>
-                <Image
-                  style={styles.galleryimage}
-                  source={{
-                    uri:
-                      "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Pomeranian_in_garden.jpg/1200px-Pomeranian_in_garden.jpg"
-                  }}
-                />
-              </View>
+              {this.state.email !== "" ? (
+                <View style={styles.datafield}>
+                  <Icon
+                    name="web"
+                    type="material"
+                    color="#aaaaaa"
+                    containerStyle={styles.dataicon}
+                  />
+                  <Text style={styles.datalable}>Website </Text>
+                  <Text style={styles.datatextUrl} onPress = {()=>Linking.openURL(this.state.website)}>{this.state.website}</Text>
+                </View>
+              ) : null}
+              {this.state.telenumber !== "" ? (
+                <View style={styles.datafield}>
+                  <Icon
+                    name="book"
+                    type="material"
+                    color="#aaaaaa"
+                    containerStyle={styles.dataicon}
+                  />
+                  <Text style={styles.datalable}>Booking </Text>
+                  <Text style={styles.datatextUrl} onPress = {()=>Linking.openURL(this.state.booking)}>{this.state.booking}</Text>
+                </View>
+              ) : null}
             </View>
             <View
               style={{
@@ -290,7 +268,7 @@ export default class OtherProfile extends Component {
                 borderBottomColor: "#af4"
               }}
             >
-              <Text style={{ fontSize: 20, fontWeight: "500" }}>{this.state.name}'s Memories</Text>
+              <Text style={{ fontSize: 20, fontWeight: "500" }}>{this.state.name}'s Reviews</Text>
             </View>
             <Post />
           </ScrollView>
@@ -355,6 +333,10 @@ export default class OtherProfile extends Component {
       fontSize:17,
       fontWeight: 'bold',
       color:'#000'
+    },datatextUrl:{
+      fontSize:17,
+      fontWeight: 'bold',
+      color:'#39f'
     },
     dataicon:{
       marginHorizontal:5,
