@@ -23,6 +23,13 @@ export default class CreatePost extends Component {
             buttonStyle={{width:100,}}
             onPress={()=>this.props.navigation.navigate('ServiceProfile',{accessToken:'4LSlL7BsdseSkIKi8BKGrVdTIE22'})}
           />
+           <Button
+            title='Service filter'
+            type='outline'
+            raised={true}
+            buttonStyle={{width:100,}}
+            onPress={()=>this.props.navigation.navigate('ServiceFilter')}
+          />
       </View>
     );
   }

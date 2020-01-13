@@ -141,8 +141,6 @@ export default class Profile extends Component {
         });
       }
     );
-
-    // We're done with the blob, close and release it
   };
 
     //-------------------------------------------------------------------------

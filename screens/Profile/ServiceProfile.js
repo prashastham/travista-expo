@@ -2,8 +2,7 @@ import React,{Component  } from "react";
 import { View,Text,YellowBox,StyleSheet,Platform,Dimensions,ScrollView,Image, ActivityIndicator, ImageBackground, Linking} from "react-native";
 import {Avatar,Icon,Overlay,Button} from 'react-native-elements';
 import Colors from '../../constants/Colors';
-import Post from '../../elements/Post';
-import HeaderIcon from "../../components/HeaderIcon";
+import Review from '../../elements/Review';
 
 export default class ServiceProfile extends Component {
  
@@ -43,8 +42,25 @@ export default class ServiceProfile extends Component {
       reviews:[
                 {
                     "reviewId": "ZnWaMKlpmG0ZpfCKKuNv",
+                    "body": "ake time to relax and refresh. Take a dip in the pool or get in a workout in the gym. Enjoy a relaxing meal poolside or visit our on-site restaurant or bar.",
+                    "travelerId": "shamen",
+                    "traverlerImageUrl":"https://firebasestorage.googleapis.com/v0/b/travista-chat.appspot.com/o/users%2FiY61tXyWBOerZ1dqTkRjkwqRRoi1%2Fdp.jpg?alt=media&token=12a6a636-c795-4d1d-ba45-9eb27ae3e013",
+                    "serviceId": "Thilara hotel ",
+                    "createdAt": "2019-10-12T17:03:20.813Z"
+                },
+                {
+                    "reviewId": "ZnWaMKlpmG0ZpfCKKuNv",
                     "body": "a hotel",
                     "travelerId": "shamen",
+                    "traverlerImageUrl":"https://firebasestorage.googleapis.com/v0/b/travista-chat.appspot.com/o/users%2FiY61tXyWBOerZ1dqTkRjkwqRRoi1%2Fdp.jpg?alt=media&token=12a6a636-c795-4d1d-ba45-9eb27ae3e013",
+                    "serviceId": "Thilara hotel ",
+                    "createdAt": "2019-10-12T17:03:20.813Z"
+                },
+                {
+                    "reviewId": "ZnWaMKlpmG0ZpfCKKuNv",
+                    "body": "ake time to relax and refresh. Take a dip in the pool or get in a workout in the gym. Enjoy a relaxing meal poolside or visit our on-site restaurant or bar.",
+                    "travelerId": "shamen",
+                    "traverlerImageUrl":"https://firebasestorage.googleapis.com/v0/b/travista-chat.appspot.com/o/users%2FiY61tXyWBOerZ1dqTkRjkwqRRoi1%2Fdp.jpg?alt=media&token=12a6a636-c795-4d1d-ba45-9eb27ae3e013",
                     "serviceId": "Thilara hotel ",
                     "createdAt": "2019-10-12T17:03:20.813Z"
                 }
@@ -270,7 +286,7 @@ export default class ServiceProfile extends Component {
             >
               <Text style={{ fontSize: 20, fontWeight: "500" }}>{this.state.name}'s Reviews</Text>
             </View>
-            <Post />
+            <Review review={this.state.reviews}/>
           </ScrollView>
         </View>
       );
