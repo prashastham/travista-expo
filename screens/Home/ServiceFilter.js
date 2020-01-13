@@ -2,10 +2,12 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ActivityIndicator } from 'react-native';
 import { Card, Avatar, SearchBar, Icon } from 'react-native-elements';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import Colors from '../../constants/Colors';
 
 export default class ServiceFilter extends Component {
-    static navigationOption = {
-        title:'Services'
+    static navigationOptions = {
+        title:'Services',
+        headerTintColor:Colors.stackHeaderTintColor,
     }
   constructor(props) {
     super(props);

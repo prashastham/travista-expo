@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import {Button} from 'react-native-elements';
+import Colors from '../../constants/Colors';
 
 export default class CreatePost extends Component {
   static navigationOptions = {
-      title:'Make a Memory'
+      title:'Make a Memory',
+      headerTintColor:Colors.stackHeaderTintColor,
   }
   constructor(props) {
     super(props);
