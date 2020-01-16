@@ -11,10 +11,6 @@ import {
 import { Card, Button, Avatar, Image } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Colors from "../constants/Colors";
-
-import dummy_posts from "../dummy_data/dummy_posts";
-const posts = dummy_posts;
-
 export default class Review extends Component{
 
     constructor(props){

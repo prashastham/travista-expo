@@ -4,6 +4,7 @@ import CreatePost from "./Profile/CreatePost";
 import EditProfile from './Profile/EditProfile';
 import ServiceProfileScreen from './Profile/ServiceProfile';
 import ServiceFilter from "./Home/ServiceFilter";
+import AddReview from "./Profile/AddReview";
 
 const ProfileStackNavigator = createStackNavigator(
   {
@@ -11,7 +12,8 @@ const ProfileStackNavigator = createStackNavigator(
     CreatePost:CreatePost,
     EditProfile: EditProfile,
     ServiceProfile: ServiceProfileScreen,
-    ServiceFilter:ServiceFilter
+    ServiceFilter:ServiceFilter,
+    AddReview:AddReview,
   },
   { initialRouteName: "Profile" }
 );

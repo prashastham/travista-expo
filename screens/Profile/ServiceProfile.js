@@ -286,6 +286,13 @@ export default class ServiceProfile extends Component {
             >
               <Text style={{ fontSize: 20, fontWeight: "500" }}>{this.state.name}'s Reviews</Text>
             </View>
+            <Button
+              title = 'Add Review'
+              type='outline'
+              color = '#4cf'
+              containerStyle = {{margin:10,borderWidth:1, borderColor:'#4cf'}}
+              onPress={()=>this.props.navigation.navigate('AddReview',{serviceId:this.state.name})}
+            />
             <Review review={this.state.reviews}/>
           </ScrollView>
         </View>
