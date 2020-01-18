@@ -45,6 +45,9 @@ export default class Profile extends Component {
       telenumber:'',//0776480429
       dpurl:'',//https://vignette4.wikia.nocookie.net/animal-jam-clans-1/images/7/75/Facepalm-cat-300x300.jpg/revision/latest?cb=20151223193525
       bio:'',//Hey there, this is about you. Say something shortly
+      im_1:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Pomeranian_in_garden.jpg/1200px-Pomeranian_in_garden.jpg',
+      im_2:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Pomeranian_in_garden.jpg/1200px-Pomeranian_in_garden.jpg',
+      im_3:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Pomeranian_in_garden.jpg/1200px-Pomeranian_in_garden.jpg',
       visible:false,
       isOverlayVisible:false,
       isModalVisible:false,
@@ -448,9 +451,9 @@ export default class Profile extends Component {
             </View>
           </View>
           <View style={styles.galleryedit}>
-            <TouchableOpacity style={styles.galleryeditbtn}>
+            <TouchableOpacity style={styles.galleryeditbtn} onPress={()=>this.props.navigation.navigate('Gallery',{im_1:this.state.im_1,im_2:this.state.im_2,im_3:this.state.im_3})}>
               <Text style={styles.galleryeditbtntext}>
-                Edit Public Gallery {this.state.progress}
+                Edit Public Gallery
               </Text>
             </TouchableOpacity>
           </View>

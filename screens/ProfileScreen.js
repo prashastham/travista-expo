@@ -5,6 +5,7 @@ import EditProfile from './Profile/EditProfile';
 import ServiceProfileScreen from './Profile/ServiceProfile';
 import ServiceFilter from "./Home/ServiceFilter";
 import AddReview from "./Profile/AddReview";
+import Gallery from "../elements/Gallery";
 
 const ProfileStackNavigator = createStackNavigator(
   {
@@ -14,6 +15,7 @@ const ProfileStackNavigator = createStackNavigator(
     ServiceProfile: ServiceProfileScreen,
     ServiceFilter:ServiceFilter,
     AddReview:AddReview,
+    Gallery:Gallery,
   },
   { initialRouteName: "Profile" }
 );
