@@ -83,11 +83,12 @@ export default class ServiceFilter extends Component {
                     wrapperStyle = {styles.cardContainer}
                     containerStyle={{padding:3}}
                 >
-                    <TouchableOpacity style={styles.cardContentItemTouch} onPress={()=>this.props.navigation.navigate('ServiceProfile',{accessToken:'4LSlL7BsdseSkIKi8BKGrVdTIE22'})}>
+                    <TouchableOpacity style={styles.cardContentItemTouch} onPress={()=>this.props.navigation.navigate('ServiceProfile',{token:user.name})}>
                         <View style={styles.touchContent}>
                         <Avatar
                             rounded
                             source={{uri:user.imageUrl}}
+                            title = {user.name[0].toUpperCase()}
                             containerStyle={styles.cardContentItemAvatar}
                             size={50}
                         />  

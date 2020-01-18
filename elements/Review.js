@@ -38,7 +38,7 @@ export default class Review extends Component{
                         <View style={styles.avatar}>
                             <Avatar
                                 size="small"
-                                source={{ uri: review.traverlerImageUrl }}
+                                source={{ uri: review.travelerImage }}
                                 rounded
                                 PlaceholderContent={<ActivityIndicator />}
                             />

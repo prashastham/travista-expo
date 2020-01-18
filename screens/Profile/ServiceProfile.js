@@ -26,53 +26,28 @@ export default class ServiceProfile extends Component {
    
     }
     state = {
-      id:this.current_data.accessToken,
-      email:'anjanasamindraperera@gmail.com',
-      name:'Hotel kamaro',
-      location:'bandaragama',
-      lat:'6.9270786',
-      lng:'79.861243',
-      telenumber:'075-2713825',
-      dpurl:'https://firebasestorage.googleapis.com/v0/b/travista-chat.appspot.com/o/219809563563.jpg?alt=media',
-      coverurl:'https://firebasestorage.googleapis.com/v0/b/travista-chat.appspot.com/o/857703376913.jpg?alt=media',
-      bio:'This is my hotel',
-      category:'Hotel',
-      website:'http://kamaro.lk',
-      booking:'http://Booking.lk',
-      reviews:[
-                {
-                    "reviewId": "ZnWaMKlpmG0ZpfCKKuNv",
-                    "body": "ake time to relax and refresh. Take a dip in the pool or get in a workout in the gym. Enjoy a relaxing meal poolside or visit our on-site restaurant or bar.",
-                    "travelerId": "shamen",
-                    "traverlerImageUrl":"https://firebasestorage.googleapis.com/v0/b/travista-chat.appspot.com/o/users%2FiY61tXyWBOerZ1dqTkRjkwqRRoi1%2Fdp.jpg?alt=media&token=12a6a636-c795-4d1d-ba45-9eb27ae3e013",
-                    "serviceId": "Thilara hotel ",
-                    "createdAt": "2019-10-12T17:03:20.813Z"
-                },
-                {
-                    "reviewId": "ZnWaMKlpmG0ZpfCKKuNv",
-                    "body": "a hotel",
-                    "travelerId": "shamen",
-                    "traverlerImageUrl":"https://firebasestorage.googleapis.com/v0/b/travista-chat.appspot.com/o/users%2FiY61tXyWBOerZ1dqTkRjkwqRRoi1%2Fdp.jpg?alt=media&token=12a6a636-c795-4d1d-ba45-9eb27ae3e013",
-                    "serviceId": "Thilara hotel ",
-                    "createdAt": "2019-10-12T17:03:20.813Z"
-                },
-                {
-                    "reviewId": "ZnWaMKlpmG0ZpfCKKuNv",
-                    "body": "ake time to relax and refresh. Take a dip in the pool or get in a workout in the gym. Enjoy a relaxing meal poolside or visit our on-site restaurant or bar.",
-                    "travelerId": "shamen",
-                    "traverlerImageUrl":"https://firebasestorage.googleapis.com/v0/b/travista-chat.appspot.com/o/users%2FiY61tXyWBOerZ1dqTkRjkwqRRoi1%2Fdp.jpg?alt=media&token=12a6a636-c795-4d1d-ba45-9eb27ae3e013",
-                    "serviceId": "Thilara hotel ",
-                    "createdAt": "2019-10-12T17:03:20.813Z"
-                }
-            ],
+      id:this.current_data.token,
+      email:'',
+      name:this.current_data.token,
+      location:'',
+      lat:'',
+      lng:'',
+      telenumber:'',
+      dpurl:'',
+      coverurl:'',
+      bio:'',
+      category:'',
+      website:'',
+      booking:'',
+      reviews:[],
       visible:false,
       isOverlayVisible:false,
-      loading:false
+      loading:true
     }
     
     componentDidMount(){
       this.willFocus = this.props.navigation.addListener('willFocus',() => {
-        //   this.getdata()
+        this.getdata()
       });
     }
     componentWillUnmount() {
@@ -81,7 +56,7 @@ export default class ServiceProfile extends Component {
   
   getdata = () =>{
     this.setState({loading:true})
-   const url = `https://us-central1-travista-chat.cloudfunctions.net/app/api/login?access=${this.state.id}`
+   const url = `https://us-central1-travista-chat.cloudfunctions.net/api/user/${this.state.id}`
     console.log(this.state.id)
     fetch(url,{
       method:'GET',
@@ -94,16 +69,18 @@ export default class ServiceProfile extends Component {
     .then(res =>{
       console.log(res)
       this.setState({
-        email:res.email,
-        name:res.name,
-        telenumber:res.telenumber,
-        dpurl:res.dpurl,
-        bio:res.bio,
-        country:res.country,
-        from:res.from,
-        hometown:res.hometown,
-        interest:res.interest,
-        worksin:res.worksin,
+        email:res.user.email,
+        location:res.user.location,
+        lat:res.user.lat,
+        lng:res.user.long,
+        telenumber:res.user.telNo,
+        dpurl:res.user.imageUrl,
+        coverurl:res.user.imageUrlCover,
+        bio:res.user.bio,
+        category:res.user.category,
+        website:res.user.website,
+        booking:res.user.booking,
+        reviews:res.reviews,
     })
       this.setState({loading:false});
     })
@@ -158,6 +135,8 @@ export default class ServiceProfile extends Component {
           <ScrollView>
             <ImageBackground
               source={{ uri: this.state.coverurl }}
+              resizeMode={'cover'}
+              loadingIndicatorSource={{backgroundColor:'#c6c6c6',}}
               style={styles.linearGradient}
             >
               <Avatar
