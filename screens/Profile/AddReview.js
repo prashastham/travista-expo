@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import Storage from '../../local/Storage';
 import { Avatar, Input, Button } from 'react-native-elements';
-import moment from 'moment';
 
 export default class AddReview extends Component {
 
@@ -22,9 +21,11 @@ export default class AddReview extends Component {
   }
   state = {
     travelerId:'',
+    travelerName:'',
     traverlerImageUrl:'',
     serviceId:this.userData.serviceId,
     body:'', ///need to add create time to last object
+    errorMessage:'',
   };
   componentWillMount() {
     this.props.navigation.setParams({ save: this.save });
@@ -32,14 +33,35 @@ export default class AddReview extends Component {
   async componentDidMount(){
     userName = await Storage.getItem('name');
     imageUrl = await Storage.getItem('dpurl');
-    this.setState({userName:userName,traverlerImageUrl:imageUrl});
+    let travelerId = await Storage.getItem("accessToken");
+    this.setState({travelerId:travelerId ,travelerName:userName, traverlerImageUrl:imageUrl,});
+  }
+
+  validate=()=>{
+    if(this.state.body === ""){
+      this.setState({errorMessage:'Review can\'t be empty!',errorStyle:styles.errorInput});
+      return false;
+    }
+    else{
+      this.setState({errorMessage:'',errorStyle:{}});
+      return true;
+    }
   }
 
   save=()=>{
-    const time = moment(new Date()).format("YYYY-MM-DD hh:mm:ss")
-    this.setState({createdBy:time})
-    const data = this.state;
-    const url = ''
+    if(!this.validate())
+    {
+      return false;
+    }
+    this.setState({loading:true})
+    const data = {
+      uid:this.state.travelerId,
+      travelerId:this.state.travelerName,
+      travelerImage:this.state.traverlerImageUrl,
+      serviceId:this.state.serviceId,
+      body:this.state.body,
+    };
+    const url = 'https://us-central1-travista-chat.cloudfunctions.net/api/review'
     fetch(url,{
       method:'POST',
       headers: { 
@@ -49,38 +71,58 @@ export default class AddReview extends Component {
       body:JSON.stringify(data)
     }).then(res=>res.json())
     .then(res=>{
-          // --------------------------------------------------------------------------edit
+          console.log(res)
+          this.setState({loading:false});
+          this.props.navigation.goBack();
     })
     .catch(error=>{
       if(error.message === 'Network request failed')
       {
         alert('Connection faild. Try again later.')
+        this.setState({loading:false})
+      }
+      else{
+        alert(error.message);
       }
     })
   }
 
   render() {
-    return (
-      <View style={styles.container}>
-          <View style={styles.header}>
-              <Avatar
-                rounded
-                size={50}
-                containerStyle={styles.avatar}
-                source={{uri:this.state.traverlerImageUrl===''?' ':this.state.traverlerImageUrl}}
-              />
-              <Text style={styles.name}>{this.state.travelerId}</Text>
-          </View>
-          <View style={styles.body}>
-            <Input
-              multiline = {true}
-              label='Add Reveiw :'
-              value={this.state.body}
-              onChangeText={text => this.setState({body:text})}
-            />
-          </View> 
+    if(this.state.loading){
+      return(
+        <View style={styles.activityIndicator}>
+        <ActivityIndicator
+          size='large'
+          color='#c6c6c6'
+        />
       </View>
-    );
+      )  
+    }
+    else{
+      return (
+        <View style={styles.container}>
+            <View style={styles.header}>
+                <Avatar
+                  rounded
+                  size={50}
+                  containerStyle={styles.avatar}
+                  source={{uri:this.state.traverlerImageUrl===''?' ':this.state.traverlerImageUrl}}
+                />
+                <Text style={styles.name}>{this.state.travelerName}</Text>
+            </View>
+            <View style={styles.body}>
+              <Input
+                multiline = {true}
+                label='Add Reveiw :'
+                value={this.state.body}
+                onChangeText={text => this.setState({body:text})}
+                errorMessage={this.state.errorMessage}
+                errorStyle={this.state.errorStyle}
+              />
+            </View> 
+        </View>
+      );
+    } 
   }
 }
 
@@ -108,5 +150,13 @@ const styles = StyleSheet.create({
   },
   btnContainer:{
     marginRight:20
+  },
+  errorInput:{
+    color:'red',
+  },
+  activityIndicator:{
+    flex:1,
+    justifyContent:'center',
+    alignContent:'center',
   },
 })

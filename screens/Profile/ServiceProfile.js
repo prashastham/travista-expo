@@ -71,7 +71,12 @@ export default class ServiceProfile extends Component {
     }
     
     componentDidMount(){
-    //   this.getdata()
+      this.willFocus = this.props.navigation.addListener('willFocus',() => {
+        //   this.getdata()
+      });
+    }
+    componentWillUnmount() {
+      this.willFocus;
     }
   
   getdata = () =>{
