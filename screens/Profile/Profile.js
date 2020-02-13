@@ -1,5 +1,5 @@
 import React,{Component  } from "react";
-import { View,Text,YellowBox,StyleSheet,Platform,Dimensions,ScrollView,Image,SafeAreaView,Alert,TouchableOpacity,PlatformOSType } from "react-native";
+import { View,Text,YellowBox,StyleSheet,Platform,Dimensions,ScrollView,Image,SafeAreaView,Alert,TouchableOpacity,PlatformOSType, ActivityIndicator } from "react-native";
 import {Avatar,Icon,Overlay,Button} from 'react-native-elements';
 import {LinearGradient} from 'expo-linear-gradient';
 import Modal from 'react-native-modal';
@@ -54,10 +54,12 @@ export default class Profile extends Component {
       isOverlayVisible:false,
       isModalVisible:false,
       progress:0,
-      dpupload:false
+      dpupload:false,
+      loading:false,
     }
     async componentDidMount(){
       this.willFocus = this.props.navigation.addListener('willFocus', async () => {
+        this.setState({loading:true});
         let email = await Storage.getItem("email");
         let name = await Storage.getItem("name");
         let id = await Storage.getItem("accessToken");
@@ -83,6 +85,7 @@ export default class Profile extends Component {
             hometown:hometown,
             interest:interest,
             worksin:worksin,
+            loading:false,
         })
       });
     this.getPermissionAsync();
@@ -208,6 +211,15 @@ export default class Profile extends Component {
   };
 
   render() {
+    if(this.state.loading)
+    {
+      return(
+        <View style={styles.loadingMainContainer}>
+          <ActivityIndicator size = 'large' color='#c6c6c6'/>
+        </View>
+      )
+    }
+    else{
     return (
       <View style={styles.MainContainer}>
         <ScrollView>
@@ -273,7 +285,7 @@ export default class Profile extends Component {
           <View style={styles.namefield}>
             <Text style={styles.nametext}>{this.state.name}</Text>
             {this.state.bio === "" ? (
-              <TouchableOpacity style={styles.bioBtn}>
+              <TouchableOpacity style={styles.bioBtn} onPress={() => this.props.navigation.navigate("EditProfile",this.state)}>
                 <Text style={styles.bioBtnText}>+bio</Text>
               </TouchableOpacity>
             ) : (
@@ -483,11 +495,19 @@ export default class Profile extends Component {
         </ScrollView>
       </View>
     );
+    }
   }
 }
 
   const styles = StyleSheet.create({
- 
+    
+    loadingMainContainer:{
+      paddingTop: (Platform.OS) === 'ios' ? 20 : 0,
+      backgroundColor:'#fff',
+      flex:1,
+      justifyContent:'center',
+      height:'100%'
+    },
     MainContainer: {
       paddingTop: (Platform.OS) === 'ios' ? 20 : 0,
       backgroundColor:'#fff',
