@@ -45,9 +45,11 @@ export default class Profile extends Component {
       telenumber:'',//0776480429
       dpurl:'',//https://vignette4.wikia.nocookie.net/animal-jam-clans-1/images/7/75/Facepalm-cat-300x300.jpg/revision/latest?cb=20151223193525
       bio:'',//Hey there, this is about you. Say something shortly
-      im_1:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Pomeranian_in_garden.jpg/1200px-Pomeranian_in_garden.jpg',
-      im_2:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Pomeranian_in_garden.jpg/1200px-Pomeranian_in_garden.jpg',
-      im_3:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Pomeranian_in_garden.jpg/1200px-Pomeranian_in_garden.jpg',
+      galleryImage:{
+        im_1:'',
+        im_2:'',
+        im_3:'', 
+      },
       visible:false,
       isOverlayVisible:false,
       isModalVisible:false,
@@ -67,12 +69,14 @@ export default class Profile extends Component {
         let hometown = await Storage.getItem('hometown')
         let interest = await Storage.getItem('interest')
         let worksin = await Storage.getItem('worksin')
+        let galleryImage = await Storage.getItem('galleryImage')
         this.setState({
             email:email,
             name:name,
             id:id,
             telenumber:telenumber,
             dpurl:dpurl,
+            galleryImage:galleryImage,
             bio:bio,
             country:country,
             from:from,
@@ -423,35 +427,42 @@ export default class Profile extends Component {
               </View>
             ) : null}
           </View>
+          {(this.state.galleryImage.im_1+this.state.galleryImage.im_2+this.state.galleryImage.im_3) !== "" ? (
           <View style={styles.profilegallerycontainer}>
+            {(this.state.galleryImage.im_1+this.state.galleryImage.im_2) !== "" ? (
+            <View style={styles.subgallerycontainer}>
+              {this.state.galleryImage.im_1 !== "" ? (
+              <Image
+                style={styles.galleryimage}
+                source={{
+                  uri:this.state.galleryImage.im_1
+                }}
+              />
+              ) : null}
+              {this.state.galleryImage.im_2 !== "" ? (
+              <Image
+                style={styles.galleryimage}
+                source={{
+                  uri:this.state.galleryImage.im_2
+                }}
+              />
+              ) : null}
+            </View>
+            ) : null}
+            {this.state.galleryImage.im_3 !== "" ? (
             <View style={styles.subgallerycontainer}>
               <Image
                 style={styles.galleryimage}
                 source={{
-                  uri:
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Pomeranian_in_garden.jpg/1200px-Pomeranian_in_garden.jpg"
-                }}
-              />
-              <Image
-                style={styles.galleryimage}
-                source={{
-                  uri:
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Pomeranian_in_garden.jpg/1200px-Pomeranian_in_garden.jpg"
+                  uri:this.state.galleryImage.im_3
                 }}
               />
             </View>
-            <View style={styles.subgallerycontainer}>
-              <Image
-                style={styles.galleryimage}
-                source={{
-                  uri:
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Pomeranian_in_garden.jpg/1200px-Pomeranian_in_garden.jpg"
-                }}
-              />
-            </View>
+            ) : null}
           </View>
+          ) : null}
           <View style={styles.galleryedit}>
-            <TouchableOpacity style={styles.galleryeditbtn} onPress={()=>this.props.navigation.navigate('Gallery',{im_1:this.state.im_1,im_2:this.state.im_2,im_3:this.state.im_3})}>
+            <TouchableOpacity style={styles.galleryeditbtn} onPress={()=>this.props.navigation.navigate('Gallery',{galleryImage:this.state.galleryImage})}>
               <Text style={styles.galleryeditbtntext}>
                 Edit Public Gallery
               </Text>
