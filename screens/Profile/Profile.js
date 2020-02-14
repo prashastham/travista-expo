@@ -210,6 +210,20 @@ export default class Profile extends Component {
     }
   };
 
+  logOut()
+  {
+    firebaseClient.auth().signOut()
+    .then(async ()=>{
+      tkm = await Storage.getItem('accessToken')
+      console.log(tkm)
+      Storage.clear()
+      tk = await Storage.getItem('accessToken')
+      console.log(tk)
+      this.props.navigation.navigate({ routeName: "Loading" })
+    })
+    .catch(error=>{console.log(error)})
+  }
+
   render() {
     if(this.state.loading)
     {
@@ -304,15 +318,7 @@ export default class Profile extends Component {
           style={styles.moreOptionModal}
           >
             <View style={styles.modalContent}>
-              <View style = {styles.modalContentRow}>
-                <Icon
-                  name = {PlatformOSType === 'ios'? 'mail':'email' }
-                  type = {PlatformOSType === 'ios'? 'ionicon':'material' }
-                  size = {30}
-                  color = '#ccc'
-                />
-                <Text style={styles.modalContentRowText}>Change e-mail</Text>
-              </View>
+              <TouchableOpacity onPress={()=>this.logOut()}>
               <View style = {styles.modalContentRow}>
                 <Icon
                   name = {PlatformOSType === 'ios'? 'log-out':'trending-flat' }
@@ -322,6 +328,8 @@ export default class Profile extends Component {
                 />
                 <Text style={styles.modalContentRowText}>Log Out</Text>
               </View>
+              </TouchableOpacity>
+              <TouchableOpacity>
               <View style = {styles.modalContentRow}>
                 <Icon
                   name = {'delete' }
@@ -331,6 +339,7 @@ export default class Profile extends Component {
                 />
                 <Text style={styles.modalContentRowText}>Delete Account</Text>
               </View>
+              </TouchableOpacity>
             </View>
           </Modal>
           {/* ------------------------------------------------------------------------------------------------------ */}
