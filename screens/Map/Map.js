@@ -115,12 +115,15 @@ class MapScreen extends Component{
                             coordinate={{latitude:this.state.region.latitude,longitude:this.state.region.longitude}}
                             pinColor='#5548f9'
                             title = 'Me'
-                        />
+                        /> 
                     </MapView>
                     <FloatingAction
                             actions={this.actions}
                             onPressItem={name => {
-                            console.log(`selected button: ${name}`);
+                                if(name==='bt_Search')
+                                {
+                                    this.props.navigation.navigate('Search');
+                                }
                             }}
                     />
                 </View>
