@@ -17,7 +17,7 @@ import Colors from "../../constants/Colors";
 import { LinearGradient } from "expo-linear-gradient";
 
 import firebase from "../../local/FirebaseClient";
-import Storage from '../../local/Storage';
+import Storage from "../../local/Storage";
 
 const LoginScreen = props => {
   const [email, updateEmail] = React.useState("");
@@ -30,7 +30,11 @@ const LoginScreen = props => {
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
-      .then(({user})=>{console.log(user); Storage.setItem('accessToken',user.uid); getuserdata(user.uid);}) 
+      .then(({ user }) => {
+        console.log(user);
+        Storage.setItem("accessToken", user.uid);
+        getuserdata(user.uid);
+      })
       .catch(error => setError(error.message));
   };
 
@@ -61,7 +65,22 @@ const LoginScreen = props => {
         alert('Check Your Connection.')
       }
     })
-  }
+      .then(res => res.json())
+      .then(res => {
+        Object.entries(res).forEach(([key, value]) => {
+          console.log(`${key} ${value}`);
+          Storage.setItem(key, value);
+        });
+      })
+      .catch(error => {
+        console.log(
+          "There is some problem in your fetch operation" + error.message
+        );
+        if (error.message === "Network request failed") {
+          alert("Check Your Connection.");
+        }
+      });
+  };
 
   if(isLoading)
   {

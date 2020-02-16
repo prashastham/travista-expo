@@ -9,6 +9,7 @@ import TabBarIcon from "../components/TabBarIcon";
 import HomeScreen from "../screens/HomeScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 import ChatListScreen from "../screens/Chat/ChatListScreen";
+import ChatScreen from "../screens/Chat/ChatScreen";
 import MapScreen from "../screens/MapScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import OtherProfileScreen from "../screens/Profile/OtherProfile";
@@ -21,7 +22,7 @@ const config = Platform.select({
 const HomeStack = createStackNavigator(
   {
     Home: HomeScreen,
-    OtherProfile:OtherProfileScreen,
+    OtherProfile: OtherProfileScreen
   },
   config
 );
@@ -38,20 +39,17 @@ HomeStack.navigationOptions = {
 
 HomeStack.path = "";
 
-const ProfileStack = createStackNavigator(
-  {
-    Profiles: {
-      screen:ProfileScreen,
-      navigationOptions: () => ({
-        header:null,
-      }),
-    },
-    OtherProfile:{
-      screen:OtherProfileScreen,
-    }
+const ProfileStack = createStackNavigator({
+  Profiles: {
+    screen: ProfileScreen,
+    navigationOptions: () => ({
+      header: null
+    })
   },
-  
-);
+  OtherProfile: {
+    screen: OtherProfileScreen
+  }
+});
 
 ProfileStack.navigationOptions = {
   tabBarLabel: "Profile",
@@ -111,9 +109,10 @@ MapStack.path = "";
 
 const ChatStack = createStackNavigator(
   {
-    Chat: ChatListScreen
+    Trips: ChatListScreen,
+    Chat: ChatScreen
   },
-  config
+  { initialRouteName: "Chat" }
 );
 
 ChatStack.navigationOptions = {

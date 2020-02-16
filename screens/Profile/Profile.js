@@ -146,44 +146,46 @@ export default class Profile extends Component {
         uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
           console.log("File available at", downloadURL);
           blob.close();
-          this.setState({dpurl:downloadURL,dpupload:false,progress:0});
+          this.setState({ dpurl: downloadURL, dpupload: false, progress: 0 });
           this.updateimageurl();
         });
       }
     );
   };
 
-    //-------------------------------------------------------------------------
-  
-  updateimageurl = () =>{
-   const url = 'https://us-central1-travista-chat.cloudfunctions.net/app/api_app/profileupdate'
+  //-------------------------------------------------------------------------
+
+  updateimageurl = () => {
+    const url =
+      "https://us-central1-travista-chat.cloudfunctions.net/app/api_app/profileupdate";
     const data = {
-      accessToken:this.state.id,
-      dpurl:this.state.dpurl
-    }
-    console.log(data)
-    fetch(url,{
-      method:'POST',
-      headers: { 
-        'Accept': 'application/json',
-         'Content-Type': 'application/json' 
+      accessToken: this.state.id,
+      dpurl: this.state.dpurl
+    };
+    console.log(data);
+    fetch(url, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
       },
-      body:JSON.stringify(data)
+      body: JSON.stringify(data)
     })
-    .then((res => res.json()))
-    .then(res =>{
-      console.log(res)
-      Storage.setItem('dpurl',this.state.dpurl)
-      this.setState({loading:false});
-    })
-    .catch(error=>{
-      console.log('There is some problem in your fetch operation'+error.message)
-      if(error.message === 'Network request failed')
-      {
-        alert('Connection faild. Try again later.')
-      }
-    })
-  }
+      .then(res => res.json())
+      .then(res => {
+        console.log(res);
+        Storage.setItem("dpurl", this.state.dpurl);
+        this.setState({ loading: false });
+      })
+      .catch(error => {
+        console.log(
+          "There is some problem in your fetch operation" + error.message
+        );
+        if (error.message === "Network request failed") {
+          alert("Connection faild. Try again later.");
+        }
+      });
+  };
 
   getPermissionAsync = async () => {
     if (Constants.platform.ios) {
@@ -245,7 +247,7 @@ export default class Profile extends Component {
             <Avatar
               rounded
               size={170}
-              title={this.state.name.toUpperCase()[0]}
+              title={this.state.name}
               containerStyle={{
                 marginTop: 50,
                 marginBottom: 50,
@@ -253,10 +255,12 @@ export default class Profile extends Component {
                 borderColor: "#fff"
               }}
               source={{
-                uri: this.state.dpurl===''?' ':this.state.dpurl //this.state.dpurl,
+                uri: this.state.dpurl === "" ? " " : this.state.dpurl //this.state.dpurl,
               }}
               onPress={() => {
-                this.setState({ isOverlayVisible: this.state.dpurl===''?false:true });
+                this.setState({
+                  isOverlayVisible: this.state.dpurl === "" ? false : true
+                });
               }}
               editButton={{
                 name: "camera",
@@ -310,21 +314,21 @@ export default class Profile extends Component {
           </View>
           {/* ------------------------------------------------------------------------------------------------------ */}
           <Modal
-          isVisible={this.state.isModalVisible}
-          onSwipeComplete={() => this.setState({isModalVisible: false})}
-          swipeDirection={['down']}
-          onBackButtonPress={() => this.setState({isModalVisible: false})}
-          onBackdropPress={() => this.setState({isModalVisible: false})}
-          style={styles.moreOptionModal}
+            isVisible={this.state.isModalVisible}
+            onSwipeComplete={() => this.setState({ isModalVisible: false })}
+            swipeDirection={["down"]}
+            onBackButtonPress={() => this.setState({ isModalVisible: false })}
+            onBackdropPress={() => this.setState({ isModalVisible: false })}
+            style={styles.moreOptionModal}
           >
             <View style={styles.modalContent}>
               <TouchableOpacity onPress={()=>this.logOut()}>
               <View style = {styles.modalContentRow}>
                 <Icon
-                  name = {PlatformOSType === 'ios'? 'log-out':'trending-flat' }
-                  type = {PlatformOSType === 'ios'? 'ionicon':'material' }
-                  size = {30}
-                  color = '#000'
+                  name={PlatformOSType === "ios" ? "log-out" : "trending-flat"}
+                  type={PlatformOSType === "ios" ? "ionicon" : "material"}
+                  size={30}
+                  color="#000"
                 />
                 <Text style={styles.modalContentRowText}>Log Out</Text>
               </View>
@@ -332,10 +336,10 @@ export default class Profile extends Component {
               <TouchableOpacity>
               <View style = {styles.modalContentRow}>
                 <Icon
-                  name = {'delete' }
-                  type = {PlatformOSType === 'ios'? 'ionicon':'material' }
-                  size = {30}
-                  color = '#f00'
+                  name={"delete"}
+                  type={PlatformOSType === "ios" ? "ionicon" : "material"}
+                  size={30}
+                  color="#f00"
                 />
                 <Text style={styles.modalContentRowText}>Delete Account</Text>
               </View>
@@ -343,15 +347,15 @@ export default class Profile extends Component {
             </View>
           </Modal>
           {/* ------------------------------------------------------------------------------------------------------ */}
-          <View style = {styles.menufield}>
+          <View style={styles.menufield}>
             <Icon
               raised
-              size = {24}
-              name = 'tab'
-              type = 'material'
-              color = '#4ac959'
-              containerStyle = {styles.menuicon}
-              onPress={() => this.props.navigation.navigate('CreatePost')}
+              size={24}
+              name="tab"
+              type="material"
+              color="#4ac959"
+              containerStyle={styles.menuicon}
+              onPress={() => this.props.navigation.navigate("CreatePost")}
             />
             <Icon
               raised
@@ -360,16 +364,20 @@ export default class Profile extends Component {
               type="material"
               color="#2f95dc"
               containerStyle={styles.menuicon}
-              onPress={() => this.props.navigation.navigate("EditProfile",this.state)}
+              onPress={() =>
+                this.props.navigation.navigate("EditProfile", this.state)
+              }
             />
             <Icon
               raised
-              size = {24}
-              name = 'more-horiz'
-              type = 'material'
-              color = '#4ac959'
-              containerStyle = {styles.menuicon}
-              onPress={() => {this.setState({isModalVisible:true})}}
+              size={24}
+              name="more-horiz"
+              type="material"
+              color="#4ac959"
+              containerStyle={styles.menuicon}
+              onPress={() => {
+                this.setState({ isModalVisible: true });
+              }}
             />
           </View>
           <View style={styles.datacontainer}>
@@ -500,7 +508,7 @@ export default class Profile extends Component {
           >
             <Text style={{ fontSize: 20, fontWeight: "500" }}>My Memories</Text>
           </View>
-          <Post navigation = {this.props.navigation}/>
+          <Post navigation={this.props.navigation} />
         </ScrollView>
       </View>
     );
