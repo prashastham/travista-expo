@@ -27,8 +27,7 @@ const Post = props => {
   });
 
   return (
-    
-    <ScrollView style={styles.container} contentOffset={{ x: 10, y: 10 }}> 
+    <ScrollView style={styles.container} contentOffset={{ x: 10, y: 10 }}>
       {posts.map((u, i) => {
         return (
           <Card
@@ -39,7 +38,7 @@ const Post = props => {
                 <View style={styles.avatar}>
                   <Avatar
                     size="medium"
-                    source={{ uri: u.avatar }}
+                    source={{ uri: u.dpurl }}
                     rounded
                     PlaceholderContent={<ActivityIndicator />}
                   />
@@ -47,28 +46,28 @@ const Post = props => {
                 <View style={styles.user}>
                   <Text></Text>
                   <TouchableOpacity>
-                    <Text style={styles.user}>{u.name}</Text>
+                    <Text style={styles.user}>{u.userHandle}</Text>
                   </TouchableOpacity>
-                  <Text style={styles.date}>{date}</Text>
+                  <Text style={styles.date}>{u.createdAt.split("T")[0]}</Text>
                 </View>
               </View>
             }
           >
             <View>
-              <Text style={styles.description}>{u.description}</Text>
+              <Text style={styles.description}>{u.body}</Text>
             </View>
             <View style={styles.imageContainer}>
-            <TouchableOpacity onPress={() => console.log("Picture clicked")}>
-              <Image
-                source={{ uri: u.image }}
-                style={{
-                  flexGrow: 1,
-                  minHeight: Dimensions.get("window").height * 0.4,
-                }}
-                resizeMode="stretch"
-                PlaceholderContent={<ActivityIndicator />}
-              />
-            </TouchableOpacity>
+              <TouchableOpacity onPress={() => console.log("Picture clicked")}>
+                <Image
+                  source={{ uri: u.image }}
+                  style={{
+                    flexGrow: 1,
+                    minHeight: Dimensions.get("window").height * 0.4
+                  }}
+                  resizeMode="stretch"
+                  PlaceholderContent={<ActivityIndicator />}
+                />
+              </TouchableOpacity>
             </View>
             <View style={styles.buttonContainer}>
               <Button
@@ -107,11 +106,11 @@ const Post = props => {
 
 const styles = StyleSheet.create({
   container: {
-    maxWidth: Dimensions.get("screen").width,
+    maxWidth: Dimensions.get("screen").width
   },
   postContainer: {
-    marginHorizontal:5,
-    borderRadius: 5,
+    marginHorizontal: 5,
+    borderRadius: 5
   },
   header: {
     flexDirection: "row",
@@ -131,13 +130,13 @@ const styles = StyleSheet.create({
   description: {
     padding: 10
   },
-  imageContainer:{
+  imageContainer: {
     // backgroundColor:'#f00',
-    paddingVertical:10,
-    borderTopWidth:1,
-    borderBottomWidth:1,
-    borderTopColor:'#af4',
-    borderBottomColor:'#af4',
+    paddingVertical: 10,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderTopColor: "#af4",
+    borderBottomColor: "#af4"
   },
   buttonContainer: {
     flexDirection: "row",

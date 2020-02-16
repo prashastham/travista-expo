@@ -1,95 +1,89 @@
 const dummy_posts = [
   {
-    id: 1,
-    name: "Prashastha Mudannayake",
-    avatar: "https://miro.medium.com/fit/c/256/256/0*rfrBJGvo5FXftsTx.",
-    image: "https://picsum.photos/300/600",
-    description: "Fun thama",
-    likes: 0,
-    likers: {},
-    comments: {
-      user_id: 2,
-      comment: ""
-    }
+    postId: "f0He58mHASP41jZjaoVK",
+    likesCount: 10,
+    author: "iY61tXyWBOerZ1dqTkRjkwqRRoi1",
+    image:
+      "https://firebasestorage.googleapis.com/v0/b/travista-chat.appspot.com/o/users%2FiY61tXyWBOerZ1dqTkRjkwqRRoi1%2Fimgs%2Fphoto-1517021897933-0e0319cfbc28.jpg?alt=media&token=2553f244-eafd-4305-baf6-7c6356c6896a",
+    dpurl:
+      "https://firebasestorage.googleapis.com/v0/b/travista-chat.appspot.com/o/users%2FiY61tXyWBOerZ1dqTkRjkwqRRoi1%2Fdp.jpg?alt=media&token=9543c9dc-6283-41f3-a991-bb0565cca2da",
+    body: "Another mountain pic",
+    reports: 0,
+    comments: [],
+    createdAt: "2020-01-13T13:49:44.194Z",
+    userHandle: "Prashastha Mudannayake"
   },
   {
-    id: 2,
-    name: "Steve Jobs",
-    avatar:
-      "https://upload.wikimedia.org/wikipedia/commons/f/f5/Steve_Jobs_Headshot_2010-CROP2.jpg",
-    image: "https://picsum.photos/300/600",
-    description: "Great click, it was an awesome trip",
-    likes: 0,
-    likers: {}
+    postId: "ZgzSCJ4KL06tT2tF5P1c",
+    reports: 0,
+    comments: [],
+    createdAt: "2020-01-13T13:47:59.897Z",
+    userHandle: "Prashastha Mudannayake",
+    likesCount: 12,
+    author: "iY61tXyWBOerZ1dqTkRjkwqRRoi1",
+    image:
+      "https://firebasestorage.googleapis.com/v0/b/travista-chat.appspot.com/o/users%2FiY61tXyWBOerZ1dqTkRjkwqRRoi1%2Fimgs%2Fphoto-1570814628289-9db351a291fa.jpg?alt=media&token=093329a0-430b-436d-8eed-6f03721ad395",
+    dpurl:
+      "https://firebasestorage.googleapis.com/v0/b/travista-chat.appspot.com/o/users%2FiY61tXyWBOerZ1dqTkRjkwqRRoi1%2Fdp.jpg?alt=media&token=9543c9dc-6283-41f3-a991-bb0565cca2da",
+    body: "Misty mountain"
   },
   {
-    id: 3,
-    name: "Gotabhaya Rajapakse",
-    avatar:
-      "https://www.tamilguardian.com/sites/default/files/Image/pictures/2019/MAy%2018/Gotabaya%20Rajapaksa.jpg",
-    image: "https://picsum.photos/300/600",
-    description: "That was an awsome day",
-    likes: 0,
-    likers: {}
+    postId: "9Gad3osWcYRShatxwTy3",
+    likesCount: 0,
+    author: "iY61tXyWBOerZ1dqTkRjkwqRRoi1",
+    image:
+      "https://firebasestorage.googleapis.com/v0/b/travista-chat.appspot.com/o/users%2FiY61tXyWBOerZ1dqTkRjkwqRRoi1%2Fimgs%2Fphoto-1570814628289-9db351a291fa.jpg?alt=media&token=093329a0-430b-436d-8eed-6f03721ad395",
+    dpurl:
+      "https://firebasestorage.googleapis.com/v0/b/travista-chat.appspot.com/o/users%2FiY61tXyWBOerZ1dqTkRjkwqRRoi1%2Fdp.jpg?alt=media&token=9543c9dc-6283-41f3-a991-bb0565cca2da",
+    body: "Misty mountain",
+    reports: 0,
+    comments: [],
+    createdAt: "2020-01-13T13:46:51.938Z",
+    userHandle: "Prashastha Mudannayake"
   },
   {
-    id: 4,
-    name: "Prashastha Mudannayake",
-    avatar: "https://miro.medium.com/fit/c/256/256/0*rfrBJGvo5FXftsTx.",
-    image: "https://picsum.photos/300/600",
-    description: "This was a great thing they did",
-    likes: 0,
-    likers: {}
+    postId: "XR7HbHXyaVqnPpZyUIoJ",
+    likesCount: 90,
+    author: "iY61tXyWBOerZ1dqTkRjkwqRRoi1",
+    image: null,
+    dpurl:
+      "https://firebasestorage.googleapis.com/v0/b/travista-chat.appspot.com/o/users%2FiY61tXyWBOerZ1dqTkRjkwqRRoi1%2Fdp.jpg?alt=media&token=9543c9dc-6283-41f3-a991-bb0565cca2da",
+    body: "Without image",
+    reports: 0,
+    comments: [],
+    createdAt: "2020-02-15T10:48:34.749Z",
+    userHandle: "Prashastha Mudannayake"
   },
   {
-    id: 5,
-    name: "Steve Jobs",
-    avatar:
-      "https://upload.wikimedia.org/wikipedia/commons/f/f5/Steve_Jobs_Headshot_2010-CROP2.jpg",
-    image: "https://picsum.photos/300/600",
-    description: "Yay that was awesome",
-    likes: 0,
-    likers: {}
-  },
-  {
-    id: 6,
-    name: "Gotabhaya Rajapakse",
-    avatar:
-      "https://www.tamilguardian.com/sites/default/files/Image/pictures/2019/MAy%2018/Gotabaya%20Rajapaksa.jpg",
-    image: "https://picsum.photos/300/600",
-    description: "Enna rata dinawamu",
-    likes: 0,
-    likers: {}
-  },
-  {
-    id: 7,
-    name: "Prashastha Mudannayake",
-    avatar: "https://miro.medium.com/fit/c/256/256/0*rfrBJGvo5FXftsTx.",
-    image: "https://picsum.photos/300/600",
-    description: "Elama thama...",
-    likes: 0,
-    likers: {}
-  },
-  {
-    id: 8,
-    name: "Steve Jobs",
-    avatar:
-      "https://upload.wikimedia.org/wikipedia/commons/f/f5/Steve_Jobs_Headshot_2010-CROP2.jpg",
-    image: "https://picsum.photos/300/600",
-    description: "Great click ;)",
-    likes: 0,
-    likers: {}
-  },
-  {
-    id: 9,
-    name: "Gotabhaya Rajapakse",
-    avatar:
-      "https://www.tamilguardian.com/sites/default/files/Image/pictures/2019/MAy%2018/Gotabaya%20Rajapaksa.jpg",
-    image: "https://picsum.photos/300/600",
-    description:
-      "It is important to develop the education system to cater the economy",
-    likes: 0,
-    likers: {}
+    reports: 0,
+    comments: [
+      {
+        postId: "9Fdpxa2qdi0sIwwM4w79",
+        createdAt: "2020-02-15T13:39:30.045Z",
+        userHandle: "Prashastha Mudannayake",
+        dpurl:
+          "https://firebasestorage.googleapis.com/v0/b/travista-chat.appspot.com/o/users%2FiY61tXyWBOerZ1dqTkRjkwqRRoi1%2Fdp.jpg?alt=media&token=9543c9dc-6283-41f3-a991-bb0565cca2da",
+        body: "another new comment"
+      },
+      {
+        postId: "9Fdpxa2qdi0sIwwM4w79",
+        createdAt: "2020-02-15T08:11:25.338Z",
+        userHandle: "Prashastha Mudannayake",
+        dpurl:
+          "https://firebasestorage.googleapis.com/v0/b/travista-chat.appspot.com/o/users%2FiY61tXyWBOerZ1dqTkRjkwqRRoi1%2Fdp.jpg?alt=media&token=9543c9dc-6283-41f3-a991-bb0565cca2da",
+        body: "new comment"
+      }
+    ],
+    createdAt: "2020-02-15T11:46:50.237Z",
+    userHandle: "Prashastha Mudannayake",
+    likesCount: 0,
+    author: "iY61tXyWBOerZ1dqTkRjkwqRRoi1",
+    image:
+      "https://firebasestorage.googleapis.com/v0/b/travista-chat.appspot.com/o/users%2FiY61tXyWBOerZ1dqTkRjkwqRRoi1%2Fimgs%2Fphoto-1517021897933-0e0319cfbc28.jpg?alt=media&token=2553f244-eafd-4305-baf6-7c6356c6896a",
+    dpurl:
+      "https://firebasestorage.googleapis.com/v0/b/travista-chat.appspot.com/o/users%2FiY61tXyWBOerZ1dqTkRjkwqRRoi1%2Fdp.jpg?alt=media&token=9543c9dc-6283-41f3-a991-bb0565cca2da",
+    body: "Just another mountain pic",
+    postId: "9Fdpxa2qdi0sIwwM4w79"
   }
 ];
 

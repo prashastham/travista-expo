@@ -21,10 +21,11 @@ export default createAppContainer(
     {
       Loading: AuthLoadingScreen,
       Auth: AuthStackNavigator,
-      App: AppTabNavigator
+      App: AppTabNavigator,
+      Verify: VerifyScreen
     },
     {
-      initialRouteName: "Auth"
+      initialRouteName: "Loading"
     }
   )
 );

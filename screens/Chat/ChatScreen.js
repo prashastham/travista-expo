@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import Colors from '../../constants/Colors';
-import HeaderIcon from '../../components/HeaderIcon';
+import Colors from "../../constants/Colors";
+import HeaderIcon from "../../components/HeaderIcon";
 
 const ChatScreen = props => {
   return (
@@ -13,8 +13,8 @@ const ChatScreen = props => {
 
 ChatScreen.navigationOptions = {
   title: "Chat",
-  headerTintColor:Colors.stackHeaderTintColor,
-  headerLeft:<HeaderIcon/>
+  headerTintColor: Colors.stackHeaderTintColor,
+  headerLeft: <HeaderIcon />
 };
 
 const styles = StyleSheet.create({
