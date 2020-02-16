@@ -41,7 +41,7 @@ const ChatListScreen = props => {
   const [dpurl, setDpurl] = useState("");
   return (
     <View style={styles.container}>
-      <Text>Chat List screen</Text>
+      <Text>Trip List screen</Text>
     </View>
   );
 };

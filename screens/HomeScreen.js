@@ -27,6 +27,7 @@ import Colors from "../constants/Colors";
 import HeaderIcon from "../components/HeaderIcon";
 import Storage from "../local/Storage";
 import Constants from "expo-constants";
+import firebaseClient from "../local/FirebaseClient";
 
 import * as ImagePicker from "expo-image-picker";
 
@@ -69,6 +70,7 @@ const HomeScreen = props => {
   const [body, onChangeBody] = useState("");
   const [pickedImage, onPickImage] = useState(null);
   const [heightWidth, setHeightWidth] = useState({ height: 0, width: 0 });
+  const [imgURL, setImageURL] = useState("");
 
   //comments
   const [list, setList] = useState([]);
@@ -120,7 +122,6 @@ const HomeScreen = props => {
     fetch(url)
       .then(res => res.json())
       .then(function(data) {
-        console.log(data);
         setPosts(data);
         return data;
       })
@@ -129,8 +130,46 @@ const HomeScreen = props => {
       });
   };
 
+  uploadImage = async () => {
+    const uri = pickedImage.uri;
+    // Why are we using XMLHttpRequest? See:
+    // https://github.com/expo/expo/issues/2402#issuecomment-443726662
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function() {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function(e) {
+        console.log(e);
+        reject(new TypeError("Network request failed"));
+      };
+      xhr.responseType = "blob";
+      xhr.open("GET", uri, true);
+      xhr.send(null);
+    });
+    const uid = id;
+    const ref = firebaseClient
+      .storage()
+      .ref("users/" + uid)
+      .child(`imgs/${Math.round(Math.random() * 1000000000)}.jpg`);
+    const uploadTask = ref.put(blob);
+    console.log(blob);
+    uploadTask.on(
+      "state_changed",
+      function(snapshot) {},
+      function(error) {},
+      function() {
+        uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+          console.log("File available at", downloadURL);
+          setImageURL(downloadURL);
+        });
+      }
+    );
+  };
+
   //create and upload post to db
   savePost = () => {
+    uploadImage;
     const url = "https://asia-east2-travista-chat.cloudfunctions.net/app2/post";
     const newPost = {
       author: id,
@@ -138,8 +177,7 @@ const HomeScreen = props => {
       body: body,
       userHandle: name,
       createdAt: new Date().toISOString(),
-      image:
-        "https://firebasestorage.googleapis.com/v0/b/travista-chat.appspot.com/o/users%2FiY61tXyWBOerZ1dqTkRjkwqRRoi1%2Fimgs%2Fphoto-1517021897933-0e0319cfbc28.jpg?alt=media&token=2553f244-eafd-4305-baf6-7c6356c6896a",
+      image: imgURL,
       likesCount: 0,
       reports: 0,
       commentsCount: 0,
@@ -238,6 +276,7 @@ const HomeScreen = props => {
     if (!result.cancelled) {
       onPickImage({ uri: result.uri });
       setHeightWidth({ height: result.height, width: result.width });
+      uploadImage();
     }
   };
 
