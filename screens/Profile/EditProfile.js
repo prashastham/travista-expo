@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, StyleSheet, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, ActivityIndicator, Alert, KeyboardAvoidingView } from 'react-native';
 import Colors from '../../constants/Colors';
 import { Button , Overlay, Input} from 'react-native-elements';
 import Storage from '../../local/Storage';
@@ -95,7 +95,12 @@ export default class EditProfile extends Component {
     }
     else{
     return (
-      <ScrollView>
+      <KeyboardAvoidingView
+        keyboardVerticalOffset={100}
+          behavior="padding"
+        >
+      <ScrollView >
+        
         <View style={styles.saveContainer}>
           <Text>Save Your Changes</Text>
           <Button
@@ -179,6 +184,7 @@ export default class EditProfile extends Component {
           />
         </View> 
       </ScrollView>
+      </KeyboardAvoidingView>
     );
     }
   }
