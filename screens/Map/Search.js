@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet,Dimensions,TouchableOpacity,PlatformOSType} from 'react-native';
+import { View, Text, StyleSheet,Dimensions,TouchableOpacity,Linking,Platform} from 'react-native';
 import {SearchBar,Button,Icon} from 'react-native-elements';
 import Modal from 'react-native-modal';
 import MapView,{Marker} from "react-native-maps";
@@ -7,6 +7,7 @@ import Colors from "../../constants/Colors";
 import HeaderIcon from '../../components/HeaderIcon';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
+import Pics from '../../elements/MapLocationPics';
 
 export default class Search extends Component {
   static navigationOptions = {
@@ -25,7 +26,7 @@ export default class Search extends Component {
     },
     mylat:0,
     mylong:0,
-    searchText:"Galle",
+    searchText:"",
     isModalVisible:false,
     isloading:false,
   }
@@ -42,7 +43,7 @@ export default class Search extends Component {
   }
 
   search = async()=>{
-    if(this.state.searchText!==""){
+    if(this.state.searchText!=="" && this.state.searchText!=="Me"){
         data = await Location.geocodeAsync(this.state.searchText)
         console.log(data);
         if(data.length)
@@ -81,6 +82,20 @@ export default class Search extends Component {
     }
   };
 
+  openLocation (){
+    console.log('hello')
+  const scheme = Platform.select({ ios: 'maps:0,0?q=', android: 'geo:0,0?q=' });
+  const latLng = `${this.state.region.latitude},${this.state.region.longitude}`;
+  const label = 'Custom Label';
+  const url = Platform.select({
+    ios: `${scheme}${label}@${latLng}`,
+    android: `${scheme}${latLng}(${label})`
+  });
+  
+  
+  Linking.openURL(url);
+}
+
   render() {
     return (
         <View style={styles.container}>
@@ -107,12 +122,16 @@ export default class Search extends Component {
                     <SearchBar placeholder="Search Location..." lightTheme onChangeText={text => this.searchOnChange(text)} autoCorrect={false} value={this.state.searchText} inputContainerStyle={{backgroundColor:'#fff',borderRadius:10,}} containerStyle={styles.searchBar}/>
                     <Button title='Search' type='outline' containerStyle={{flexGrow:0.1,margin:0}} buttonStyle={styles.buttonStyle} onPress={()=>this.search()}/>
                 </View>
-                {!this.state.isloading
+                {(this.state.searchText===""||this.state.searchText==="Me")
                 ?
+                <View>
+                    <Button type='solid' buttonStyle={styles.detailsButton} titleStyle={{color:'#000'}} onPress ={()=>{region= {latitude: this.state.mylat,longitude: this.state.mylong,latitudeDelta: 0.0922,longitudeDelta: 0.0421,};this.setState({region:region,searchText:'Me',isloading:false,isModalVisible:true})}} title='Current'/>
+                </View>
+                :
                 <View>
                     <Button type='solid' buttonStyle={styles.detailsButton} titleStyle={{color:'#000'}} onPress ={()=>this.setState({isModalVisible:true})} title='View'/>
                 </View>
-                :null}
+                }
             </View>
             <Modal
             isVisible={this.state.isModalVisible}
@@ -126,13 +145,13 @@ export default class Search extends Component {
                 <View style={styles.modalContent}>
                     <View style={styles.modalHeader}>
                         <Text style={styles.modalTitle}>{this.state.searchText}</Text>
-                        <TouchableOpacity style = {styles.googleLocationContainer}>
+                        <TouchableOpacity style = {styles.googleLocationContainer} onPress={()=>this.openLocation()}>
                             <Icon
                                 name='location-on'
                                 type='matirial-community'
                                 color='#cccccc'
                             />
-                            <Text style = {styles.googleLocationText}>on google maps</Text>
+                            <Text style = {styles.googleLocationText}>on Google maps</Text>
                         </TouchableOpacity>
                         <View style={styles.pictureHeader}>
                             <Text style={styles.pictureTitle}>What People know..</Text>
@@ -142,9 +161,12 @@ export default class Search extends Component {
                                 type='matirial'
                                 color='#f50'
                                 size={20}
-                                onPress={() => console.log('hello')} 
+                                onPress={() => {this.setState({isModalVisible: false}); this.props.navigation.navigate('MapPic')}} 
                             />
                         </View>
+                    </View>
+                    <View style={{flex:1,marginTop:70}}>
+                        <Pics/>
                     </View>
                 </View>
             </Modal>
