@@ -11,6 +11,7 @@ import {
 import { Card, Button, Avatar, Image } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Colors from "../constants/Colors";
+import moment from 'moment';
 
 import dummy_posts from "../dummy_data/dummy_posts";
 const posts = dummy_posts;
@@ -48,7 +49,7 @@ const Post = props => {
                   <TouchableOpacity>
                     <Text style={styles.user}>{u.userHandle}</Text>
                   </TouchableOpacity>
-                  <Text style={styles.date}>{u.createdAt.split("T")[0]}</Text>
+                  <Text style={styles.date}>{moment(u.createdAt).format("YYYY-MM-DD h:mm")}</Text>
                 </View>
               </View>
             }

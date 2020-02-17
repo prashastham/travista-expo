@@ -247,7 +247,7 @@ export default class Profile extends Component {
             <Avatar
               rounded
               size={170}
-              title={this.state.name}
+              title={this.state.name.charAt(0).toUpperCase()}
               containerStyle={{
                 marginTop: 50,
                 marginBottom: 50,

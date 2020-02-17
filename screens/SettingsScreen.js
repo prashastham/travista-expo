@@ -34,6 +34,16 @@ const SettingsScreen = props => {
           <Text style={{ fontSize: 16 }}>Logout</Text>
         </View>
       </TouchableOpacity>
+      <View>
+          <Button title='Change Password'/>
+      </View>
+      <View>
+          <Button title='Services'/>
+      </View>
+      <View>
+          <Button title='Logout'/>
+      </View>
+
     </View>
   );
 };

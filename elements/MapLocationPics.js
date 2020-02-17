@@ -9,6 +9,7 @@ import {
   ActivityIndicator
 } from "react-native";
 import { Card, Button, Avatar, Image } from "react-native-elements";
+import moment from 'moment';
 
 import dummy_posts from "../dummy_data/dummy_posts";
 const posts = dummy_posts;
@@ -17,11 +18,6 @@ const Post = props => {
   const [date, setDate] = useState("");
 
   useEffect(() => {
-    var hours = new Date().getHours(); //Current Hours
-    var min = new Date().getMinutes(); //Current Minutes
-    var ampm = hours >= 12 ? "pm" : "am";
-
-    setDate((hours % 12) + ":" + (min < 10 ? "0" + min : min) + " " + ampm);
   });
 
   return (
@@ -37,14 +33,15 @@ const Post = props => {
                 <View style={styles.avatar}>
                   <Avatar
                     size="medium"
-                    source={{ uri: u.avatar }}
+                    title={u.userHandle.charAt(0).toLocaleUpperCase()}
+                    source={{ uri: u.dpurl?u.dpurl:" "}}
                     rounded
                     PlaceholderContent={<ActivityIndicator />}
                   />
                 </View>
                 <View style={styles.user}>
-                    <Text style={styles.user}>{u.name}</Text>
-                    <Text style={styles.date}>{date}</Text>
+                    <Text style={styles.user}>{u.userHandle}</Text>
+                    <Text style={styles.date}>{moment(u.createdAt).format("YYYY-MM-DD h:mm")}</Text>
                 </View>
               </View>
             }
