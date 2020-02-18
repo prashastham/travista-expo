@@ -5,7 +5,8 @@ import {
   View,
   ScrollView,
   KeyboardAvoidingView,
-  Dimensions
+  Dimensions,
+  ActivityIndicator
 } from "react-native";
 import { Button, Input } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -52,9 +53,45 @@ const SignupScreen = props => {
   const [password, updatePassword] = useState("");
   const [conf_password, updateConfPassword] = useState("");
   const [errormsg, setError] = useState(null);
+  const [errorName, setErrorName] = useState(null);
+  const [errortele, setErrortele] = useState(null);
+  const [loading, setLoading] = useState(false)
+
+  const validate = ()=>{
+    setErrorName("");
+    setErrortele("");
+    if(name!=="")
+    {
+      if(telephone!==''&&telephone.length ==10)
+      {
+        return true;
+      }
+      else if(telephone=="")
+      {
+        setErrortele('Enter telephone number');
+        alert('Enter telephone number');
+        return false;
+      }
+      else{
+        setError('Telephone number have only 10 digits');
+        alert('Telephone number have only 10 digits')
+        return false;
+      }
+    }
+    else{
+      setErrorName('Enter Name');
+      alert('Enter Name');
+      return false;
+    }
+  }
 
   const handleSignUp = () => {
     console.log(email + name + telephone);
+    if(!validate())
+    {
+      return false;
+    }
+    setLoading(true);
     if (password == conf_password) {
       firebase
         .auth()
@@ -66,9 +103,11 @@ const SignupScreen = props => {
             createUser(user.user.uid);
           });
         })
-        .catch(errormsg => setError(errormsg.message));
+        .catch(errormsg => {setLoading(false); setError(errormsg.message); alert(errormsg)});
     } else {
+      setLoading(false);
       setError("Password do not match");
+      alert(errormsg);
     }
   };
 
@@ -97,11 +136,13 @@ const SignupScreen = props => {
           console.log(`${key} ${value}`);
           Storage.setItem(key, value);
         });
+        setLoading(false);
       })
       .catch(error => {
         console.log(
           "There is some problem in your fetch operation" + error.message
         );
+        setLoading(false);
         if (error.message === "Network request failed") {
           alert("Check Your Connection.");
         }
@@ -145,6 +186,15 @@ const SignupScreen = props => {
   //   [dispatchFormState]
   // );
 
+  if(loading)
+  {
+    return(
+      <View style={{flex:1,justifyContent:'center',alignContent:'center'}}>
+        <ActivityIndicator size ='large' color='#c6c6c6'/>
+      </View>
+    );
+  }
+  else{
   return (
     <KeyboardAvoidingView style={styles.container} behavior="height" enabled>
       <ScrollView>
@@ -166,6 +216,8 @@ const SignupScreen = props => {
                 padding: 5
               }}
               required
+              errorMessage={errorName}
+              errorStyle={{color:'red'}}
               autoCapitalize="none"
               onChangeText={text => updateName(text)}
               value={name}
@@ -175,7 +227,7 @@ const SignupScreen = props => {
             <Input
               id="telephone"
               label="Your Telephone"
-              placeholder="+9471 000 000 1"
+              placeholder="071 000 000 1"
               leftIcon={{
                 type: "material",
                 name: "phone",
@@ -183,6 +235,8 @@ const SignupScreen = props => {
                 padding: 5
               }}
               required
+              errorMessage={errortele}
+              errorStyle={{color:'red'}}
               autoCapitalize="none"
               onChangeText={text => updateTelephone(text)}
               value={telephone}
@@ -289,6 +343,7 @@ const SignupScreen = props => {
       </ScrollView>
     </KeyboardAvoidingView>
   );
+  }
 };
 
 SignupScreen.navigationOptions = {

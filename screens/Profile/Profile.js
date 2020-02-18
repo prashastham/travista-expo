@@ -1,6 +1,6 @@
 import React,{Component  } from "react";
 import { View,Text,YellowBox,StyleSheet,Platform,Dimensions,ScrollView,Image,SafeAreaView,Alert,TouchableOpacity,PlatformOSType, ActivityIndicator } from "react-native";
-import {Avatar,Icon,Overlay,Button} from 'react-native-elements';
+import {Avatar,Icon,Overlay,Button,Input} from 'react-native-elements';
 import {LinearGradient} from 'expo-linear-gradient';
 import Modal from 'react-native-modal';
 import * as ImagePicker from 'expo-image-picker';
@@ -12,6 +12,7 @@ import Colors from '../../constants/Colors';
 import Post from '../../elements/Post';
 import HeaderIcon from "../../components/HeaderIcon";
 import * as Progress from "react-native-progress";
+import firebase from 'firebase';
 
 export default class Profile extends Component {
  
@@ -53,6 +54,9 @@ export default class Profile extends Component {
       visible:false,
       isOverlayVisible:false,
       isModalVisible:false,
+      passwordOverlay:false,
+      password:'',
+      error3:'',
       progress:0,
       dpupload:false,
       loading:false,
@@ -226,6 +230,60 @@ export default class Profile extends Component {
     .catch(error=>{console.log(error)})
   }
 
+  validate = ()=>{
+    this.setState({error3:""})
+    password = this.state.password;
+    if(password!==''&&password.length>=6)
+    {
+      return true;
+    }
+    else if(password==='')
+    {
+      this.setState({error3:'Enter Password!'})
+      return false;
+    }
+    else{
+      this.setState({error3:'Enter Correct Password!'})
+      return false;
+    }
+  }
+  deleteAccount(){
+
+    this.setState({passwordOverlay:false,loading:true})
+    if(!this.validate())
+    {
+      return false;
+    }
+
+    const user = firebaseClient.auth().currentUser;
+    var credential = firebase.auth.EmailAuthProvider.credential(
+      user.email,
+      password
+    );
+    console.log(credential)
+    if(JSON.parse(credential).password==this.state.password)
+    {
+      alert('password in walid')
+      return false;
+    }
+    if(credential)
+    {
+      user.delete().then(function() {
+        this.setState({loading:false,password:''})
+        console.log('user delete')
+      }).catch((error)=> {
+        this.setState({loading:false,password:''})
+        console.log(error)
+        alert("user can't delete!")
+      });
+      
+    }
+    else{
+      this.setState({loading:false,password:''})
+      alert('Incorrect password!')
+    }
+  }
+
   render() {
     if(this.state.loading)
     {
@@ -247,7 +305,7 @@ export default class Profile extends Component {
             <Avatar
               rounded
               size={170}
-              title={this.state.name}
+              title={this.state.name.charAt(0).toUpperCase()}
               containerStyle={{
                 marginTop: 50,
                 marginBottom: 50,
@@ -333,7 +391,7 @@ export default class Profile extends Component {
                 <Text style={styles.modalContentRowText}>Log Out</Text>
               </View>
               </TouchableOpacity>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={()=>{this.setState({isModalVisible:false,passwordOverlay:true})}}>
               <View style = {styles.modalContentRow}>
                 <Icon
                   name={"delete"}
@@ -346,6 +404,19 @@ export default class Profile extends Component {
               </TouchableOpacity>
             </View>
           </Modal>
+          <Overlay
+            isVisible={this.state.passwordOverlay}
+            windowBackgroundColor="rgba(0, 0, 0, 0.5)"
+            overlayBackgroundColor="white"
+            onBackdropPress={() => this.setState({passwordOverlay:false,password:''})}
+            width="90%"
+            height="50%"
+          >
+              <View style={styles.overlayContainer}>
+                  <Input label='Enter Password' errorStyle={{ color: 'red' }} errorMessage={this.state.error3} onChangeText={(text)=>this.setState({password:text})} value={this.state.password} secureTextEntry={true} style={styles.input}/>
+                  <Button title='Save' type='outline' buttonStyle={{borderWidth: 1,}} onPress={()=>this.deleteAccount()}/>
+              </View>
+          </Overlay>
           {/* ------------------------------------------------------------------------------------------------------ */}
           <View style={styles.menufield}>
             <Icon
@@ -355,7 +426,7 @@ export default class Profile extends Component {
               type="material"
               color="#4ac959"
               containerStyle={styles.menuicon}
-              onPress={() => this.props.navigation.navigate("CreatePost")}
+              onPress={()=>this.props.navigation.navigate('ServiceFilter')}
             />
             <Icon
               raised
@@ -712,5 +783,9 @@ export default class Profile extends Component {
       fontSize:17,
       fontWeight:'300',
       marginLeft:10,
+    },
+    overlayContainer:{
+      flex:1,
+      justifyContent:'space-around'
     },
 });

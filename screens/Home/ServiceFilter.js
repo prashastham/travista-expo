@@ -87,7 +87,7 @@ export default class ServiceFilter extends Component {
                         <View style={styles.touchContent}>
                         <Avatar
                             rounded
-                            source={{uri:user.imageUrl}}
+                            source={{uri:user.imageUrl!==""?user.imageUrl:" "}}
                             title = {user.name[0].toUpperCase()}
                             containerStyle={styles.cardContentItemAvatar}
                             size={50}

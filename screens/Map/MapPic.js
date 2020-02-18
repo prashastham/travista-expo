@@ -3,8 +3,9 @@ import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import Storage from '../../local/Storage';
 import { Avatar, Input, Button, Image, Icon, Overlay} from 'react-native-elements';
 import * as ImagePicker from 'expo-image-picker';
-import Constants from 'expo-constants';
-import * as Permissions from 'expo-permissions';
+import firebaseClient from '../../local/FirebaseClient';
+import moment from 'moment';
+
 
 export default class MapPic extends Component {
 
@@ -26,23 +27,30 @@ export default class MapPic extends Component {
     travelerId:'',
     travelerName:'',
     traverlerImageUrl:'',
-    latitude:'',
-    longitude:'',
+    latitude:this.userData.region.latitude,
+    longitude:this.userData.region.longitude,
     place:'',
     body:'', ///need to add create time to last object
     imageUrl:'',
     errorMessage:'',
+    image:'',
     isOverlayVisible:false,
+    loading:false,
+    latitude:'',
+    longitude:'',
   };
-  componentWillMount() {
+  componentWillMount=async()=> {
     this.props.navigation.setParams({ save: this.save });
+    // Location.setApiKey('AIzaSyCN1tAyAammD_ym0fJsvLhc0z_hJfwxtWc');
+    // const loc = await Location.getCurrentPositionAsync({accuracy:5});
+    // this.setState({latitude:loc.coords.latitude,longitude:loc.coords.longitude});
   }
   async componentDidMount(){
     userName = await Storage.getItem('name');
-    imageUrl = await Storage.getItem('dpurl');
+    dpUrl = await Storage.getItem('dpurl');
     let travelerId = await Storage.getItem("accessToken");
-    this.setState({travelerId:travelerId ,travelerName:userName, traverlerImageUrl:imageUrl,});
-    // this.getPermissionAsync();
+    console.log(this.userData.region)
+    this.setState({travelerId:travelerId ,travelerName:userName, traverlerImageUrl:dpUrl,latitude:this.userData.region.latitude,longitude:this.userData.region.longitude});
   }
 
   validate=()=>{
@@ -56,8 +64,8 @@ export default class MapPic extends Component {
     }
   }
    // ------------------------------------------------------------------------
-   uploadImageAsync = async uri => {
-        this.setState({ dpupload: true });
+   uploadImageAsync = async (uri, lambda) => {
+        this.setState({ loading: true });
         // Why are we using XMLHttpRequest? See:
         // https://github.com/expo/expo/issues/2402#issuecomment-443726662
         const blob = await new Promise((resolve, reject) => {
@@ -73,11 +81,12 @@ export default class MapPic extends Component {
         xhr.open("GET", uri, true);
         xhr.send(null);
         });
-        const uid = this.state.id;
+        const uid = this.state.travelerId;
+        const rand = (parseInt(Math.random()*10000000000)).toString();
         const ref = firebaseClient
         .storage()
-        .ref("users/" + uid)
-        .child("dp.jpg");
+        .ref("mappics/" + uid)
+        .child(rand+".jpg");
         const uploadTask = ref.put(blob);
 
         uploadTask.on(
@@ -89,13 +98,14 @@ export default class MapPic extends Component {
         },
         function(error) {
             // Handle unsuccessful uploads
+            this.setState({loading:false,progress:0});
         },
         () => {
             uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
             console.log("File available at", downloadURL);
             blob.close();
-            this.setState({dpurl:downloadURL,dpupload:false,progress:0});
-            this.updateimageurl();
+            this.setState({image:downloadURL,progress:0});
+            lambda();
             });
         }
         );
@@ -103,18 +113,18 @@ export default class MapPic extends Component {
 
     //-------------------------------------------------------------------------
 
-    getPermissionAsync = async () => {
-          const p1 = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-          if (p1.status !== "granted") {
-            alert("Sorry, we need camera roll permissions to make this work!");
-            this.props.navigation.goBack()
-          }
-          const p2 = await Permissions.getAsync(Permissions.CAMERA)
-          if (p2.status !== "granted") {
-            alert("Sorry, we need camera roll permissions to make this work!");
-            this.props.navigation.goBack()
-          }
-      };
+    // getPermissionAsync = async () => {
+    //       const p1 = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    //       if (p1.status !== "granted") {
+    //         alert("Sorry, we need camera roll permissions to make this work!");
+    //         this.props.navigation.goBack()
+    //       }
+    //       const p2 = await Permissions.getAsync(Permissions.CAMERA)
+    //       if (p2.status !== "granted") {
+    //         alert("Sorry, we need camera roll permissions to make this work!");
+    //         this.props.navigation.goBack()
+    //       }
+    //   };
     
       _pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -127,8 +137,9 @@ export default class MapPic extends Component {
         console.log(result);
     
         if (!result.cancelled) {
-          //   this.setState({ image: result.uri });
-          this.uploadImageAsync(result.uri);
+          this.setState({ imageUrl: result.uri });
+          
+          console.log(result.uri)
         }
       };
 
@@ -137,32 +148,40 @@ export default class MapPic extends Component {
           mediaTypes: ImagePicker.MediaTypeOptions.Images,
           quality: 0.5,
           allowsEditing: true,
-          aspect: [3, 2]
+          aspect: [4, 3]
         });
     
         console.log(result);
     
         if (!result.cancelled) {
-          //   this.setState({ image: result.uri });
-        //   this.uploadImageAsync(result.uri);
+            this.setState({ imageUrl: result.uri });
         }
       };
 
 
-  save=()=>{
+  save=async ()=>{
     if(!this.validate())
     {
       return false;
     }
     this.setState({loading:true})
+    await this.uploadImageAsync(this.state.imageUrl,()=>this.request());
+    
+  }
+
+  request=()=>{
+    
     const data = {
-      uid:this.state.travelerId,
-      travelerId:this.state.travelerName,
-      travelerImage:this.state.traverlerImageUrl,
-      serviceId:this.state.serviceId,
+      author:this.state.travelerId,
+      userHandle:this.state.travelerName,
+      dpurl:this.state.traverlerImageUrl,
       body:this.state.body,
+      image:this.state.image,
+      latitude:this.state.latitude,
+      longitude:this.state.longitude,
+      createdAt:moment().format(),
     };
-    const url = 'https://us-central1-travista-chat.cloudfunctions.net/api/review'
+    const url = 'https://us-central1-travista-chat.cloudfunctions.net/app/api_app/addpicture'
     fetch(url,{
       method:'POST',
       headers: { 
@@ -230,7 +249,7 @@ export default class MapPic extends Component {
                     name='camera-alt'
                     type='material'
                     size={20}
-                    onPress={()=>this._launchCamera()} //this.setState({isOverlayVisible:true})
+                    onPress={()=>this.setState({isOverlayVisible:true})} //this._launchCamera()
                   />
               </View>
               {this.state.imageUrl!==""?
@@ -243,13 +262,16 @@ export default class MapPic extends Component {
             </View> 
             <Overlay
                 isVisible={this.state.isOverlayVisible}
-                windowBackgroundColor="rgba(255, 255, 255, .5)"
-                overlayBackgroundColor="red"
+                windowBackgroundColor="rgba(0, 0, 0, .5)"
+                overlayBackgroundColor="white"
                 onBackdropPress={() => this.setState({ isOverlayVisible: false })}
                 width="70%"
-                height={250}
+                height="30%"
             >
-                <Text>Hello from Overlay!</Text>
+                <View style={styles.overlayContainer}>
+                  <Button title='Gallary' type='outline' buttonStyle={{borderWidth: 1,}} onPress={()=>{this.setState({isOverlayVisible:false}),this._pickImage()}}/>
+                  <Button title='Camera' type='outline' buttonStyle={{borderWidth: 1,}} onPress={()=>{this.setState({isOverlayVisible:false}),this._launchCamera()}}/>
+                </View>
             </Overlay>
 
         </View>
@@ -307,4 +329,10 @@ const styles = StyleSheet.create({
       fontWeight:'500',
       color:'#6c707c'
   },
+  overlayContainer:{
+      flexGrow:1,
+      width:'100%',
+      height:'100%',
+      justifyContent:'space-around',
+  }
 })
