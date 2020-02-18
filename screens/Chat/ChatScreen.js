@@ -232,8 +232,7 @@ const styles = StyleSheet.create({
   },
   chatAndButton: {
     flex: 1,
-    flexDirection: "column",
-    justifyContent: ""
+    flexDirection: "column" 
   },
   chat: {
     flex: 1

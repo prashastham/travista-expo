@@ -45,7 +45,7 @@ const dummy_posts = [
     postId: "XR7HbHXyaVqnPpZyUIoJ",
     likesCount: 90,
     author: "iY61tXyWBOerZ1dqTkRjkwqRRoi1",
-    image: null,
+    image: "https://firebasestorage.googleapis.com/v0/b/travista-chat.appspot.com/o/users%2FiY61tXyWBOerZ1dqTkRjkwqRRoi1%2Fimgs%2Fphoto-1570814628289-9db351a291fa.jpg?alt=media&token=093329a0-430b-436d-8eed-6f03721ad395",
     dpurl:
       "https://firebasestorage.googleapis.com/v0/b/travista-chat.appspot.com/o/users%2FiY61tXyWBOerZ1dqTkRjkwqRRoi1%2Fdp.jpg?alt=media&token=9543c9dc-6283-41f3-a991-bb0565cca2da",
     body: "Without image",

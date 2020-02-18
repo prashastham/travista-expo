@@ -9,21 +9,64 @@ import {
   ActivityIndicator
 } from "react-native";
 import { Card, Button, Avatar, Image } from "react-native-elements";
+import moment from 'moment';
 
-import dummy_posts from "../dummy_data/dummy_posts";
-const posts = dummy_posts;
+// import dummy_posts from "../dummy_data/dummy_posts";
+// const posts = dummy_posts;
 
-const Post = props => {
+const MapLocationPics = props => {
   const [date, setDate] = useState("");
+  const [region,setRegion] = useState(props.region)
+  const [posts,setPost] = useState([]);
+  const [status,setStatus] = useState('')
+
+  const loadData = ()=>{
+    console.log(region)
+    lat = region.latitude.toString();//'6.8612775'
+    long = region.longitude.toString();//'79.892156'
+    console.log(lat+" "+long);
+    url = 'https://us-central1-travista-chat.cloudfunctions.net/app/api_app/getlocpics/?lat='+lat+'&long='+long;
+
+    fetch(url, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      }
+    })
+      //.then(res => res.json())//{setStatus(res.status); setTemp(res.json())}
+      .then(res => {
+        // console.log(res.json());
+        if(res.status==302)
+        {
+          temp = res.json();
+          setPost(temp);
+        }
+
+      })
+      .catch(error => {
+        console.log(
+          "There is some problem in your fetch operation" + error.message
+        );
+        if (error.message === "Network request failed") {
+          alert("Connection faild. Try again later.");
+        }
+      });
+  }
 
   useEffect(() => {
-    var hours = new Date().getHours(); //Current Hours
-    var min = new Date().getMinutes(); //Current Minutes
-    var ampm = hours >= 12 ? "pm" : "am";
+    loadData();
+  },[]);
 
-    setDate((hours % 12) + ":" + (min < 10 ? "0" + min : min) + " " + ampm);
-  });
-
+  if(posts.length===0)
+  {
+    return(
+      <View style={{flex:1,justifyContent:'center',alignContent:'center'}}>
+        <Text>No Data Found</Text>
+      </View>
+    );
+  }
+  else{
   return (
     
     <ScrollView style={styles.container} scrollEnabled horizontal={true}> 
@@ -37,14 +80,15 @@ const Post = props => {
                 <View style={styles.avatar}>
                   <Avatar
                     size="medium"
-                    source={{ uri: u.avatar }}
+                    title={u.userHandle.charAt(0).toLocaleUpperCase()}
+                    source={{ uri: u.dpurl?u.dpurl:" "}}
                     rounded
                     PlaceholderContent={<ActivityIndicator />}
                   />
                 </View>
                 <View style={styles.user}>
-                    <Text style={styles.user}>{u.name}</Text>
-                    <Text style={styles.date}>{date}</Text>
+                    <Text style={styles.user}>{u.userHandle}</Text>
+                    <Text style={styles.date}>{moment(u.createdAt).format("YYYY-MM-DD h:mm")}</Text>
                 </View>
               </View>
             }
@@ -68,6 +112,7 @@ const Post = props => {
       })}
     </ScrollView>
   );
+  }
 };
 
 const styles = StyleSheet.create({
@@ -105,4 +150,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Post;
+export default MapLocationPics;

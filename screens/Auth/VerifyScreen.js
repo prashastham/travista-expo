@@ -51,6 +51,7 @@ export default class VerifyScreen extends Component {
             source={require('../../assets/images/email_verify.jpg')}
           />
           <Text style={styles.text}> We send Verification link to your email....!</Text>
+          <Text>After verify you will redirect automaticaly!</Text>
           <Button
           title='Resend Verification'
           type='outline'

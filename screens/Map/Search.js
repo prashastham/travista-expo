@@ -192,50 +192,46 @@ export default class Search extends Component {
             </View>
           )}
         </View>
-        <Modal
-          isVisible={this.state.isModalVisible}
-          onSwipeComplete={() => this.setState({ isModalVisible: false })}
-          swipeDirection={["down"]}
-          backdropOpacity={0.3}
-          onBackButtonPress={() => this.setState({ isModalVisible: false })}
-          onBackdropPress={() => this.setState({ isModalVisible: false })}
-          style={styles.moreOptionModal}
-        >
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>{this.state.searchText}</Text>
-              <TouchableOpacity
-                style={styles.googleLocationContainer}
-                onPress={() => this.openLocation()}
-              >
-                <Icon
-                  name="location-on"
-                  type="matirial-community"
-                  color="#cccccc"
-                />
-                <Text style={styles.googleLocationText}>on Google maps</Text>
-              </TouchableOpacity>
-              <View style={styles.pictureHeader}>
-                <Text style={styles.pictureTitle}>What People know..</Text>
-                <Icon
-                  raised
-                  name="camera-alt"
-                  type="matirial"
-                  color="#f50"
-                  size={20}
-                  onPress={() => {
-                    this.setState({ isModalVisible: false });
-                    this.props.navigation.navigate("MapPic");
-                  }}
-                />
-              </View>
-            </View>
-            <View style={{ flex: 1, marginTop: 70 }}>
-              <Pics />
-            </View>
-          </View>
-        </Modal>
-      </View>
+        
+            <Modal
+            isVisible={this.state.isModalVisible}
+            onSwipeComplete={() => this.setState({isModalVisible: false})}
+            swipeDirection={['down']}
+            backdropOpacity={0.3}
+            onBackButtonPress={() => this.setState({isModalVisible: false})}
+            onBackdropPress={() => this.setState({isModalVisible: false})}
+            style={styles.moreOptionModal}
+            >
+                <View style={styles.modalContent}>
+                    <View style={styles.modalHeader}>
+                        <Text style={styles.modalTitle}>{this.state.searchText}</Text>
+                        <TouchableOpacity style = {styles.googleLocationContainer} onPress={()=>this.openLocation()}>
+                            <Icon
+                                name='location-on'
+                                type='matirial-community'
+                                color='#cccccc'
+                            />
+                            <Text style = {styles.googleLocationText}>on Google maps</Text>
+                        </TouchableOpacity>
+                        <View style={styles.pictureHeader}>
+                            <Text style={styles.pictureTitle}>What People know..</Text>
+                            <Icon
+                                raised
+                                name='camera-alt'
+                                type='matirial'
+                                color='#f50'
+                                size={20}
+                                onPress={() => {this.setState({isModalVisible: false}); this.props.navigation.navigate('MapPic',{region:this.state.region})}} 
+                            />
+                        </View>
+                    </View>
+                    <View style={{flex:1,marginTop:70}}>
+                        <Pics region={this.state.region}/>
+                    </View>
+                </View>
+            </Modal>
+        </View>
+
     );
   }
 }
