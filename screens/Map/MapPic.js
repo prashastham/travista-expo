@@ -3,11 +3,9 @@ import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import Storage from '../../local/Storage';
 import { Avatar, Input, Button, Image, Icon, Overlay} from 'react-native-elements';
 import * as ImagePicker from 'expo-image-picker';
-import Constants from 'expo-constants';
-import * as Permissions from 'expo-permissions';
 import firebaseClient from '../../local/FirebaseClient';
 import moment from 'moment';
-import * as Location from 'expo-location';
+
 
 export default class MapPic extends Component {
 
@@ -29,8 +27,8 @@ export default class MapPic extends Component {
     travelerId:'',
     travelerName:'',
     traverlerImageUrl:'',
-    latitude:'',
-    longitude:'',
+    latitude:this.userData.region.latitude,
+    longitude:this.userData.region.longitude,
     place:'',
     body:'', ///need to add create time to last object
     imageUrl:'',
@@ -43,15 +41,16 @@ export default class MapPic extends Component {
   };
   componentWillMount=async()=> {
     this.props.navigation.setParams({ save: this.save });
-    Location.setApiKey('AIzaSyCN1tAyAammD_ym0fJsvLhc0z_hJfwxtWc');
-    const loc = await Location.getCurrentPositionAsync({accuracy:5});
-    this.setState({latitude:loc.coords.latitude,longitude:loc.coords.longitude});
+    // Location.setApiKey('AIzaSyCN1tAyAammD_ym0fJsvLhc0z_hJfwxtWc');
+    // const loc = await Location.getCurrentPositionAsync({accuracy:5});
+    // this.setState({latitude:loc.coords.latitude,longitude:loc.coords.longitude});
   }
   async componentDidMount(){
     userName = await Storage.getItem('name');
     dpUrl = await Storage.getItem('dpurl');
     let travelerId = await Storage.getItem("accessToken");
-    this.setState({travelerId:travelerId ,travelerName:userName, traverlerImageUrl:dpUrl,});
+    console.log(this.userData.region)
+    this.setState({travelerId:travelerId ,travelerName:userName, traverlerImageUrl:dpUrl,latitude:this.userData.region.latitude,longitude:this.userData.region.longitude});
   }
 
   validate=()=>{

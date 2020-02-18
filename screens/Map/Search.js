@@ -161,12 +161,12 @@ export default class Search extends Component {
                                 type='matirial'
                                 color='#f50'
                                 size={20}
-                                onPress={() => {this.setState({isModalVisible: false}); this.props.navigation.navigate('MapPic')}} 
+                                onPress={() => {this.setState({isModalVisible: false}); this.props.navigation.navigate('MapPic',{region:this.state.region})}} 
                             />
                         </View>
                     </View>
                     <View style={{flex:1,marginTop:70}}>
-                        <Pics/>
+                        <Pics region={this.state.region}/>
                     </View>
                 </View>
             </Modal>
