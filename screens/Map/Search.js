@@ -40,10 +40,8 @@ export default class Search extends Component {
   };
 
   componentDidMount = async () => {
-    this.props.navigation.addListener("willFocus", async () => {
-      await this.getPermissionAsync();
-      Location.setApiKey("AIzaSyCN1tAyAammD_ym0fJsvLhc0z_hJfwxtWc"); //google api key
-    });
+    await this.getPermissionAsync();
+    Location.setApiKey("AIzaSyCN1tAyAammD_ym0fJsvLhc0z_hJfwxtWc"); //google api key
   };
 
   searchOnChange(text) {
