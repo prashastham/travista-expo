@@ -103,7 +103,7 @@ const ChatScreen = props => {
       .database()
       .ref("/messages/000000")
       .once("value")
-      .then(function(snapshot) {
+      .then(function (snapshot) {
         snapshotToArray(snapshot);
       });
   }
@@ -185,31 +185,31 @@ const ChatScreen = props => {
                 />
               </View>
             ) : (
-              <View
-                style={{
-                  padding: 5,
-                  maxWidth: Dimensions.get("screen").width * 0.8
-                }}
-              >
-                <ListItem
-                  key={i}
-                  leftAvatar={{ source: { uri: l.dpurl } }}
-                  title={
-                    <View style={{ flexDirection: "row" }}>
-                      <Text style={{ fontSize: 20, color: "#28b463" }}>
-                        {l.userHandle}
-                      </Text>
-                    </View>
-                  }
-                  subtitle={
-                    <View style={{ flexDirection: "row" }}>
-                      <Text style={{ fontSize: 20 }}>{l.body}</Text>
-                    </View>
-                  }
-                  bottomDivider
-                />
-              </View>
-            )
+                <View
+                  style={{
+                    padding: 5,
+                    maxWidth: Dimensions.get("screen").width * 0.8
+                  }}
+                >
+                  <ListItem
+                    key={i}
+                    leftAvatar={{ source: { uri: l.dpurl } }}
+                    title={
+                      <View style={{ flexDirection: "row" }}>
+                        <Text style={{ fontSize: 20, color: "#28b463" }}>
+                          {l.userHandle}
+                        </Text>
+                      </View>
+                    }
+                    subtitle={
+                      <View style={{ flexDirection: "row" }}>
+                        <Text style={{ fontSize: 20 }}>{l.body}</Text>
+                      </View>
+                    }
+                    bottomDivider
+                  />
+                </View>
+              )
           )}
         </ScrollView>
       </View>
@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
   },
   chatAndButton: {
     flex: 1,
-    flexDirection: "column" 
+    flexDirection: "column"
   },
   chat: {
     flex: 1

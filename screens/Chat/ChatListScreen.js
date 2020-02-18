@@ -78,11 +78,11 @@ const ChatListScreen = props => {
       "https://asia-east2-travista-chat.cloudfunctions.net/app2/events";
     fetch(url)
       .then(res => res.json())
-      .then(function(data) {
+      .then(function (data) {
         setEventList(data);
         //console.log(eventList);
       })
-      .catch(function(err) {
+      .catch(function (err) {
         console.log(err);
       });
   };

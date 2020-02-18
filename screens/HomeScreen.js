@@ -127,11 +127,11 @@ const HomeScreen = props => {
       "https://asia-east2-travista-chat.cloudfunctions.net/app2/posts";
     fetch(url_post)
       .then(res => res.json())
-      .then(function(data) {
+      .then(function (data) {
         //setPosts(data);
         return data;
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
 
@@ -139,11 +139,11 @@ const HomeScreen = props => {
       "https://asia-east2-travista-chat.cloudfunctions.net/app2/adsUser";
     fetch(url_ad)
       .then(res => res.json())
-      .then(function(data) {
+      .then(function (data) {
         setPosts(data);
         return data;
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -154,10 +154,10 @@ const HomeScreen = props => {
     // https://github.com/expo/expo/issues/2402#issuecomment-443726662
     const blob = await new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
-      xhr.onload = function() {
+      xhr.onload = function () {
         resolve(xhr.response);
       };
-      xhr.onerror = function(e) {
+      xhr.onerror = function (e) {
         console.log(e);
         reject(new TypeError("Network request failed"));
       };
@@ -174,10 +174,10 @@ const HomeScreen = props => {
     console.log(blob);
     uploadTask.on(
       "state_changed",
-      function(snapshot) {},
-      function(error) {},
-      function() {
-        uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+      function (snapshot) { },
+      function (error) { },
+      function () {
+        uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
           console.log("File available at", downloadURL);
           setImageURL(downloadURL);
         });
@@ -239,7 +239,7 @@ const HomeScreen = props => {
     const url = `https://asia-east2-travista-chat.cloudfunctions.net/app2/posts/${postId}`;
     fetch(url)
       .then(res => res.json())
-      .then(function(data) {
+      .then(function (data) {
         setList(data.comments);
       });
   };
@@ -248,7 +248,7 @@ const HomeScreen = props => {
     const url = `https://asia-east2-travista-chat.cloudfunctions.net/app2/adsUser/${postId}`;
     fetch(url)
       .then(res => res.json())
-      .then(function(data) {
+      .then(function (data) {
         setList(data.comments);
       });
   };

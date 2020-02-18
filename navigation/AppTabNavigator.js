@@ -84,7 +84,7 @@ SettingsStack.path = "";
 
 const MapStack = createStackNavigator(
   {
-    Map:{
+    Map: {
       screen: MapScreen,
       navigationOptions: () => ({
         header: null

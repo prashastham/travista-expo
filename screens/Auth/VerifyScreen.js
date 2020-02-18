@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
-import { View, Text, Image, StyleSheet} from 'react-native';
-import {Button} from 'react-native-elements';
+import { View, Text, Image, StyleSheet } from 'react-native';
+import { Button } from 'react-native-elements';
 import firebase from '../../local/FirebaseClient';
 
 let interval;
 export default class VerifyScreen extends Component {
-    static navigationOption = {
-        header:'none'
-    }
+  static navigationOption = {
+    header: 'none'
+  }
   constructor(props) {
     super(props);
     this.state = {
-      verified:'false'
+      verified: 'false'
     };
   }
   componentDidMount() {
@@ -20,9 +20,8 @@ export default class VerifyScreen extends Component {
       firebase.auth().currentUser.reload();
       let user = firebase.auth().currentUser;
       console.log(user)
-      this.setState({verified:user.emailVerified})
-      if(user.emailVerified)
-      {
+      this.setState({ verified: user.emailVerified })
+      if (user.emailVerified) {
         clearInterval(interval);
         this.props.navigation.navigate('Loading');
       }
@@ -32,12 +31,11 @@ export default class VerifyScreen extends Component {
   componentWillUnmount() {
     clearInterval(interval);
   }
-  sendVerification()
-  {
+  sendVerification() {
     const user = firebase.auth().currentUser;
     user.sendEmailVerification();
   }
-  goback=(props)=>{
+  goback = (props) => {
     const user = firebase.auth().currentUser;
     user.delete();
   }
@@ -53,20 +51,20 @@ export default class VerifyScreen extends Component {
           <Text style={styles.text}> We send Verification link to your email....!</Text>
           <Text>After verify you will redirect automaticaly!</Text>
           <Button
-          title='Resend Verification'
-          type='outline'
-          raised={true}
-          containerStyle={styles.sendButtonContainer}
-          buttonStyle={styles.sendButton}
-          onPress={this.sendVerification}
+            title='Resend Verification'
+            type='outline'
+            raised={true}
+            containerStyle={styles.sendButtonContainer}
+            buttonStyle={styles.sendButton}
+            onPress={this.sendVerification}
           />
           <Button
-          title='Go Back'
-          type='outline'
-          raised={true}
-          containerStyle={styles.sendButtonContainer}
-          buttonStyle={styles.sendButton}
-          onPress={() => {this.goback()}}
+            title='Go Back'
+            type='outline'
+            raised={true}
+            containerStyle={styles.sendButtonContainer}
+            buttonStyle={styles.sendButton}
+            onPress={() => { this.goback() }}
           />
         </View>
       </View>
@@ -75,30 +73,30 @@ export default class VerifyScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  container:{
+  container: {
     flex: 1,
-    justifyContent:'center',
-    alignItems:'center',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  sub_container_1:{
+  sub_container_1: {
     flexGrow: 1,
-    justifyContent:'center',
-    alignItems:'center',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  verify_image:{
+  verify_image: {
     width: 150,
     height: 150
   },
-  text:{
-    fontSize:20,
-    color:'#0cf',
-    justifyContent:'center',
-    textAlign:'center',
+  text: {
+    fontSize: 20,
+    color: '#0cf',
+    justifyContent: 'center',
+    textAlign: 'center',
   },
-  sendButton:{
-    width:200,
+  sendButton: {
+    width: 200,
   },
-  sendButtonContainer:{
-    margin:20,
+  sendButtonContainer: {
+    margin: 20,
   },
 })
