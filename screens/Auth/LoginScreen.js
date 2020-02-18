@@ -73,33 +73,33 @@ const LoginScreen = props => {
       .catch(error => {setLoading(false); setError(error.message)});
   };
 
-  const getuserdata = (accessToken) =>{
-    console.log(accessToken)
-   
-    const url = `https://us-central1-travista-chat.cloudfunctions.net/app/api/login?access=${accessToken}`
-    fetch(url,{
-      method:'GET',
-      headers: { 
-        'Accept': 'application/json',
-         'Content-Type': 'application/json' 
+  const getuserdata = accessToken => {
+    console.log(accessToken);
+
+    const url = `https://us-central1-travista-chat.cloudfunctions.net/app/api/login?access=${accessToken}`;
+    fetch(url, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
       }
     })
-    .then((res => res.json()))
-    .then(res =>{
-      Object.entries(res).forEach( async ([key, value]) => {
-        console.log(`${key} ${value}`);
-        await Storage.setItem(key, value)
-        
-      });
-    })
-    .catch(error=>{
-      console.log('There is some problem in your fetch operation'+error.message)
-      setLoading(false)
-      if(error.message === 'Network request failed')
-      {
-        alert('Check Your Connection.')
-      }
-    })
+      .then(res => res.json())
+      .then(res => {
+        Object.entries(res).forEach(async ([key, value]) => {
+          console.log(`${key} ${value}`);
+          await Storage.setItem(key, value);
+        });
+      })
+      .catch(error => {
+        console.log(
+          "There is some problem in your fetch operation" + error.message
+        );
+        setLoading(false);
+        if (error.message === "Network request failed") {
+          alert("Check Your Connection.");
+        }
+      })
       .then(res => res.json())
       .then(res => {
         Object.entries(res).forEach(([key, value]) => {
@@ -143,12 +143,10 @@ const LoginScreen = props => {
   {
     return(
       <View style={styles.container}>
-        <ActivityIndicator size='large' color = '#c6c6c6'/>
+        <ActivityIndicator size="large" color="#c6c6c6" />
       </View>
     );
-  }
-  else
-  {
+  } else {
     return (
       <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
         <ScrollView>

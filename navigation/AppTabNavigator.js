@@ -9,10 +9,10 @@ import TabBarIcon from "../components/TabBarIcon";
 import HomeScreen from "../screens/HomeScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 import ChatListScreen from "../screens/Chat/ChatListScreen";
-import ChatScreen from "../screens/Chat/ChatScreen";
 import MapScreen from "../screens/MapScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import OtherProfileScreen from "../screens/Profile/OtherProfile";
+import ChatScreen from "../screens/Chat/ChatScreen";
 
 const config = Platform.select({
   web: { headerMode: "screen" },
@@ -84,13 +84,12 @@ SettingsStack.path = "";
 
 const MapStack = createStackNavigator(
   {
-    Map: {
-      screen:MapScreen,
+    Map:{
+      screen: MapScreen,
       navigationOptions: () => ({
-        header:null,
-      }),
-    },
-    
+        header: null
+      })
+    }
   },
   config
 );
@@ -109,14 +108,14 @@ MapStack.path = "";
 
 const ChatStack = createStackNavigator(
   {
-    Trips: ChatListScreen,
+    ChatList: ChatListScreen,
     Chat: ChatScreen
   },
-  { initialRouteName: "Chat" }
+  config
 );
 
 ChatStack.navigationOptions = {
-  tabBarLabel: "Chat",
+  tabBarLabel: "Events",
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
