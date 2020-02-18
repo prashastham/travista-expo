@@ -33,6 +33,9 @@ import * as ImagePicker from "expo-image-picker";
 
 //import dummy_posts from "../dummy_data/dummy_posts";
 import { SafeAreaView } from "react-navigation";
+
+import { YellowBox } from "react-native";
+YellowBox.ignoreWarnings(["Warning: ..."]);
 //let posts = [];
 
 function wait(timeout) {
@@ -79,6 +82,9 @@ const HomeScreen = props => {
   const [comment, setComment] = useState("");
   const [postid, setPostid] = useState("");
 
+  //temp u
+  const [tempu, setTempU] = useState(null);
+
   useEffect(() => {
     this._retrieveData();
     getPosts();
@@ -117,9 +123,21 @@ const HomeScreen = props => {
 
   //get all posts from db
   const getPosts = () => {
-    const url =
+    const url_post =
       "https://asia-east2-travista-chat.cloudfunctions.net/app2/posts";
-    fetch(url)
+    fetch(url_post)
+      .then(res => res.json())
+      .then(function(data) {
+        //setPosts(data);
+        return data;
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+
+    const url_ad =
+      "https://asia-east2-travista-chat.cloudfunctions.net/app2/adsUser";
+    fetch(url_ad)
       .then(res => res.json())
       .then(function(data) {
         setPosts(data);
@@ -150,7 +168,7 @@ const HomeScreen = props => {
     const uid = id;
     const ref = firebaseClient
       .storage()
-      .ref("users/" + uid)
+      .ref("users/" + uid + "/imgs")
       .child(`imgs/${Math.round(Math.random() * 1000000000)}.jpg`);
     const uploadTask = ref.put(blob);
     console.log(blob);
@@ -183,8 +201,9 @@ const HomeScreen = props => {
       commentsCount: 0,
       comments: []
     };
+    list.push(newPost);
     console.log(newPost);
-    if (body !== "" || newPost.image !== "") {
+    if (newPost.image !== "") {
       fetch(url, {
         method: "POST",
         headers: {
@@ -193,6 +212,7 @@ const HomeScreen = props => {
         },
         body: JSON.stringify(newPost)
       }).then(res => console.log(res));
+      //setPosts(posts.push({ newPost }));
       setModalVisible(false);
     } else {
       alert("Empty post");
@@ -224,8 +244,41 @@ const HomeScreen = props => {
       });
   };
 
+  getAdComments = postId => {
+    const url = `https://asia-east2-travista-chat.cloudfunctions.net/app2/adsUser/${postId}`;
+    fetch(url)
+      .then(res => res.json())
+      .then(function(data) {
+        setList(data.comments);
+      });
+  };
+
   sendComment = () => {
-    url = `https://asia-east2-travista-chat.cloudfunctions.net/app2/posts/${postid}/comment`;
+    const url = `https://asia-east2-travista-chat.cloudfunctions.net/app2/posts/${postid}/comment`;
+    const newComment = {
+      body: comment,
+      dpurl: dpurl,
+      userHandle: name,
+      postId: postid
+    };
+    console.log(newComment);
+    if (comment !== "") {
+      fetch(url, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(newComment)
+      }).then(res => console.log(res));
+      closeCommentView();
+    } else {
+      alert("Empty comment");
+    }
+  };
+
+  sendAdComment = () => {
+    const url = `https://us-central1-travista-chat.cloudfunctions.net/api/adUser/${postid}/comment`;
     const newComment = {
       body: comment,
       dpurl: dpurl,
@@ -256,6 +309,14 @@ const HomeScreen = props => {
     setCommentVisible(true);
   };
 
+  //open comment window for ad
+  openAdCommentView = postId => {
+    console.log("Comment button clicked");
+    setPostid(postId);
+    getAdComments(postId);
+    setCommentVisible(true);
+  };
+
   //close comment window
   closeCommentView = () => {
     setComment("");
@@ -278,6 +339,29 @@ const HomeScreen = props => {
       setHeightWidth({ height: result.height, width: result.width });
       uploadImage();
     }
+  };
+
+  //report post
+  reportPost = postid => {
+    const url = `https://asia-east2-travista-chat.cloudfunctions.net/app2/reportPost/${postid}`;
+    fetch(url).then(res => res.json());
+  };
+  //report ad
+  reportAd = postid => {
+    const url = `https://asia-east2-travista-chat.cloudfunctions.net/app2/reportAd/${postid}`;
+    fetch(url).then(res => res.json());
+  };
+
+  //like post
+  likePost = postid => {
+    const url = `https://asia-east2-travista-chat.cloudfunctions.net/app2/post/${postid}/like/${name}`;
+    fetch(url).then(res => res.json());
+  };
+
+  //like ad
+  likeAd = postid => {
+    const url = `https://asia-east2-travista-chat.cloudfunctions.net/app2/`;
+    fetch(url).then(res => res.json());
   };
 
   return (
@@ -316,7 +400,7 @@ const HomeScreen = props => {
           <View>
             <Divider style={{ backgroundColor: "grey" }} />
           </View>
-          <View style={styles.subHeader}>
+          <View style={styles.header}>
             <View style={styles.avatar}>
               <Avatar
                 size="medium"
@@ -325,10 +409,8 @@ const HomeScreen = props => {
                 PlaceholderContent={<ActivityIndicator />}
               />
             </View>
-            <View style={styles.user}>
-              <Text></Text>
-
-              <Text style={styles.user}>{name}</Text>
+            <View style={styles.userCreateComment}>
+              <Text style={styles.userCreateComment}>{name}</Text>
             </View>
           </View>
 
@@ -392,14 +474,7 @@ const HomeScreen = props => {
         </ScrollView>
       </Modal>
       {/*comment view modal*/}
-      <Modal
-        animationType="slide"
-        transparent={false}
-        visible={commentVisible}
-        onRequestClose={() => {
-          Alert.alert("Comment modal has been closed.");
-        }}
-      >
+      <Modal animationType="slide" transparent={false} visible={commentVisible}>
         <View>
           <Header
             centerComponent={{
@@ -457,7 +532,9 @@ const HomeScreen = props => {
 
           <TouchableOpacity
             style={styles.btnSend}
-            onPress={() => sendComment()}
+            onPress={() => {
+              tempu.hasOwnProperty("paid") ? sendAdComment() : sendComment();
+            }}
           >
             <Icon name="arrow-circle-right" size={40} color="#f2f3f4" />
           </TouchableOpacity>
@@ -491,44 +568,43 @@ const HomeScreen = props => {
       <View style={styles.container}>
         {/* style={styles.container} */}
         {posts.map((u, i) => {
-          const CommentButton = withBadge(u.commentsCount)(Icon);
-          const LikeButton = withBadge(u.likesCount)(Icon);
-          var like = false;
-          var report = false;
+          const CommentButton = withBadge(
+            u.hasOwnProperty("paid") ? u.commentCount : u.commentsCount
+          )(Icon);
+          const LikeButton = withBadge(
+            u.hasOwnProperty("paid") ? u.likeCount : u.likesCount
+          )(Icon);
+
           return (
             <Card
               ContainerStyle={styles.postContainer}
               key={i}
               title={
                 <View style={styles.header}>
-                  <View style={{ flex: 1, flexDirection: "row-reverse" }}>
-                    <Button
-                      icon={<Icon name="warning" size={19} color="#e5e7e9" />}
-                      type="clear"
-                      onPress={() => console.log("Report button")}
+                  <View style={styles.avatar}>
+                    <Avatar
+                      size="medium"
+                      source={{ uri: u.dpurl }}
+                      rounded
+                      PlaceholderContent={<ActivityIndicator />}
+                      onPress={() => {
+                        u.hasOwnProperty("paid") ? null : viewProfile(u.author);
+                      }}
                     />
                   </View>
-                  <View style={styles.subHeader}>
-                    <View style={styles.avatar}>
-                      <Avatar
-                        size="medium"
-                        source={{ uri: u.dpurl }}
-                        rounded
-                        PlaceholderContent={<ActivityIndicator />}
-                        onPress={() => viewProfile(u.author)}
-                      />
-                    </View>
 
-                    <View style={styles.user}>
-                      <Text></Text>
-                      <TouchableOpacity onPress={() => viewProfile(u.author)}>
-                        <Text style={styles.user}>{u.userHandle}</Text>
-                      </TouchableOpacity>
-                      <Text style={styles.date}>
-                        {u.createdAt.split("T")[0]}
-                      </Text>
-                    </View>
+                  <View style={styles.user}>
+                    <Text></Text>
+                    <TouchableOpacity
+                      onPress={() => {
+                        u.hasOwnProperty("paid") ? null : viewProfile(u.author);
+                      }}
+                    >
+                      <Text style={styles.user}>{u.userHandle}</Text>
+                    </TouchableOpacity>
+                    <Text style={styles.date}>{u.createdAt.split("T")[0]}</Text>
                   </View>
+
                   <Divider style={{ backgroundColor: "grey" }} />
                 </View>
               }
@@ -552,23 +628,52 @@ const HomeScreen = props => {
               </View>
 
               <View style={styles.buttonContainer}>
-                <LikeButton
-                  type="ionicon"
-                  name="thumbs-up"
-                  status="primary"
-                  size={29}
-                  color={"#abb2b9"}
-                  onPress={() => console.log("Like button pressed")}
-                />
-                {/*enabling comment view*/}
-                <CommentButton
-                  type="ionicon"
-                  name="comments"
-                  status="primary"
-                  size={29}
-                  color={"#abb2b9"}
-                  onPress={() => openCommentView(u.postId)}
-                />
+                <View
+                  style={{
+                    flex: 1,
+                    flexDirection: "row",
+                    justifyContent: "space-between"
+                  }}
+                >
+                  <LikeButton
+                    type="ionicon"
+                    name="thumbs-up"
+                    status="primary"
+                    size={29}
+                    color={"#abb2b9"}
+                    onPress={() => {
+                      u.hasOwnProperty("paid")
+                        ? likeAd(u.postId)
+                        : likePost(u.postId);
+                      u.likeCount++;
+                    }}
+                  />
+                  {/*enabling comment view*/}
+                  <CommentButton
+                    type="ionicon"
+                    name="comments"
+                    status="primary"
+                    size={29}
+                    color={"#abb2b9"}
+                    onPress={() => {
+                      setTempU(u);
+                      u.hasOwnProperty("paid")
+                        ? openAdCommentView(u.postId)
+                        : openCommentView(u.postId);
+                    }}
+                  />
+                </View>
+                <View style={{ flex: 1, flexDirection: "row-reverse" }}>
+                  <Button
+                    icon={<Icon name="warning" size={25} color="#e5e7e9" />}
+                    type="clear"
+                    onPress={() => {
+                      u.hasOwnProperty("paid")
+                        ? reportAd(u.postId)
+                        : reportPost(u.postId);
+                    }}
+                  />
+                </View>
               </View>
             </Card>
           );
@@ -611,16 +716,17 @@ const styles = StyleSheet.create({
     borderRadius: 1
   },
   header: {
-    flexDirection: "row-reverse",
-    justifyContent: "flex-start"
-  },
-  subHeader: {
     flexDirection: "row",
     justifyContent: "flex-start"
   },
   user: {
     fontSize: 20,
     fontWeight: "100"
+  },
+  userCreateComment: {
+    fontSize: 20,
+    fontWeight: "100",
+    padding: 5
   },
   date: {
     color: "#ccc",
@@ -637,7 +743,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: "row",
-    justifyContent: "space-evenly"
+    justifyContent: "space-between"
   },
   footer: {
     flexDirection: "row",
