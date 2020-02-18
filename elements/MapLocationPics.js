@@ -34,14 +34,9 @@ const MapLocationPics = props => {
         "Content-Type": "application/json"
       }
     })
-      //.then(res => res.json())//{setStatus(res.status); setTemp(res.json())}
+      .then(res => res.json())
       .then(res => {
-        // console.log(res.json());
-        if (res.status == 302) {
-          temp = res.json();
-          setPost(temp);
-        }
-
+        setPost(res);
       })
       .catch(error => {
         console.log(

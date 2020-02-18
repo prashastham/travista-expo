@@ -572,7 +572,7 @@ export default class Profile extends Component {
             >
               <Text style={{ fontSize: 20, fontWeight: "500" }}>My Memories</Text>
             </View>
-            <Post navigation={this.props.navigation} />
+            <Post userId = {this.state.id}/>
           </ScrollView>
         </View>
       );

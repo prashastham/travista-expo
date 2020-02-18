@@ -9,103 +9,131 @@ import {
   ActivityIndicator
 } from "react-native";
 import { Card, Button, Avatar, Image } from "react-native-elements";
-import Icon from "react-native-vector-icons/FontAwesome";
-import Colors from "../constants/Colors";
 import moment from 'moment';
-
-import dummy_posts from "../dummy_data/dummy_posts";
-const posts = dummy_posts;
 
 const Post = props => {
   const [date, setDate] = useState("");
+  const [posts, setPosts] = useState([]);
+  const [isLoading, setLoading] = useState(false);
+  const [userId, setUserId] = useState(props.userId);
+
+  const loadData = async () => {
+    setLoading(true);
+    console.log(userId)
+    url = 'https://asia-east2-travista-chat.cloudfunctions.net/app2/postswithid/' + userId;
+
+    await fetch(url, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      }
+    })
+      .then( async res => await res.json())
+      .then( res => {
+        console.log(res);
+        setPosts(res);
+        setLoading(false)
+      })
+      .catch(error => {
+        setLoading(false)
+        console.log(
+          "There is some problem in your fetch operation" + error.message
+        );
+        if (error.message === "Network request failed") {
+          alert("Connection faild. Try again later.");
+        }
+      });
+  }
 
   useEffect(() => {
-    var hours = new Date().getHours(); //Current Hours
-    var min = new Date().getMinutes(); //Current Minutes
-    var ampm = hours >= 12 ? "pm" : "am";
+    loadData();
+  }, [userId]);
 
-    setDate((hours % 12) + ":" + (min < 10 ? "0" + min : min) + " " + ampm);
-  });
-
-  return (
-    <ScrollView style={styles.container} contentOffset={{ x: 10, y: 10 }}>
-      {posts.map((u, i) => {
-        return (
-          <Card
-            containerStyle={styles.postContainer}
-            key={i}
-            title={
-              <View style={styles.header}>
-                <View style={styles.avatar}>
-                  <Avatar
-                    size="medium"
-                    source={{ uri: u.dpurl }}
-                    rounded
-                    PlaceholderContent={<ActivityIndicator />}
-                  />
+  if (isLoading) {
+    return (
+      <View style={styles.emptyContainer}>
+        <ActivityIndicator size='large' color='#000' />
+      </View>
+    );
+  }
+  else {
+    if (posts.length === 0) {
+      return (
+        <View style={styles.emptyContainer}>
+          <Text style = {styles.emptyText}>Nothing to Show</Text>
+        </View>
+      );
+    }
+    else {
+      return (
+        <ScrollView style={styles.container} contentOffset={{ x: 10, y: 10 }}>
+          {posts.map((u, i) => {
+            return (
+              <Card
+                containerStyle={styles.postContainer}
+                key={i}
+                title={
+                  <View style={styles.header}>
+                    <View style={styles.avatar}>
+                      <Avatar
+                        size="medium"
+                        source={{ uri: u.dpurl }}
+                        rounded
+                        PlaceholderContent={<ActivityIndicator />}
+                      />
+                    </View>
+                    <View style={styles.user}>
+                      <Text></Text>
+                      <TouchableOpacity>
+                        <Text style={styles.user}>{u.userHandle}</Text>
+                      </TouchableOpacity>
+                      <Text style={styles.date}>{moment(u.createdAt).format("YYYY-MM-DD h:mm")}</Text>
+                    </View>
+                  </View>
+                }
+              >
+                <View>
+                  <Text style={styles.description}>{u.body}</Text>
                 </View>
-                <View style={styles.user}>
-                  <Text></Text>
-                  <TouchableOpacity>
-                    <Text style={styles.user}>{u.userHandle}</Text>
+                <View style={styles.imageContainer}>
+                  <TouchableOpacity onPress={() => console.log("Picture clicked")}>
+                    <Image
+                      source={{ uri: u.image }}
+                      style={{
+                        flexGrow: 1,
+                        minHeight: Dimensions.get("window").height * 0.4
+                      }}
+                      resizeMode="stretch"
+                      PlaceholderContent={<ActivityIndicator />}
+                    />
                   </TouchableOpacity>
-                  <Text style={styles.date}>{moment(u.createdAt).format("YYYY-MM-DD h:mm")}</Text>
                 </View>
-              </View>
-            }
-          >
-            <View>
-              <Text style={styles.description}>{u.body}</Text>
-            </View>
-            <View style={styles.imageContainer}>
-              <TouchableOpacity onPress={() => console.log("Picture clicked")}>
-                <Image
-                  source={{ uri: u.image }}
-                  style={{
-                    flexGrow: 1,
-                    minHeight: Dimensions.get("window").height * 0.4
-                  }}
-                  resizeMode="stretch"
-                  PlaceholderContent={<ActivityIndicator />}
-                />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.buttonContainer}>
-              <Button
-                icon={
-                  <Icon
-                    name="thumbs-up"
-                    size={18}
-                    color={Colors.iconColor}
-                    padding={5}
-                  />
-                }
-                type="clear"
-                iconLeft
-                title="  Like"
-              />
-              <Button
-                icon={
-                  <Icon
-                    name="comments"
-                    size={18}
-                    color={Colors.iconColor}
-                    padding={5}
-                  />
-                }
-                type="clear"
-                iconLeft
-                title="  Comment"
-              />
-            </View>
-          </Card>
-        );
-      })}
-    </ScrollView>
-  );
+              </Card>
+            );
+          })}
+        </ScrollView>
+      );
+    }
+  }
 };
 
 const styles = StyleSheet.create({
+  emptyContainer: {
+    flex: 1,
+    width: '100%',
+    height: '10%',
+    justifyContent: 'center',
+    alignContent: 'center'
+  },
+  emptyText:{
+    width:'100%',
+    fontSize:20,
+    fontWeight:'500',
+    textAlign:'center',
+    paddingVertical:10,
+    color:'#c6c6c6'
+  },
   container: {
     maxWidth: Dimensions.get("screen").width
   },
