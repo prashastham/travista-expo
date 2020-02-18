@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
-  Platform,
   KeyboardAvoidingView,
-  SafeAreaView,
   View,
   Text,
   StyleSheet,
@@ -10,18 +8,7 @@ import {
   TouchableOpacity,
   Dimensions
 } from "react-native";
-import {
-  Card,
-  Button,
-  Avatar,
-  Image,
-  Header,
-  Divider,
-  Badge,
-  withBadge,
-  ListItem
-} from "react-native-elements";
-//import { GiftedChat } from "react-native-gifted-chat";
+import { Button, ListItem } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Colors from "../../constants/Colors";
 import HeaderIcon from "../../components/HeaderIcon";
@@ -232,8 +219,7 @@ const styles = StyleSheet.create({
   },
   chatAndButton: {
     flex: 1,
-    flexDirection: "column",
-    justifyContent: ""
+    flexDirection: "column"
   },
   chat: {
     flex: 1
