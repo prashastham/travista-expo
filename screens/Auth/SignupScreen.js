@@ -58,19 +58,17 @@ const SignupScreen = props => {
   const [loading, setLoading] = useState(false)
 
   const validate = () => {
+    tel = "^0[0-9]{9}$";
+    telRegx = new RegExp(tel);
+
     setErrorName("");
     setErrortele("");
     if (name !== "") {
-      if (telephone !== '' && telephone.length == 10) {
+      if (telRegx.test(telephone)) {
         return true;
       }
-      else if (telephone == "") {
-        setErrortele('Enter telephone number');
-        alert('Enter telephone number');
-        return false;
-      }
       else {
-        setError('Telephone number have only 10 digits');
+        setErrortele('Telephone number have only 10 digits');
         alert('Telephone number have only 10 digits')
         return false;
       }

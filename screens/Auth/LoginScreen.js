@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
 import {
   StyleSheet,
   View,
@@ -14,7 +13,6 @@ import {
 } from "react-native";
 import { Button, Input, Overlay } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
-import Colors from "../../constants/Colors";
 import { LinearGradient } from "expo-linear-gradient";
 
 import firebase from "../../local/FirebaseClient";
@@ -34,7 +32,7 @@ const LoginScreen = props => {
   const validate = () => {
     setErroremail('');
     setErrorpassword('');
-    if (email !== "") {
+    if (validateEmail(email)) {
       if (password !== "" && password.length >= 6) {
         return true;
       }
@@ -48,7 +46,7 @@ const LoginScreen = props => {
       }
     }
     else {
-      setErroremail('Enter Email')
+      setErroremail('email is badly formatted')
       return false;
     }
   }
@@ -114,12 +112,13 @@ const LoginScreen = props => {
   };
 
   const validateEmail = (email) => {
+    setErorr3('')
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
   }
   const forgotPassword = () => {
     if (!validateEmail(emailAddress)) {
-      setErorr3('email badly formatted.')
+      setErorr3('email is badly formatted.')
       return false
     }
     var auth = firebase.auth();
@@ -129,7 +128,7 @@ const LoginScreen = props => {
       alert('email send! check Your Email')
     }).catch(function (error) {
       setOverlay(false);
-      alert('error to reset password!')
+      alert('error in reset password!')
     });
 
   }
