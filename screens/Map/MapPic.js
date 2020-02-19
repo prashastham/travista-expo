@@ -51,6 +51,7 @@ export default class MapPic extends Component {
     let travelerId = await Storage.getItem("accessToken");
     console.log(this.userData.region)
     this.setState({ travelerId: travelerId, travelerName: userName, traverlerImageUrl: dpUrl, latitude: this.userData.region.latitude, longitude: this.userData.region.longitude });
+    this.getPermissionAsync();
   }
 
   validate = () => {
@@ -113,18 +114,20 @@ export default class MapPic extends Component {
 
   //-------------------------------------------------------------------------
 
-  // getPermissionAsync = async () => {
-  //       const p1 = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-  //       if (p1.status !== "granted") {
-  //         alert("Sorry, we need camera roll permissions to make this work!");
-  //         this.props.navigation.goBack()
-  //       }
-  //       const p2 = await Permissions.getAsync(Permissions.CAMERA)
-  //       if (p2.status !== "granted") {
-  //         alert("Sorry, we need camera roll permissions to make this work!");
-  //         this.props.navigation.goBack()
-  //       }
-  //   };
+  getPermissionAsync = async () => {
+    if (Constants.platform.ios) {
+      const p1 = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      if (p1.status !== "granted") {
+        alert("Sorry, we need camera roll permissions to make this work!");
+        this.props.navigation.goBack()
+      }
+      const p2 = await Permissions.getAsync(Permissions.CAMERA)
+      if (p2.status !== "granted") {
+        alert("Sorry, we need camera roll permissions to make this work!");
+        this.props.navigation.goBack()
+      }
+    }
+  };
 
   _pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
