@@ -5,6 +5,7 @@ import { Avatar, Input, Button, Image, Icon, Overlay } from 'react-native-elemen
 import * as ImagePicker from 'expo-image-picker';
 import firebaseClient from '../../local/FirebaseClient';
 import moment from 'moment';
+import Constants from 'expo-constants';
 
 
 export default class MapPic extends Component {
@@ -41,9 +42,6 @@ export default class MapPic extends Component {
   };
   componentWillMount = async () => {
     this.props.navigation.setParams({ save: this.save });
-    // Location.setApiKey('AIzaSyCN1tAyAammD_ym0fJsvLhc0z_hJfwxtWc');
-    // const loc = await Location.getCurrentPositionAsync({accuracy:5});
-    // this.setState({latitude:loc.coords.latitude,longitude:loc.coords.longitude});
   }
   async componentDidMount() {
     userName = await Storage.getItem('name');
