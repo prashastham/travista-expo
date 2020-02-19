@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
 import {
   StyleSheet,
   View,
@@ -14,7 +13,6 @@ import {
 } from "react-native";
 import { Button, Input, Overlay } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
-import Colors from "../../constants/Colors";
 import { LinearGradient } from "expo-linear-gradient";
 
 import firebase from "../../local/FirebaseClient";
@@ -27,38 +25,34 @@ const LoginScreen = props => {
   const [erroremail, setErroremail] = useState(null);
   const [errorpassword, setErrorpassword] = useState(null);
   const [isLoading, setLoading] = useState(false);
-  const [emailAddress,setEmailAddress] = useState("")
-  const [isOverlayVisible,setOverlay] = useState(false);
-  const [error3,setErorr3] = useState("");
+  const [emailAddress, setEmailAddress] = useState("")
+  const [isOverlayVisible, setOverlay] = useState(false);
+  const [error3, setErorr3] = useState("");
 
-  const  validate = ()=>{
+  const validate = () => {
     setErroremail('');
     setErrorpassword('');
-    if(email!=="")
-    {
-      if(password!=="" && password.length>=6)
-      {
+    if (validateEmail(email)) {
+      if (password !== "" && password.length >= 6) {
         return true;
       }
-      else if(password=="")
-      {
+      else if (password == "") {
         setErrorpassword('Enter Password')
         return false;
       }
-      else{
+      else {
         setErrorpassword('Invalid Password')
         return false;
       }
     }
-    else{
-      setErroremail('Enter Email')
+    else {
+      setErroremail('email is badly formatted')
       return false;
     }
   }
 
   const handleLogin = () => {
-    if(!validate())
-    {
+    if (!validate()) {
       return false;
     }
     setLoading(true);
@@ -70,7 +64,7 @@ const LoginScreen = props => {
         Storage.setItem("accessToken", user.uid);
         getuserdata(user.uid);
       })
-      .catch(error => {setLoading(false); setError(error.message)});
+      .catch(error => { setLoading(false); setError(error.message) });
   };
 
   const getuserdata = accessToken => {
@@ -117,31 +111,30 @@ const LoginScreen = props => {
       });
   };
 
-  const  validateEmail = (email)=> {
+  const validateEmail = (email) => {
+    setErorr3('')
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
   }
-  const forgotPassword = () =>{
-    if(!validateEmail(emailAddress))
-    {
-      setErorr3('email badly formatted.')
+  const forgotPassword = () => {
+    if (!validateEmail(emailAddress)) {
+      setErorr3('email is badly formatted.')
       return false
     }
     var auth = firebase.auth();
 
-    auth.sendPasswordResetEmail(emailAddress).then(function() {
+    auth.sendPasswordResetEmail(emailAddress).then(function () {
       setOverlay(false);
       alert('email send! check Your Email')
-    }).catch(function(error) {
+    }).catch(function (error) {
       setOverlay(false);
-      alert('error to reset password!')
+      alert('error in reset password!')
     });
-    
+
   }
 
-  if(isLoading)
-  {
-    return(
+  if (isLoading) {
+    return (
       <View style={styles.container}>
         <ActivityIndicator size="large" color="#c6c6c6" />
       </View>
@@ -182,7 +175,7 @@ const LoginScreen = props => {
                   padding: 5
                 }}
                 errorMessage={erroremail}
-                errorStyle={{color:'red'}}
+                errorStyle={{ color: 'red' }}
                 email
                 required
                 autoCapitalize="none"
@@ -204,7 +197,7 @@ const LoginScreen = props => {
                   padding: 5
                 }}
                 errorMessage={errorpassword}
-                errorStyle={{color:'red'}}
+                errorStyle={{ color: 'red' }}
                 autoCapitalize="none"
                 required
                 minLength={6}
@@ -228,27 +221,27 @@ const LoginScreen = props => {
           </View>
 
           <View style={styles.buttonContainer}>
-            <TouchableOpacity onPress = {()=>{setOverlay(true)}}>
-            <LinearGradient
-              colors={["#4c669f", "#3b5998", "#192f6a"]}
-              style={{
-                justifyContent: "center",
-                padding: 5,
-                alignItems: "center",
-                borderRadius: 5
-              }}
-            >
-              <Text
+            <TouchableOpacity onPress={() => { setOverlay(true) }}>
+              <LinearGradient
+                colors={["#4c669f", "#3b5998", "#192f6a"]}
                 style={{
-                  backgroundColor: "transparent",
-                  fontSize: 20,
-                  color: "#fff",
-                  padding: 5
+                  justifyContent: "center",
+                  padding: 5,
+                  alignItems: "center",
+                  borderRadius: 5
                 }}
               >
-                Forgot password
+                <Text
+                  style={{
+                    backgroundColor: "transparent",
+                    fontSize: 20,
+                    color: "#fff",
+                    padding: 5
+                  }}
+                >
+                  Forgot password
               </Text>
-            </LinearGradient>
+              </LinearGradient>
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -261,8 +254,8 @@ const LoginScreen = props => {
           height="50%"
         >
           <View style={styles.overlayContainer}>
-            <Input label='Your Email Address' errorStyle={{ color: 'red' }} errorMessage={error3} onChangeText={(text)=>setEmailAddress(text)} value={emailAddress}/>
-            <Button title='Send' type='outline' buttonStyle={{borderWidth: 1,}} onPress={()=>forgotPassword()}/>
+            <Input label='Your Email Address' errorStyle={{ color: 'red' }} errorMessage={error3} onChangeText={(text) => setEmailAddress(text)} value={emailAddress} />
+            <Button title='Send' type='outline' buttonStyle={{ borderWidth: 1, }} onPress={() => forgotPassword()} />
           </View>
         </Overlay>
       </KeyboardAvoidingView>
@@ -311,9 +304,9 @@ const styles = StyleSheet.create({
     padding: 25,
     minWidth: "100%"
   },
-  overlayContainer:{
-    flex:1,
-    justifyContent:'space-around'
+  overlayContainer: {
+    flex: 1,
+    justifyContent: 'space-around'
   },
 });
 

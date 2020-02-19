@@ -9,13 +9,13 @@ import Gallery from "../elements/Gallery";
 
 const ProfileStackNavigator = createStackNavigator(
   {
-    Profile:Profile,
-    CreatePost:CreatePost,
+    Profile: Profile,
+    CreatePost: CreatePost,
     EditProfile: EditProfile,
     ServiceProfile: ServiceProfileScreen,
-    ServiceFilter:ServiceFilter,
-    AddReview:AddReview,
-    Gallery:Gallery,
+    ServiceFilter: ServiceFilter,
+    AddReview: AddReview,
+    Gallery: Gallery,
   },
   { initialRouteName: "Profile" }
 );

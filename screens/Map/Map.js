@@ -27,17 +27,10 @@ class MapScreen extends Component {
       buttonSize: 50
     },
     {
-      text: "Add Place",
-      icon: require("../../assets/white_icon/place_white.png"),
-      name: "bt_Place",
-      position: 2,
-      buttonSize: 50
-    },
-    {
-      text: "Create Trip",
+      text: "Create Event",
       icon: require("../../assets/white_icon/event_white.png"),
       name: "bt_Trip",
-      position: 3,
+      position: 2,
       buttonSize: 50
     }
   ];

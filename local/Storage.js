@@ -1,4 +1,4 @@
-import {AsyncStorage} from 'react-native';
+import { AsyncStorage } from 'react-native';
 
 const Storage = {
 
@@ -13,7 +13,7 @@ const Storage = {
     removeItem: async function (key) {
         return await AsyncStorage.removeItem(key);
     },
-    clear: async function (){
+    clear: async function () {
         return await AsyncStorage.clear();
     }
 };
