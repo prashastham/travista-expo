@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   StyleSheet,
   Text,
@@ -30,8 +30,8 @@ import Constants from "expo-constants";
 import firebaseClient from "../local/FirebaseClient";
 
 import * as ImagePicker from "expo-image-picker";
+import { Camera } from "expo-camera";
 
-//import dummy_posts from "../dummy_data/dummy_posts";
 import { SafeAreaView } from "react-navigation";
 
 import { YellowBox } from "react-native";
@@ -45,6 +45,10 @@ function wait(timeout) {
 }
 
 const HomeScreen = props => {
+  //camer permissions states
+  const [hasPermission, setHasPermission] = useState(null);
+  const [type, setType] = useState(Camera.Constants.Type.back);
+
   //app refresh state
   const [refreshing, setRefreshing] = React.useState(false);
 
@@ -59,6 +63,8 @@ const HomeScreen = props => {
   // const [errorState, setError] = useState(null);
 
   //all posts are stored here
+  const [tempPosts, setTempPosts] = useState();
+  const [tempAds, setTempAds] = useState();
   const [posts, setPosts] = useState([]);
 
   //enable views
@@ -85,10 +91,26 @@ const HomeScreen = props => {
   //temp u
   const [tempu, setTempU] = useState(null);
 
+  //temp i
+  const [tempi, setTempI] = useState(0);
+
   useEffect(() => {
     this._retrieveData();
     getPosts();
+    //_cameraPermissionReq;
   }, []);
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Camera.requestPermissionsAsync();
+      setHasPermission(status === "granted");
+    })();
+  }, []);
+
+  //re-render component/////////////////////////////////////////////
+  const [, updateState] = React.useState();
+  const forceUpdate = useCallback(() => updateState({}), []);
+  ///////////////////////////////////////////////////////////////////
 
   //app refresh function
   const onRefresh = React.useCallback(() => {
@@ -97,6 +119,13 @@ const HomeScreen = props => {
     wait(2000).then(() => setRefreshing(false));
   }, [refreshing]);
 
+  // //request camera permissions
+  // _cameraPermissionReq = (async () => {
+  //   const { status } = await Camera.requestPermissionsAsync();
+  //   setHasPermission(status === "granted");
+  // })();
+
+  //retrieve data from local storage
   _retrieveData = async () => {
     try {
       let id = await Storage.getItem("accessToken");
@@ -121,6 +150,16 @@ const HomeScreen = props => {
     });
   };
 
+  //process all posts to be interactable
+  processPosts = data => {
+    data.forEach(element => {
+      element.liked = false;
+      element.reported = false;
+      element.commented = false;
+    });
+    setPosts(data);
+  };
+
   //get all posts from db
   const getPosts = () => {
     const url_post =
@@ -128,8 +167,8 @@ const HomeScreen = props => {
     fetch(url_post)
       .then(res => res.json())
       .then(function(data) {
-        //setPosts(data);
-        return data;
+        processPosts(data);
+        //setTempPosts(data);
       })
       .catch(function(error) {
         console.log(error);
@@ -140,12 +179,13 @@ const HomeScreen = props => {
     fetch(url_ad)
       .then(res => res.json())
       .then(function(data) {
-        setPosts(data);
-        return data;
+        //processPosts(data);
+        //setTempAds(data);
       })
       .catch(function(error) {
         console.log(error);
       });
+    //console.log(tempAds[0]);
   };
 
   uploadImage = async () => {
@@ -201,9 +241,11 @@ const HomeScreen = props => {
       commentsCount: 0,
       comments: []
     };
-    list.push(newPost);
-    console.log(newPost);
     if (newPost.image !== "") {
+      newPost.liked = false;
+      newPost.reported = false;
+      newPost.commented = false;
+      setPosts([newPost, ...posts]);
       fetch(url, {
         method: "POST",
         headers: {
@@ -236,7 +278,7 @@ const HomeScreen = props => {
   };
 
   getComments = postId => {
-    const url = `https://asia-east2-travista-chat.cloudfunctions.net/app2/posts/${postId}`;
+    const url = `https://asia-east2-travista-chat.cloudfunctions.net/app2/postandcomments/${postId}`;
     fetch(url)
       .then(res => res.json())
       .then(function(data) {
@@ -341,25 +383,59 @@ const HomeScreen = props => {
     }
   };
 
+  // take picture
+  clickPhoto = async () => {
+    let result = await takePictureAsync();
+  };
+
   //report post
   reportPost = postid => {
     const url = `https://asia-east2-travista-chat.cloudfunctions.net/app2/reportPost/${postid}`;
     fetch(url).then(res => res.json());
   };
+
+  //unreport post
+  unreportPost = postid => {
+    const url = `https://asia-east2-travista-chat.cloudfunctions.net/app2/unreportPost/${postid}`;
+    fetch(url).then(res => res.json());
+  };
+
   //report ad
   reportAd = postid => {
     const url = `https://asia-east2-travista-chat.cloudfunctions.net/app2/reportAd/${postid}`;
     fetch(url).then(res => res.json());
   };
 
+  //unreport ad
+  unreportAd = postid => {
+    const url = `https://asia-east2-travista-chat.cloudfunctions.net/app2/unreportAd/${postid}`;
+    fetch(url).then(res => res.json());
+  };
+
   //like post
   likePost = postid => {
+    const name = name;
     const url = `https://asia-east2-travista-chat.cloudfunctions.net/app2/post/${postid}/like/${name}`;
+    fetch(url).then(res => res.json());
+  };
+
+  //unlike post
+  unlikePost = postid => {
+    const name = name;
+    const url = `https://asia-east2-travista-chat.cloudfunctions.net/app2/post/${postid}/unlike/${name}`;
     fetch(url).then(res => res.json());
   };
 
   //like ad
   likeAd = postid => {
+    console.log("ad liked");
+    const url = `https://asia-east2-travista-chat.cloudfunctions.net/app2/`;
+    fetch(url).then(res => res.json());
+  };
+
+  //unlike as
+  unlikeAd = postid => {
+    console.log("ad unliked");
     const url = `https://asia-east2-travista-chat.cloudfunctions.net/app2/`;
     fetch(url).then(res => res.json());
   };
@@ -492,6 +568,29 @@ const HomeScreen = props => {
           />
         </View>
         <SafeAreaView>
+          <View style={styles.footer}>
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.inputs}
+                placeholder="Write a comment..."
+                underlineColorAndroid="transparent"
+                onChangeText={text => setComment(text)}
+              />
+            </View>
+
+            <TouchableOpacity
+              style={styles.btnSend}
+              onPress={() => {
+                tempu.hasOwnProperty("paid") ? sendAdComment() : sendComment();
+                tempu.hasOwnProperty("paid")
+                  ? (posts[tempi].commentCount = tempu.commentCount + 1)
+                  : (posts[tempi].commentsCount = tempu.commentsCount + 1); /////////////////////////////
+                forceUpdate();
+              }}
+            >
+              <Icon name="arrow-circle-right" size={40} color="#f2f3f4" />
+            </TouchableOpacity>
+          </View>
           <View
             style={{
               felx: 1,
@@ -520,25 +619,6 @@ const HomeScreen = props => {
             </ScrollView>
           </View>
         </SafeAreaView>
-        <View style={styles.footer}>
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.inputs}
-              placeholder="Write a comment..."
-              underlineColorAndroid="transparent"
-              onChangeText={text => setComment(text)}
-            />
-          </View>
-
-          <TouchableOpacity
-            style={styles.btnSend}
-            onPress={() => {
-              tempu.hasOwnProperty("paid") ? sendAdComment() : sendComment();
-            }}
-          >
-            <Icon name="arrow-circle-right" size={40} color="#f2f3f4" />
-          </TouchableOpacity>
-        </View>
       </Modal>
 
       {/*image overlay*/}
@@ -640,12 +720,23 @@ const HomeScreen = props => {
                     name="thumbs-up"
                     status="primary"
                     size={29}
-                    color={"#abb2b9"}
+                    color={u.liked ? "#2ecc71" : "#abb2b9"}
                     onPress={() => {
-                      u.hasOwnProperty("paid")
-                        ? likeAd(u.postId)
-                        : likePost(u.postId);
-                      u.likeCount++;
+                      if (u.liked === false) {
+                        u.hasOwnProperty("paid")
+                          ? likeAd(u.postId)
+                          : likePost(u.postId);
+                        posts[i].likesCount++;
+                        posts[i].liked = true;
+                        forceUpdate();
+                      } else {
+                        u.hasOwnProperty("paid")
+                          ? unlikeAd(u.postId)
+                          : unlikePost(u.postId);
+                        posts[i].likesCount--;
+                        posts[i].liked = false;
+                        forceUpdate();
+                      }
                     }}
                   />
                   {/*enabling comment view*/}
@@ -660,17 +751,36 @@ const HomeScreen = props => {
                       u.hasOwnProperty("paid")
                         ? openAdCommentView(u.postId)
                         : openCommentView(u.postId);
+                      setTempI(i);
                     }}
                   />
                 </View>
                 <View style={{ flex: 1, flexDirection: "row-reverse" }}>
                   <Button
-                    icon={<Icon name="warning" size={25} color="#e5e7e9" />}
+                    icon={
+                      <Icon
+                        name="warning"
+                        size={25}
+                        color={u.reported ? "#dc7633" : "#e5e7e9"}
+                      />
+                    }
                     type="clear"
                     onPress={() => {
-                      u.hasOwnProperty("paid")
-                        ? reportAd(u.postId)
-                        : reportPost(u.postId);
+                      if (u.reported === false) {
+                        u.hasOwnProperty("paid")
+                          ? reportAd(u.postId)
+                          : reportPost(u.postId);
+                        posts[i].reports++;
+                        posts[i].reported = true;
+                        forceUpdate();
+                      } else {
+                        u.hasOwnProperty("paid")
+                          ? unreportAd(u.postId)
+                          : unreportPost(u.postId);
+                        posts[i].reports--;
+                        posts[i].reported = false;
+                        forceUpdate();
+                      }
                     }}
                   />
                 </View>

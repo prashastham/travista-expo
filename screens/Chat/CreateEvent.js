@@ -40,12 +40,13 @@ const CreateEvent = props => {
   const [name, setName] = useState("");
   const [dpurl, setDpurl] = useState("");
 
-  const [date, setDate] = useState("15-05-2018");
+  const [date, setDate] = useState("");
   const [msg, setMsg] = useState("");
   const [location, setLocation] = useState("");
 
   useEffect(() => {
     this._retrieveData();
+    this._getCurrentDate();
   }, []);
 
   _retrieveData = async () => {
@@ -64,6 +65,17 @@ const CreateEvent = props => {
       // Error retrieving data
       console.error(error);
     }
+  };
+
+  _getCurrentDate = () => {
+    var today = new Date();
+    var date =
+      today.getDate() +
+      "-" +
+      (today.getMonth() + 1) +
+      "-" +
+      today.getFullYear();
+    setDate(date);
   };
 
   submit = props => {
@@ -85,7 +97,7 @@ const CreateEvent = props => {
         },
         body: JSON.stringify(newEvent)
       }).then(res => console.log(res));
-      setDate("5-05-2018");
+      _getCurrentDate();
       setLocation("");
       setMsg("");
     } else {

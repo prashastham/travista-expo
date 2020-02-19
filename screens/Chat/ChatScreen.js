@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
-  Platform,
   KeyboardAvoidingView,
-  SafeAreaView,
   View,
   Text,
   StyleSheet,
@@ -10,18 +8,7 @@ import {
   TouchableOpacity,
   Dimensions
 } from "react-native";
-import {
-  Card,
-  Button,
-  Avatar,
-  Image,
-  Header,
-  Divider,
-  Badge,
-  withBadge,
-  ListItem
-} from "react-native-elements";
-//import { GiftedChat } from "react-native-gifted-chat";
+import { Button, ListItem } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Colors from "../../constants/Colors";
 import HeaderIcon from "../../components/HeaderIcon";
@@ -37,30 +24,29 @@ closeChat = props => {
 const ChatScreen = props => {
   const [msg, setMsg] = useState("");
 
-  const [id, setId] = useState("");
+  //const [id, setId] = useState("");
   const [name, setName] = useState("");
   const [dpurl, setDpurl] = useState("");
 
   const [msgList, setMsgList] = useState([]);
-  const [eventId, setEventId] = useState("hvsihiq");
+  //const [eventId, setEventId] = useState("");
 
   useEffect(() => {
     this._retrieveData();
     const { params } = props.navigation.state;
     const id = params.id;
-    setEventId(id);
-    getMessages();
+    this._getMessages();
   }, []);
 
   _retrieveData = async () => {
     try {
-      let id = await Storage.getItem("accessToken");
+      //let id = await Storage.getItem("accessToken");
       let dpurl = await Storage.getItem("dpurl");
       let name = await Storage.getItem("name");
 
       if ((dpurl && name) !== null) {
         // We have data!!
-        setId(id);
+        //setId(id);
         setDpurl(dpurl);
         setName(name);
       }
@@ -87,26 +73,29 @@ const ChatScreen = props => {
         .push().key;
 
       var updates = {};
-      updates["/messages/" + "000000" + "/" + keyVal] = message;
+      const { params } = props.navigation.state;
+      const id = params.id;
+
+      updates["/messages/" + id + "/" + keyVal] = message; //eventId here
       return firebaseClient
         .database()
         .ref()
         .update(updates);
     }
-    setMsgList([...sendMsg, message]);
   }
 
   //retieving messages
-  let chatid = eventId.toString();
-  function getMessages() {
+  _getMessages = () => {
+    const { params } = props.navigation.state;
+    const id = params.id;
     firebaseClient
       .database()
-      .ref("/messages/000000")
-      .once("value")
-      .then(function(snapshot) {
+      .ref("/messages/" + id) //eventId here
+      .on("value", function(snapshot) {
         snapshotToArray(snapshot);
+        console.log("snapshot", snapshot);
       });
-  }
+  };
 
   snapshotToArray = snapshot => {
     let returnArr = [];
@@ -117,6 +106,7 @@ const ChatScreen = props => {
       returnArr.push(item);
     });
     setMsgList(returnArr);
+    //console.log("new message list", returnArr);
   };
 
   return (
@@ -164,7 +154,13 @@ const ChatScreen = props => {
           iconRight
           onPress={() => closeChat(props)}
         />
-        <ScrollView style={styles.chat}>
+        <ScrollView
+          style={styles.chat}
+          ref={ref => (this.scrollView = ref)}
+          onContentSizeChange={(contentWidth, contentHeight) => {
+            this.scrollView.scrollToEnd({ animated: true });
+          }}
+        >
           {msgList.map((l, i) =>
             l.userHandle == name ? (
               <View
@@ -232,7 +228,7 @@ const styles = StyleSheet.create({
   },
   chatAndButton: {
     flex: 1,
-    flexDirection: "column" 
+    flexDirection: "column"
   },
   chat: {
     flex: 1
