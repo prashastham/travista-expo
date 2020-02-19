@@ -14,6 +14,7 @@ import Colors from "../../constants/Colors";
 import HeaderIcon from "../../components/HeaderIcon";
 
 import Storage from "../../local/Storage";
+import { LinearGradient } from "expo-linear-gradient";
 
 id = async () => {
   try {
@@ -52,7 +53,7 @@ const ChatListScreen = props => {
 
   useEffect(() => {
     this._retrieveData();
-    getEvents();
+    this._getEvents();
   }, []);
 
   _retrieveData = async () => {
@@ -73,7 +74,7 @@ const ChatListScreen = props => {
     }
   };
 
-  getEvents = () => {
+  _getEvents = () => {
     const url =
       "https://asia-east2-travista-chat.cloudfunctions.net/app2/events";
     fetch(url)
@@ -88,25 +89,28 @@ const ChatListScreen = props => {
   };
 
   return (
-    <View>
+    <ScrollView style={styles.container}>
       {eventList.map((l, i) => (
         <TouchableOpacity onPress={() => openChat(props, l.eventId)}>
           <ListItem
             key={i}
             leftAvatar={{ source: { uri: l.dpurl } }}
             title={
-              <View style={{ flexDirection: "row" }}>
-                <Text>{l.userHandle}</Text>
-                <Text>'s to </Text>
-                <Text>{l.location}</Text>
+              <View
+                style={{ flexDirection: "row", backgroundColor: "#ff5733" }}
+              >
+                <Text>{l.userHandle.split(" ")[0]}</Text>
+                <Text>'s trip to </Text>
+                <Text style={{}}>{l.location}</Text>
               </View>
             }
             subtitle={l.date}
             bottomDivider
+            chevron
           />
         </TouchableOpacity>
       ))}
-    </View>
+    </ScrollView>
   );
 };
 
